@@ -69,6 +69,10 @@ const LoginScreen = ({ navigation }) => {
       <TextInput
         style={styles.textInput}
         value={username}
+        mode='outlined'
+        placeholder='Masukan Username'
+        placeholderTextColor={'#99999'}
+        underlineColor="transparent"
         onChangeText={(text) => setUsername(text)}
       />
       <Caption>Password</Caption>
@@ -76,6 +80,10 @@ const LoginScreen = ({ navigation }) => {
         style={styles.textInput}
         secureTextEntry={!showPassword}
         value={password}
+        mode='outlined'
+        placeholder='Masukan Password'
+        placeholderTextColor={'#99999'}
+        underlineColor="transparent"
         onChangeText={(text) => setPassword(text)}
         right={
           <TextInput.Icon
@@ -112,10 +120,9 @@ const styles = StyleSheet.create({
     marginTop: '2%',
   },
   textInput: {
-    height: 40,
-    marginBottom: 10,
-    borderColor: '#F5F8FB',
-    backgroundColor: 'transparent',
+    height: 60,
+    borderRadius: 8,
+    paddingHorizontal: 10,
   },
   showPasswordIcon: {
     marginTop: 15,

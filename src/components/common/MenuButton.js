@@ -2,6 +2,7 @@ import React from 'react';
 import {StyleSheet, TouchableWithoutFeedback, View, Text} from 'react-native';
 import {Card} from 'react-native-paper';
 import Ionicons from 'react-native-vector-icons/Ionicons';
+import Color from '../../common/Color';
 
 const MenuButton = props => {
   return (
@@ -33,7 +34,7 @@ const styles = StyleSheet.create({
   },
   buttonIcon: {
     marginBottom: 15,
-    color: '#2E39BB',
+    color: Color.primaryBackgroundColor.backgroundColor,
     paddingTop: 19
   },
   buttonElement: {

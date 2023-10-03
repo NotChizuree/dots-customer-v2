@@ -31,7 +31,13 @@ const AccountsScreen = ({ navigation }) => {
     const renderSavingItem = (data) => {
       return (
         <View>
-          <List.Item onPress={() => navigation.navigate('SavingDetail', { savingID: data.id })} titleStyle={{ marginBottom: 5, }} title={<Text>{data.productType.name}</Text>} description={<Text>{data.id}</Text>} left={props => <List.Icon color={Colors.white} style={{ ...Color.primaryBackgroundColor, borderRadius: 10, width: 50, marginLeft: 15, }} icon="wallet" />} />
+          <List.Item
+            onPress={() => navigation.navigate('SavingDetail', { savingID: data.id })}
+            titleStyle={{ marginBottom: 5 }}
+            title={<Text>{data.productType.name}</Text>}
+            description={<Text>{data.id}</Text>}
+            left={props => <List.Icon color={Colors.white} style={{ ...Color.primaryBackgroundColor, borderRadius: 10, width: 50, marginLeft: 15, height: 50 }} icon="wallet" />}
+          />
         </View>
       );
     }
@@ -39,105 +45,141 @@ const AccountsScreen = ({ navigation }) => {
     const { height } = Dimensions.get('window');
 
     return (
-      <View>
-        <ScrollView style={{ flexGrow: 1, height: '94%' }}>
+      <View style={{ flex: 1 }}>
+        <TouchableOpacity
+          style={{
+            width: "100%",
+            backgroundColor: Color.primaryBackgroundColor.backgroundColor,
+            padding: 10,
+            alignItems: 'center',
+            justifyContent: 'center',
+          }}
+          onPress={() => navigation.navigate('CreateSavingAccount')}
+        >
+          <Text style={{ color: 'white', textTransform: 'uppercase' }}>Ajukan Tabungan Baru</Text>
+        </TouchableOpacity>
+
+        <ScrollView style={{ flexGrow: 1, height: '95%' }}>
           <FlatList
             data={data?.findSavingsByCustomerID}
             ItemSeparatorComponent={() => <Divider />}
             renderItem={({ item }) => renderSavingItem(item)}
           />
         </ScrollView>
+      </View>
+    );
+  }
+
+
+  const renderLoanAccountsList = () => {
+    const { loading, error, data } = useQuery(FindLoansByCustomerID);
+  
+    if (loading) {
+      return <LoadingOverlay />;
+    }
+  
+    if (error) {
+      navigation.goBack();
+      toaster.show({ message: 'Terjadi error saat memuat data kredit: ' + error.message })
+    }
+  
+    const renderLoanItem = (data) => {
+      return (
+        <View>
+          <List.Item
+            onPress={() => navigation.navigate('LoanDetail', { loanID: data.id })}
+            titleStyle={{ marginBottom: 5 }}
+            title={<Text>{data.productType.name}</Text>}
+            description={<Text>{data.id}</Text>}
+            left={props => <List.Icon color={Colors.white} style={{ ...Color.primaryBackgroundColor, borderRadius: 10, width: 50, marginLeft: 15, height: 50 }} icon="cash" />}
+          />
+        </View>
+      );
+    }
+  
+    const { height } = Dimensions.get('window');
+  
+    return (
+      <View style={{ flex: 1 }}>
         <TouchableOpacity
           style={{
-            position: 'absolute',
-            bottom: -35,
             width: "100%",
             backgroundColor: Color.primaryBackgroundColor.backgroundColor,
             padding: 10,
             alignItems: 'center',
             justifyContent: 'center',
           }}
-          onPress={() => navigation.navigate('CreateSavingAccount')}
+          onPress={() => navigation.navigate('CreateLoanAccount')}
         >
           <Text style={{ color: 'white', textTransform: 'uppercase' }}>Ajukan Kredit Baru</Text>
         </TouchableOpacity>
-      </View>
-    );
-  }
-
-  const renderLoanAccountsList = () => {
-    const { loading, error, data } = useQuery(FindLoansByCustomerID);
-
-    if (loading) {
-      return <LoadingOverlay />;
-    }
-
-    if (error) {
-      navigation.goBack();
-      toaster.show({ message: 'Terjadi error saat memuat data kredit: ' + error.message })
-    }
-
-    const renderLoanItem = (data) => {
-      return (
-        <View>
-          <List.Item onPress={() => navigation.navigate('LoanDetail', { loanID: data.id })} titleStyle={{ marginBottom: 5 }} title={<Text>{data.productType.name}</Text>} description={<Text>{data.id}</Text>} left={props => <List.Icon color={Colors.white} style={{ ...Color.primaryBackgroundColor, borderRadius: 10, width: 50, marginLeft: 15, }} icon="cash" />} />
-        </View>
-      );
-    }
-
-    return (
-      <View>
-        <ScrollView style={{ flexGrow: 1, height: '94%' }}>
+  
+        <ScrollView style={{ flexGrow: 1, height: '95%' }}>
           <FlatList
             data={data?.findLoansByCustomerID}
             ItemSeparatorComponent={() => <Divider />}
             renderItem={({ item }) => renderLoanItem(item)}
           />
         </ScrollView>
+      </View>
+    );
+  }
+  
+
+  const renderDepositAccountsList = () => {
+    const { loading, error, data } = useQuery(FindSavingsByCustomerID);
+  
+    if (loading) {
+      return <LoadingOverlay />;
+    }
+  
+    if (error) {
+      navigation.goBack();
+      toaster.show({ message: 'Terjadi error saat memuat data deposito: ' + error.message })
+    }
+  
+    const renderDepositItem = (data) => {
+      return (
+        <View>
+          <List.Item
+            onPress={() => navigation.navigate('DepositDetail', { savingID: data.id })}
+            titleStyle={{ marginBottom: 5 }}
+            title={<Text>DEPOSITO 6 BLN</Text>}
+            description={<Text>{data.id}</Text>}
+            left={props => <List.Icon color={Colors.white} style={{ ...Color.primaryBackgroundColor, borderRadius: 10, width: 50, marginLeft: 15, height: 50 }} icon="cash" />}
+          />
+        </View>
+      );
+    }
+  
+    const { height } = Dimensions.get('window');
+  
+    return (
+      <View style={{ flex: 1 }}>
         <TouchableOpacity
           style={{
-            position: 'absolute',
-            bottom: -35,
             width: "100%",
             backgroundColor: Color.primaryBackgroundColor.backgroundColor,
             padding: 10,
             alignItems: 'center',
             justifyContent: 'center',
           }}
-          onPress={() => navigation.navigate('CreateSavingAccount')}
+          onPress={() => navigation.navigate('CreateDepositAccount')}
         >
-          <Text style={{ color: 'white', textTransform: 'uppercase' }}>Ajukan Kredit Baru</Text>
+          <Text style={{ color: 'white', textTransform: 'uppercase' }}>Ajukan Deposito Baru</Text>
         </TouchableOpacity>
+  
+        <ScrollView style={{ flexGrow: 1, height: '95%' }}>
+          <FlatList
+            data={data?.findSavingsByCustomerID}
+            ItemSeparatorComponent={() => <Divider />}
+            renderItem={({ item }) => renderDepositItem(item)}
+          />
+        </ScrollView>
       </View>
     );
   }
-
-  const renderDepositAccountsList = () => {
-    const { loading, error, data } = useQuery(FindSavingsByCustomerID);
-
-    if (loading) {
-      return <LoadingOverlay />;
-    }
-
-    if (error) {
-      navigation.goBack();
-      toaster.show({ message: 'Terjadi error saat memuat data deposito: ' + error.message })
-    }
-
-    const renderDepositItem = (data) => {
-      return (
-        <View>
-          <List.Item onPress={() => navigation.navigate('DepositDetail', { savingID: data.id })} titleStyle={{ marginBottom: 5 }} title={<Text>DEPOSITO 6 BLN</Text>} description={<Text>{data.id}</Text>} left={props => <List.Icon color={Colors.white} style={{ ...Color.primaryBackgroundColor, borderRadius: 10, width: 50, marginLeft: 15, }} icon="cash" />} />
-        </View>
-      );
-    }
-
-    return (
-      <ScrollView>
-        <FlatList data={data.findSavingsByCustomerID} ItemSeparatorComponent={() => <Divider />} renderItem={({ item }) => renderDepositItem(item)} />
-      </ScrollView>
-    );
-  }
+  
 
   const renderTabBar = (props) => {
     return (
@@ -175,7 +217,7 @@ const AccountsScreen = ({ navigation }) => {
   return (
     <View style={styles.screen}>
       <View style={Color.primaryBackgroundColor}>
-        <Headline style={styles.heading}>Akun Saya</Headline>
+        <Headline style={styles.heading}>Daftar Rekening</Headline>
       </View>
 
       <TabView
@@ -199,7 +241,6 @@ const styles = StyleSheet.create({
   heading: {
     marginTop: '15%',
     fontSize: 30,
-    fontWeight: '800',
     marginLeft: '5%',
     paddingBottom: '2%',
     color: 'white',

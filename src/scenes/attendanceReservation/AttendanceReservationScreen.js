@@ -146,6 +146,7 @@ const AttendanceReservationScreen = ({ navigation }) => {
           <Caption>Kantor Tujuan</Caption>
           <DropDown
             placeholder={!data ? 'Loading...' : null}
+            mode={"outlined"}
             value={office}
             setValue={setOffice}
             list={!data ? [] : generateOfficeList()}
@@ -158,6 +159,7 @@ const AttendanceReservationScreen = ({ navigation }) => {
           />
           <Caption>Layanan Tujuan</Caption>
           <DropDown
+            mode={"outlined"}
             value={destinationService}
             setValue={setDestinationService}
             list={destinationServices}
@@ -169,12 +171,13 @@ const AttendanceReservationScreen = ({ navigation }) => {
             }}
           />
           <Caption>Tujuan Kedatangan</Caption>
-          <TextInput style={styles.textInput} value={reason} onChangeText={text => setReason(text)} />
+          <TextInput style={styles.textInput} value={reason} onChangeText={text => setReason(text)} mode="outlined" />
           <Caption>Tanggal Kedatangan</Caption>
           <TouchableWithoutFeedback onPress={() => setShowDatepicker(true)}>
             <View>
               <TextInput
                 style={{ height: 55, marginBottom: 5, paddingHorizontal: 10, borderWidth: 1, borderColor: '#ccc' }}
+                mode="outlined"
                 value={date.toDateString()}
                 editable={false}
               />
@@ -196,6 +199,7 @@ const AttendanceReservationScreen = ({ navigation }) => {
           )}
           <Caption>Waktu Kedatangan</Caption>
           <DropDown
+            mode={"outlined"}
             value={attendanceTimeRange}
             setValue={setAttendanceTimeRange}
             list={generateTimeList()}
@@ -205,9 +209,8 @@ const AttendanceReservationScreen = ({ navigation }) => {
             inputProps={{
               right: <TextInput.Icon name={"menu-down"} />,
             }}
-            style={{ ...styles.textInput }}
-            />
-          <Button mode="contained" onPress={() => onSubmitForm()} style={{ marginTop: 15, ...Color.primaryBackgroundColor, }}>Submit</Button>
+          />
+          <Button mode="contained" onPress={() => onSubmitForm()} style={{ marginTop: 15 }}>Submit</Button>
         </View>
       </ScrollView>
     </>
@@ -237,7 +240,6 @@ const styles = StyleSheet.create({
   textInput: {
     height: 55,
     marginBottom: 5,
-    backgroundColor: 'transparent',
   },
 });
 

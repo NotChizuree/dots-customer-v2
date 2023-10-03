@@ -49,6 +49,10 @@ const UserRegistrationScreen = ({navigation}) => {
         <Caption>Nama sesuai Identitas</Caption>
         <TextInput
             style={styles.textInput}
+            mode='outlined'
+            placeholder='Masukan Nama sesuai Identitas'
+            placeholderTextColor={'#99999'}
+            underlineColor="transparent"
             // value={username}
             // onChangeText={(text) => setUsername(text)}
         />
@@ -56,6 +60,10 @@ const UserRegistrationScreen = ({navigation}) => {
         <Caption>Nomor Induk Kependudukan (NIK)</Caption>
         <TextInput
             style={styles.textInput}
+            mode='outlined'
+            placeholder='Masukan NIK'
+            placeholderTextColor={'#99999'}
+            underlineColor="transparent"
             // value={username}
             // onChangeText={(text) => setUsername(text)}
         />
@@ -63,6 +71,10 @@ const UserRegistrationScreen = ({navigation}) => {
         <Caption>Tempat Lahir</Caption>
         <TextInput
             style={styles.textInput}
+            mode='outlined'
+            placeholder='Masukan Tempat Lahir'
+            placeholderTextColor={'#99999'}
+            underlineColor="transparent"
             // value={username}
             // onChangeText={(text) => setUsername(text)}
         />
@@ -70,6 +82,10 @@ const UserRegistrationScreen = ({navigation}) => {
         <Caption>Tanggal Lahir</Caption>
         <TextInput
             style={styles.textInput}
+            mode='outlined'
+            placeholder='Masukan Tanggal Lahir'
+            placeholderTextColor={'#99999'}
+            underlineColor="transparent"
             // value={username}
             // onChangeText={(text) => setUsername(text)}
         />
@@ -77,6 +93,10 @@ const UserRegistrationScreen = ({navigation}) => {
        <Caption>Nama Ibu Kandung</Caption>
         <TextInput
             style={styles.textInput}
+            mode='outlined'
+            placeholder='Masukan Nama Ibu Kandung'
+            placeholderTextColor={'#99999'}
+            underlineColor="transparent"
             // value={username}
             // onChangeText={(text) => setUsername(text)}
         />
@@ -84,6 +104,10 @@ const UserRegistrationScreen = ({navigation}) => {
         <Caption>Email</Caption>
         <TextInput
             style={styles.textInput}
+            mode='outlined'
+            placeholder='Masukan Email'
+            placeholderTextColor={'#99999'}
+            underlineColor="transparent"
             // value={username}
             // onChangeText={(text) => setUsername(text)}
         />
@@ -91,6 +115,10 @@ const UserRegistrationScreen = ({navigation}) => {
         <Caption>Kode Refferal (opsional)</Caption>
         <TextInput
             style={styles.textInput}
+            mode='outlined'
+            placeholder='Masukan Kode Refferal (opsional)'   
+            placeholderTextColor={'#99999'}
+            underlineColor="transparent"
             // value={username}
             // onChangeText={(text) => setUsername(text)}
         />
@@ -98,12 +126,20 @@ const UserRegistrationScreen = ({navigation}) => {
         <Caption>Username</Caption>
         <TextInput
             style={styles.textInput}
+            mode='outlined'
+            placeholder='Masukan Username'
+            placeholderTextColor={'#99999'}
+            underlineColor="transparent"
             // value={username}
             // onChangeText={(text) => setUsername(text)}
         />
 
     <Caption>Password</Caption>
       <TextInput
+         mode='outlined'
+         placeholder='Masukan Password'
+         placeholderTextColor={'#99999'}
+         underlineColor="transparent"
         style={styles.textInput}
         secureTextEntry={!showPassword}
         right={
@@ -155,10 +191,9 @@ const styles = StyleSheet.create({
     marginTop: '2%',
   },
   textInput: {
-    height: 40,
-    marginBottom: 10,
-    borderColor: '#F5F8FB',
-    backgroundColor: 'transparent',
+    height: 60,
+    borderRadius: 10,
+    paddingHorizontal: 10,
   },
   showPasswordIcon: {
     marginTop: 15,

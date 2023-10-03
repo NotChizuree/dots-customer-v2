@@ -30,12 +30,12 @@ const HomeNavigation = ({navigation}) => {
         }}
       />
       <HomeBottomTab.Screen
-        name="Akun Saya"
+        name="Rekening"
         component={AccountsScreen}
         options={{
           headerShown: false,
           tabBarIcon: ({color, size}) => (
-            <Ionicons name="list" color={color} size={size} />
+            <Ionicons name="cash" color={color} size={size} />
           ),
         }}
       />

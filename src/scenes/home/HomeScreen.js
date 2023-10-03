@@ -1,5 +1,5 @@
 import React, {useContext, useState} from 'react';
-import {StyleSheet, ScrollView, View, Image, Dimensions, Text} from 'react-native';
+import {StyleSheet, ScrollView, View, Image, Dimensions, Text, Alert} from 'react-native';
 import {Headline, Appbar, Subheading} from 'react-native-paper';
 import MenuButton from '../../components/common/MenuButton';
 import {AuthContext} from '../../providers/AuthenticationProvider';
@@ -16,33 +16,63 @@ const HomeScreen = ({navigation}) => {
       id: 1,
       title: 'Top-up',
       icon: 'wallet-outline',
-      onPress: () => navigation.navigate('CustomerList'),
+      onPress: () => {
+        // Cek akses di sini jika diperlukan
+        if (user.hasTopUpAccess) {
+          navigation.navigate('CustomerList');
+        } else {
+          Alert.alert('Akses Ditolak', 'Anda tidak memiliki akses untuk Top-up.');
+        }
+      },
     },
     {
       id: 2,
       title: 'Beli - Bayar',
       icon: 'receipt-outline',
-      onPress: () => navigation.navigate('CustomerList'),
+      onPress: () => {
+        // Cek akses di sini jika diperlukan
+        if (user.hasPurchaseAccess) {
+          navigation.navigate('CustomerList');
+        } else {
+          Alert.alert('Akses Ditolak', 'Anda tidak memiliki akses untuk Beli - Bayar.');
+        }
+      },
     },
     {
       id: 3,
       title: 'Transfer',
       icon: 'cash-outline',
-      onPress: () => navigation.navigate('CustomerList'),
+      onPress: () => {
+        // Cek akses di sini jika diperlukan
+        if (user.hasTransferAccess) {
+          navigation.navigate('CustomerList');
+        } else {
+          Alert.alert('Akses Ditolak', 'Anda tidak memiliki akses untuk Transfer.');
+        }
+      },
     },
     {
       id: 4,
       title: 'Reservasi Kedatangan',
       icon: 'calendar-outline',
-      onPress: () => navigation.navigate('AttendanceReservation'),
+      onPress: () => {
+        if (hasReservationAccess) {
+          navigation.navigate('AttendanceReservation');
+        } else {
+          Alert.alert(
+            'Akses Ditolak',
+            'Anda tidak memiliki akses untuk melakukan reservasi kedatangan.'
+          );
+        }
+      },
     },
 
-    {
-      id: 5,
-      title: 'Catatan Keuangan',
-      icon: 'book-outline',
-      onPress: () => navigation.navigate('CustomerList'),
-    },
+    // {
+    //   id: 5,
+    //   title: 'Catatan Keuangan',
+    //   icon: 'book-outline',
+    //   onPress: () => navigation.navigate('CustomerList'),
+    // },
     // {
     //   id: 6,
     //   title: 'Lainnya',
