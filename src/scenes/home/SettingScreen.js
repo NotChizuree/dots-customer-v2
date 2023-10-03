@@ -1,0 +1,47 @@
+import React, {useContext} from 'react';
+import {View, StyleSheet, Alert} from 'react-native';
+import {Headline, Button, List, Divider} from 'react-native-paper';
+import {AuthContext} from '../../providers/AuthenticationProvider';
+
+const SettingScreen = () => {
+  const {logout} = useContext(AuthContext);
+  return (
+    <View style={styles.screen}>
+      <View style={Color.primaryBackgroundColor}>
+        <Headline style={styles.heading}>Pengaturan</Headline>
+      </View>
+
+      <List.Item style={styles.settingMenuButton} title="Ubah Password" />
+      <Divider />
+      <List.Item style={styles.settingMenuButton} titleStyle={{color: "#E74C3C", fontWeight: "bold"}} title="Keluar" onPress={() => {
+         Alert.alert(
+          'Perhatian',
+          'Apakah anda yakin ingin keluar?',
+          [
+            { text: "Keluar", onPress: logout},
+          ], 
+          { cancelable: true }
+        );
+      }} />
+    </View>
+  );
+};
+
+const styles = StyleSheet.create({
+  screen: {
+    backgroundColor: '#F5F8FB',
+    flex: 1,
+  },
+  heading: {
+    marginTop: '15%',
+    fontSize: 30,
+    marginLeft: '5%',
+    paddingBottom: '2%',
+    color: 'white'
+  },
+  settingMenuButton: {
+    backgroundColor: 'white'
+  }
+});
+
+export default SettingScreen;

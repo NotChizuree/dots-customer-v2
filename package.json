@@ -1,0 +1,45 @@
+{
+  "name": "dotscustomerv2",
+  "version": "1.0.0",
+  "main": "node_modules/expo/AppEntry.js",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web"
+  },
+  "dependencies": {
+    "@apollo/client": "^3.8.4",
+    "@react-native-community/datetimepicker": "7.2.0",
+    "@react-navigation/bottom-tabs": "^6.5.9",
+    "@react-navigation/native": "^6.1.8",
+    "@react-navigation/stack": "^6.3.18",
+    "apollo-client": "^2.6.10",
+    "apollo-link": "^1.2.14",
+    "axios": "^1.5.1",
+    "base-64": "^1.0.0",
+    "expo": "~49.0.12",
+    "expo-linear-gradient": "~12.3.0",
+    "expo-secure-store": "~12.3.1",
+    "expo-status-bar": "~1.6.0",
+    "graphql": "^15.8.0",
+    "react": "18.2.0",
+    "react-native": "0.72.5",
+    "react-native-dropdown-picker": "^5.4.6",
+    "react-native-global-props": "^1.1.5",
+    "react-native-linear-gradient": "^2.8.3",
+    "react-native-paper": "^5.10.6",
+    "react-native-paper-dropdown": "^1.0.7",
+    "react-native-paper-toast": "^1.2.3",
+    "react-native-qrcode-svg": "^6.2.0",
+    "react-native-sensitive-info": "^6.0.0-alpha.9",
+    "react-native-shimmer-placeholder": "^2.0.9",
+    "react-native-snap-carousel": "^3.9.1",
+    "react-native-super-grid": "^5.0.0",
+    "react-native-tab-view": "^3.5.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.20.0"
+  },
+  "private": true
+}

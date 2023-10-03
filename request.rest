@@ -1,0 +1,6 @@
+POST http://192.168.18.100:5000/graphql
+Content-Type: application/json
+
+{
+  "query": "query { findSavingsByCustomerID { id, customerID, createdAt, currentBalance, availableBalance, productType { id, name } } }"
+}
