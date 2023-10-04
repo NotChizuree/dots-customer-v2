@@ -9,6 +9,7 @@ import { FindLoanByID, FindLoanRepaymentScheduleByLoanID } from '../../query/Pro
 import { useToast } from 'react-native-paper-toast';
 import { FlatGrid } from 'react-native-super-grid';
 import MenuButton from '../../components/common/MenuButton';
+import Color from '../../common/Color';
 
 
 const LoanAccountDetailScreen = ({ navigation, route }) => {
@@ -167,7 +168,7 @@ const LoanAccountDetailScreen = ({ navigation, route }) => {
       </Appbar.Header>
       <ScrollView style={styles.screen}>
         <View style={styles.headingBlock}>
-          <LinearGradient style={styles.headingGradient} colors={['#055aa3', '#0472d1']} >
+          <LinearGradient style={styles.headingGradient} colors={Color.primaryGradientColor} >
             {loanLoading ? renderAccountInfoPlaceholder() : renderAccountInfo(loanData.findLoanByID)}
           </LinearGradient>
         </View>

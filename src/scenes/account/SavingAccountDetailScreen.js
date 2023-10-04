@@ -11,6 +11,7 @@ import { FindSavingTransactionsBySavingID } from '../../query/ProductTransaction
 import LoadingOverlay from '../../components/common/LoadingOverlay';
 import { FlatGrid } from 'react-native-super-grid';
 import MenuButton from '../../components/common/MenuButton';
+import Color from '../../common/Color';
 
 
 const SavingAccountDetailScreen = ({ navigation, route }) => {
@@ -127,7 +128,7 @@ const SavingAccountDetailScreen = ({ navigation, route }) => {
       </Appbar.Header>
       <ScrollView style={styles.screen}>
         <View style={styles.headingBlock}>
-          <LinearGradient style={styles.headingGradient} colors={[Color.primaryBackgroundColor]} >
+          <LinearGradient style={styles.headingGradient} colors={Color.primaryGradientColor} >
             {savingLoading ? renderAccountInfoPlaceholder() : renderAccountInfo(savingData.findSavingByID)}
             {/* {renderAccountInfoPlaceholder()} */}
           </LinearGradient>
