@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button, StyleSheet, Alert } from 'react-native';
-import { Caption, Headline } from 'react-native-paper';
+import { View, StyleSheet, Alert } from 'react-native';
+import { Appbar,TextInput,Button, Caption } from 'react-native-paper'; 
 
-const ChangePasswordScreen = () => {
+const ChangePasswordScreen = ({navigation}) => {
   const [currentPassword, setCurrentPassword] = useState('');
   const [newPassword, setNewPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -26,57 +26,70 @@ const ChangePasswordScreen = () => {
   };
 
   return (
-    <View style={styles.screen}> 
-    <View style={Color.primaryBackgroundColor}>
-        <Headline style={styles.heading}>Notifikasi</Headline>
-      </View>
+    <>
+      <Appbar.Header>
+        {/* Assuming `navigation` is defined somewhere */}
+        <Appbar.BackAction onPress={() => navigation.goBack()} />
+        <Appbar.Content title="Ganti Kata sandi" />
+      </Appbar.Header>
 
-    <View style={styles.container}>
-      <Caption></Caption>
-      <TextInput
-        style={styles.input}
-        placeholder="Kata Sandi Lama"
-        secureTextEntry
-        value={currentPassword}
-        onChangeText={(text) => setCurrentPassword(text)}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Kata Sandi Baru"
-        secureTextEntry
-        value={newPassword}
-        onChangeText={(text) => setNewPassword(text)}
-      />
-      <TextInput
-        style={styles.input}
-        placeholder="Konfirmasi Kata Sandi"
-        secureTextEntry
-        value={confirmPassword}
-        onChangeText={(text) => setConfirmPassword(text)}
-      />
-      <Button title="Change Password" onPress={handleChangePassword} />
-    </View>
-    </View>
+      <View style={styles.container}>
+        <View style={styles.box}>
+        <Caption>Kata sandi lama</Caption>
+
+          <TextInput
+            style={styles.input}
+            mode="outlined"
+            placeholder="Kata Sandi Lama"
+            secureTextEntry
+            value={currentPassword}
+            onChangeText={(text) => setCurrentPassword(text)}
+          />
+                  <Caption>Kata sandi baru</Caption>
+
+          <TextInput
+            style={styles.input}
+            mode="outlined"
+            placeholder="Kata Sandi Baru"
+            secureTextEntry
+            value={newPassword}
+            onChangeText={(text) => setNewPassword(text)}
+          />
+                            <Caption>Konfirmasi Kata sandi </Caption>
+
+          <TextInput
+            style={styles.input}
+            mode="outlined"
+            placeholder="Konfirmasi Kata Sandi"
+            secureTextEntry
+            value={confirmPassword}
+            onChangeText={(text) => setConfirmPassword(text)}
+          />
+          <Button mode="contained"  style={{ marginTop: 20, ...Color.primaryBackgroundColor, }}>Change</Button>
+        </View>
+      </View>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
-    screen: {
-
-    },
   container: {
     flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 20,
   },
-  input: {
-    height: 40,
+  box: {
+    backgroundColor: 'white',
     width: '100%',
-    borderColor: 'gray',
-    borderWidth: 1,
-    marginBottom: 10,
-    paddingHorizontal: 10,
+    padding: 20,
+    marginTop: 20,
+    borderRadius: 15,
+  },
+  input: {
+      marginBottom:10,
+  },button:{
+    borderRadius:20,
+
   },
 });
 
