@@ -14,6 +14,7 @@ import DepositAccountDetailScreen from '../scenes/account/DepositAccountDetailSc
 import CreateSavingAccountScreen from '../scenes/account/CreateSavingAccountScreen';
 import SavingDepositRequestScreen from '../scenes/account/SavingDepositRequestScreen';
 import IdentityPhotoScreen from '../scenes/authentication/IdentityPhotoScreen';
+import ChangePasswordScreen from '../scenes/authentication/ChangePasswordScreen';
 
 const AppNavigation = () => {
   const AppNavigator = createStackNavigator();
@@ -74,6 +75,11 @@ const AppNavigation = () => {
         <AppNavigator.Screen
           name="SavingDepositRequest"
           component={SavingDepositRequestScreen}
+          options={{headerShown: false}}
+        />
+        <AppNavigator.Screen
+          name="ChangePassword"
+          component={ChangePasswordScreen}
           options={{headerShown: false}}
         />
       </AppNavigator.Navigator>

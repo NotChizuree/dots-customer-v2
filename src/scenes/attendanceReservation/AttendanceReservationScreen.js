@@ -210,7 +210,7 @@ const AttendanceReservationScreen = ({ navigation }) => {
               right: <TextInput.Icon name={"menu-down"} />,
             }}
           />
-          <Button mode="contained" onPress={() => onSubmitForm()} style={{ marginTop: 15 }}>Submit</Button>
+          <Button mode="contained" onPress={() => onSubmitForm()} style={{ marginTop: 20, ...Color.primaryBackgroundColor, }}>Submit</Button>
         </View>
       </ScrollView>
     </>

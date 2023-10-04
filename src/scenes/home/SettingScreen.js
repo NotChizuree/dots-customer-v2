@@ -2,16 +2,25 @@ import React, {useContext} from 'react';
 import {View, StyleSheet, Alert} from 'react-native';
 import {Headline, Button, List, Divider} from 'react-native-paper';
 import {AuthContext} from '../../providers/AuthenticationProvider';
+import { useNavigation } from '@react-navigation/native';
+import ChangePasswordScreen from '../authentication/ChangePasswordScreen';
 
 const SettingScreen = () => {
+  const navigation = useNavigation();
   const {logout} = useContext(AuthContext);
+
+  const handleChangePasswordPress = () => {
+    // Navigasikan ke halaman ChangePasswordScreen
+    navigation.navigate('ChangePassword');
+  };
+
   return (
     <View style={styles.screen}>
       <View style={Color.primaryBackgroundColor}>
         <Headline style={styles.heading}>Pengaturan</Headline>
       </View>
 
-      <List.Item style={styles.settingMenuButton} title="Ubah Password" />
+      <List.Item style={styles.settingMenuButton} title="Ubah Password" onPress={handleChangePasswordPress} />
       <Divider />
       <List.Item style={styles.settingMenuButton} titleStyle={{color: "#E74C3C", fontWeight: "bold"}} title="Keluar" onPress={() => {
          Alert.alert(

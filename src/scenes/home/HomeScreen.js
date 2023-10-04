@@ -55,16 +55,7 @@ const HomeScreen = ({navigation}) => {
       id: 4,
       title: 'Reservasi Kedatangan',
       icon: 'calendar-outline',
-      onPress: () => {
-        if (hasReservationAccess) {
-          navigation.navigate('AttendanceReservation');
-        } else {
-          Alert.alert(
-            'Akses Ditolak',
-            'Anda tidak memiliki akses untuk melakukan reservasi kedatangan.'
-          );
-        }
-      },
+      onPress: () => navigation.navigate('AttendanceReservation'),
     },
 
     // {

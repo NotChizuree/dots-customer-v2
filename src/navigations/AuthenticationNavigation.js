@@ -8,37 +8,33 @@ import UserRegistrationScreen from '../scenes/authentication/UserRegistrationScr
 import IdentityPhotoScreen from '../scenes/authentication/IdentityPhotoScreen';
 
 const AuthenticationNavigation = () => {
-  const {currentTenant} = useContext(AuthContext);
+  const { currentTenant } = useContext(AuthContext);
 
   const AuthenticationNavigator = createStackNavigator();
+
   return (
-    <AuthenticationNavigator.Navigator 
-      initialRouteName={currentTenant ? 'Login' : 'MainOnboarding'}
+    <AuthenticationNavigator.Navigator
+      initialRouteName={currentTenant ? 'Login' : 'TenantSelector'}
     >
-      <AuthenticationNavigator.Screen
-        name="MainOnboarding"
-        component={MainOnboardingScreen}
-        options={{headerShown: false}}
-      />
       <AuthenticationNavigator.Screen
         name="Login"
         component={LoginScreen}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <AuthenticationNavigator.Screen
         name="TenantSelector"
         component={TenantSelectorScreen}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <AuthenticationNavigator.Screen
         name="UserRegistration"
         component={UserRegistrationScreen}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
       <AuthenticationNavigator.Screen
         name="IdentityPhoto"
         component={IdentityPhotoScreen}
-        options={{headerShown: false}}
+        options={{ headerShown: false }}
       />
     </AuthenticationNavigator.Navigator>
   );

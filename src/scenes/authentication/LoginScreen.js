@@ -50,19 +50,19 @@ const LoginScreen = ({ navigation }) => {
   return (
     <View style={styles.screen}>
       {loading && <LoadingOverlay />}
-      <View style={{ marginTop: '20%', marginBottom: '12%' }}>
+      <View style={{ marginTop: '40%', marginBottom: '12%' }}>
         <Headline style={styles.heading}>Halo.</Headline>
         <Headline style={styles.heading}>Selamat Datang</Headline>
         <View style={{ flexDirection: 'row' }}>
           <Subheading style={styles.subheading}>{currentTenant ? currentTenant.name : null}</Subheading>
-          <Button
+          {/* <Button
             mode='outlined'
             onPress={() => changeTenant()}
             style={{ marginLeft: 'auto', marginRight: '3%'}} labelStyle={{
               color: Color.primaryTextColor.color,
             }}>
             Ubah
-          </Button>
+          </Button> */}
         </View>
       </View>
       <Caption>Username</Caption>
@@ -117,7 +117,8 @@ const styles = StyleSheet.create({
   },
   subheading: {
     fontSize: 18,
-    marginTop: '2%',
+    marginTop: '3%',
+    marginBottom: '5%',
   },
   textInput: {
     height: 60,

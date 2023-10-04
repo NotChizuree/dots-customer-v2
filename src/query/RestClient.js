@@ -2,7 +2,8 @@ import React from 'react';
 import axios from 'axios';
 
 const RestClient = axios.create({
-  baseURL: 'https://dots-api-test.dotsco.re',
+  // baseURL: 'https://dots-api-test.dotsco.re',
+  baseURL: 'http://192.168.18.209:8080',
   // baseURL: process.env.API_URL,
   timeout: 10000,
 });
