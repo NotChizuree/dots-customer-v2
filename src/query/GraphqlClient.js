@@ -9,7 +9,7 @@ import {AuthContext} from '../providers/AuthenticationProvider';
 import * as SecureStore from 'expo-secure-store';
 
 // const httpLink = createHttpLink({uri: 'https://dots-api-test.dotsco.re/graphql'});
-const httpLink = createHttpLink({uri: 'http://192.168.18.209:8080/graphql'});
+const httpLink = createHttpLink({uri: 'https://x8cgfzvm-8080.asse.devtunnels.ms/graphql'});
 // const httpLink = createHttpLink({uri: process.env.API_URL + '/graphql'});
 
 const createLogoutLink = (logout) => {

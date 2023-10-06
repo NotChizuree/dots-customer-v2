@@ -21,7 +21,7 @@ const styles = StyleSheet.create({
   appCard: {
     width: 60,
     height: 60,
-    borderRadius: 50,
+    borderRadius: 10,
     alignItems: 'center',
     justifyContent: 'center',
     flex: 1,

@@ -125,7 +125,7 @@ const LoanAccountDetailScreen = ({ navigation, route }) => {
         <Text style={styles.balanceTitle}>Sisa Terutang</Text>
         <View style={{ flexDirection: 'row' }}>
           <Headline adjustFontSizeToFit style={styles.balance}>
-            Rp {isBalanceShown ? account.outstandingBalance : '******'}
+            Rp {isBalanceShown ? parseFloat(account.outstandingBalance).toLocaleString('en') : '******'}
           </Headline>
           <IconButton onPress={() => setIsBalanceShown(!isBalanceShown)} icon={isBalanceShown ? 'eye-off' : 'eye'} size={25} style={{ bottom: 5 }} />
         </View>
@@ -141,7 +141,7 @@ const LoanAccountDetailScreen = ({ navigation, route }) => {
 
     return (
       <List.Section>
-        <List.Accordion title={<Headline style={styles.detailHeading}>Total Tagihan s.d. Bulan Ini</Headline>} description={<Text style={{ fontSize: 17 }}>Rp {totalRepayment}</Text>}>
+        <List.Accordion title={<Headline style={styles.detailHeading}>Total Tagihan s.d. Bulan Ini</Headline>} description={<Text style={{ fontSize: 17 }}>Rp {totalRepayment.toLocaleString('en')}</Text>}>
           <View>
             {data.map((val, _) => {
               return (

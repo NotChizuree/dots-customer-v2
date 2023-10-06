@@ -95,7 +95,7 @@ const LoginScreen = ({ navigation }) => {
           />
         }
       />
-      <Caption style={{ ...Color.primaryTextColor, marginBottom: '3%', fontWeight: 'bold', fontSize: 13 }}>Lupa Password? </Caption>
+      <Caption style={{ ...Color.primaryTextColor, marginBottom: '1%', marginTop: '3%', fontWeight: 'bold', fontSize: 13 }}>Lupa Password? </Caption>
       <Button style={{ marginTop: '5%', marginBottom: '5%', ...Color.primaryBackgroundColor,}} mode="contained" onPress={() => handleLogin()}>
         Login
       </Button>
