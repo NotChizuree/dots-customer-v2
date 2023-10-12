@@ -96,7 +96,7 @@ const HomeScreen = ({navigation}) => {
       <Appbar.Header style={Color.primaryBackgroundColor}>
         <Appbar.Content
           style={styles.appbarContent}
-          title={currentTenant.name}
+          title={user.firstName}
           titleStyle={{ color: '#EAEBF8' }} 
         />
       </Appbar.Header>

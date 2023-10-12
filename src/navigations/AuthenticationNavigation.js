@@ -3,7 +3,6 @@ import {createStackNavigator} from '@react-navigation/stack';
 import LoginScreen from '../scenes/authentication/LoginScreen';
 import MainOnboardingScreen from '../scenes/authentication/MainOnboardingScreen';
 import { AuthContext } from '../providers/AuthenticationProvider';
-import TenantSelectorScreen from '../scenes/authentication/TenantSelectorScreen';
 import UserRegistrationScreen from '../scenes/authentication/UserRegistrationScreen';
 import IdentityPhotoScreen from '../scenes/authentication/IdentityPhotoScreen';
 
@@ -19,11 +18,6 @@ const AuthenticationNavigation = () => {
       <AuthenticationNavigator.Screen
         name="Login"
         component={LoginScreen}
-        options={{ headerShown: false }}
-      />
-      <AuthenticationNavigator.Screen
-        name="TenantSelector"
-        component={TenantSelectorScreen}
         options={{ headerShown: false }}
       />
       <AuthenticationNavigator.Screen

@@ -44,6 +44,7 @@ const AttendanceReservationScreen = ({ navigation }) => {
   };
 
   const { loading, error, data } = useQuery(FindAllOffices);
+  // const { loading, error, data } = 
 
   if (error) {
     toaster.show({ message: 'Gagal mendapatkan data kantor' });

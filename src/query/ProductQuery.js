@@ -1,21 +1,28 @@
 import React from 'react';
 import {gql} from '@apollo/client';
+import RestClient from './RestClient';
 
-export const FindSavingsByCustomerID = gql`
-  query {
-    findSavingsByCustomerID {
-      id
-      customerID
-      createdAt
-      currentBalance
-      availableBalance
-      productType {
-        id
-        name
-      }
-    }
-  }
-`;
+export const FindSavingsByCustomerID = async () => {
+  // gql`
+  //   query {
+  //     findSavingsByCustomerID {
+  //       id
+  //       customerID
+  //       createdAt
+  //       currentBalance
+  //       availableBalance
+  //       productType {
+  //         id
+  //         name
+  //       }
+  //     }
+  //   }
+  // `
+
+  const result = await RestClient('/', {
+    method: "GET",
+  })
+}
 
 export const FindLoansByCustomerID = gql`
   query {
