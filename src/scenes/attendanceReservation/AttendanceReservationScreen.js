@@ -55,7 +55,6 @@ const AttendanceReservationScreen = ({ navigation }) => {
     data.findAllOffices.map((value, _) => {
       res.push({ label: value.name, value: value.id });
     });
-
     return res;
   }
 

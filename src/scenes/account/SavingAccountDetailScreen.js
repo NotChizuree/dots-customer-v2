@@ -135,7 +135,6 @@ const SavingAccountDetailScreen = ({ navigation, route }) => {
         </View>
 
         <View style={styles.contentBlock}>
-
           <FlatGrid
             data={menus}
             keyExtractor={(item, index) => index}
