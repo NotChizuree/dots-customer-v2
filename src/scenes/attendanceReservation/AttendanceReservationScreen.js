@@ -11,7 +11,9 @@ import LoadingOverlay from "../../components/common/LoadingOverlay";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { TextInput, Appbar, Caption, Button } from "react-native-paper";
 import { CreateAttendanceReservation } from "../../query/AttendanceReservationQuery";
-import { AuthContext } from '../../providers/AuthenticationProvider';
+import { AuthContext } from "../../providers/AuthenticationProvider";
+import createReservation from "../../api/ReservationApi";
+import { createReservationRest } from "../../api/ReservationApi";
 
 const AttendanceReservationScreen = ({ navigation }) => {
   // TODO: get office operational hours from reducer
@@ -23,21 +25,22 @@ const AttendanceReservationScreen = ({ navigation }) => {
   const [showDestinationServiceDropdown, setShowDestinationServiceDropdown] =
     useState(false);
   const [destinationService, setDestinationService] = useState(null);
+
   const destinationServices = [
-    { label: "Teller", value: "TELLER" },
-    { label: "Customer Service", value: "CUSTOMER_SERVICE" },
+    { label: "Teller", value: "1" },
+    { label: "Customer Service", value: "2" },
   ];
 
   const [showDropDownService, setshowDropDownService] = useState(false);
-  const [Service, setService] = useState("");
+  const [Service, setService] = useState(null);
   const dataService = [
     {
       label: "Keluhan",
-      value: "12:00 AM",
+      value: "Keluhan",
     },
     {
       label: "Pembayaran",
-      value: "13:00 AM",
+      value: "Pembayaran",
     },
   ];
 
@@ -46,10 +49,6 @@ const AttendanceReservationScreen = ({ navigation }) => {
   const currentLocalTime = new Date();
   const intTime =
     currentLocalTime.getHours() + currentLocalTime.getMinutes() / 60;
-
-  const [showAttendanceTimeRangeDropdown, setShowAttendanceTimeRangeDropdown] =
-    useState(false);
-  const [attendanceTimeRange, setAttendanceTimeRange] = useState(null);
 
   const [showOfficeDropdown, setShowOfficeDropdown] = useState(false);
   const [office, setOffice] = useState(null);
@@ -75,26 +74,25 @@ const AttendanceReservationScreen = ({ navigation }) => {
     try {
       setLoading(true);
       findAllOffices(token).then((result) => {
-        setOfficeData(result.data);
-        console.log(officesData)
-        console.log(result.data)
-        console.log(token)
+        setOfficeData(result.data.data);
+        console.log(officesData);
+        console.log(result.data);
+        console.log(token);
       });
     } catch (error) {
       console.error("Error fetching offices: ", error);
-        setError(error);
-        setLoading(false);
-        toaster.show({ message: "Gagal mendapatkan data kantor" });
+      setError(error);
+      setLoading(false);
+      toaster.show({ message: "Gagal mendapatkan data kantor" });
     }
-
-};
+  };
 
   useEffect(() => {
     fetchData();
   }, []);
 
   if (error) {
-    toaster.show({ message: 'Gagal mendapatkan data kantor' });
+    toaster.show({ message: "Gagal mendapatkan data kantor" });
   }
 
   const generateOfficeList = () => {
@@ -115,30 +113,44 @@ const AttendanceReservationScreen = ({ navigation }) => {
     }
   };
 
-  const generateTimeList = () => {
-    let attendanceTimeList = [];
+  const [showAttendanceTimeRangeDropdown, setShowAttendanceTimeRangeDropdown] =
+    useState(false);
+  const [attendanceTimeRange, setAttendanceTimeRange] = useState(null);
+  const generateTimeList = [
+    {
+      label: "14:00 - 15:00",
+      value: "1400-1500",
+    },
+    {
+      label: "13:00 - 14:00",
+      value: "1300-1400",
+    },
+  ];
 
-    let currentTime;
-    if (intTime > operationalHourStartInt && intTime < operationalHourEndInt) {
-      if (parseInt(intTime) == intTime) {
-        currentTime = intTime;
-      } else {
-        currentTime = parseInt(intTime) + 0.5;
-      }
-    } else {
-      currentTime = operationalHourStartInt;
-    }
+  // const generateTimeList = () => {
+  //   let attendanceTimeList = [];
 
-    while (currentTime !== operationalHourEndInt) {
-      attendanceTimeList.push({
-        label: intTimeToReadableTime(currentTime),
-        value: currentTime.toString(),
-      });
-      currentTime += 0.5;
-    }
+  //   let currentTime;
+  //   if (intTime > operationalHourStartInt && intTime < operationalHourEndInt) {
+  //     if (parseInt(intTime) == intTime) {
+  //       currentTime = intTime;
+  //     } else {
+  //       currentTime = parseInt(intTime) + 0.5;
+  //     }
+  //   } else {
+  //     currentTime = operationalHourStartInt;
+  //   }
 
-    return attendanceTimeList;
-  };
+  //   while (currentTime !== operationalHourEndInt) {
+  //     attendanceTimeList.push({
+  //       label: intTimeToReadableTime(currentTime),
+  //       value: currentTime.toString(),
+  //     });
+  //     currentTime += 0.5;
+  //   }
+
+  //   return attendanceTimeList;
+  // };
 
   const attendAtStartToStr = (type) => {
     const parsedHour = parseInt(attendanceTimeRange);
@@ -158,39 +170,96 @@ const AttendanceReservationScreen = ({ navigation }) => {
     }
   };
 
-  const [
-    createReservation,
-    { loading: mutationLoading, error: mutationError },
-  ] = useMutation(CreateAttendanceReservation, {
-    variables: {
-      branchID: office,
-      destinationService: destinationService,
-      reason: reason,
-      attendAtStart: attendanceTimeRange ? attendAtStartToStr("START") : null,
-      attendAtEnd: attendanceTimeRange ? attendAtStartToStr("END") : null,
-    },
-  });
+  // const [
+  //   createReservation,
+  //   { loading: mutationLoading, error: mutationError },
+  // ] = useMutation(createReservationRest(token, console.log(token),{
+  //     branchID: office,
+  //     destinationService: destinationService,
+  //     reason: reason,
+  //     attendAtStart: attendanceTimeRange ? attendAtStartToStr("START") : null,
+  //     attendAtEnd: attendanceTimeRange ? attendAtStartToStr("END") : null,
+  // }));
 
-  if (mutationError) {
-    toaster.show({
-      message: "Gagal melakukan booking " + mutationError.message,
-    });
-  }
+  // if (mutationError) {
+  //   toaster.show({
+  //     message: "Gagal melakukan booking " + mutationError.message,
+  //   });
+  // }
 
+  // const onSubmitForm = () => {
+  //   if (!mutationLoading) {
+  //     createReservation()
+  //       .then((res) => {
+  //         navigation.dispatch(
+  //           StackActions.replace("AttendanceReservationSuccess", {
+  //             reservation: res.data.createAttendanceReservation,
+  //           })
+  //         );
+  //       })
+  //       .catch((err) => {});
+  //   }
+  // };
+
+  const [mutationLoading, setMutationLoading] = useState(false);
+  const [mutationError, setMutationError] = useState(null);
   const onSubmitForm = () => {
     if (!mutationLoading) {
-      createReservation()
+      console.log(office);
+      console.log(destinationService);
+      console.log(Service);
+      console.log(date);
+      console.log(attendanceTimeRange);
+
+      // Ambil jam mulai dan selesai dari waktu0
+      const clock = attendanceTimeRange.split("-");
+
+      // Ubah jam dari indeks array waktu ke format yang sesuai (HH:mm)
+      const jam1 = `${Math.floor(clock[0] / 100)}:${clock[0] % 100}`;
+      const jam2 = `${Math.floor(clock[1] / 100)}:${clock[1] % 100}`;
+
+      // Buat objek Date untuk tanggal
+      const tanggalDanJam1 = new Date(date);
+      tanggalDanJam1.setHours(Math.floor(clock[0] / 100));
+      tanggalDanJam1.setMinutes(clock[0] % 100);
+
+      const tanggalDanJam2 = new Date(date);
+      tanggalDanJam2.setHours(Math.floor(clock[1] / 100));
+      tanggalDanJam2.setMinutes(clock[1] % 100);
+
+      // Ambil timestamp dari tanggal dan jam yang sudah diubah
+      const timestamp1 = tanggalDanJam1;
+      const timestamp2 = tanggalDanJam2;
+
+      console.log('waktu 1 :',timestamp1);
+      console.log('waktu 2 : ',timestamp2);
+
+      createReservationRest(
+        token,
+        {
+          branchId: office,
+          destinationService: destinationService,
+          reason: Service,
+          attendAtStart: timestamp1,
+          attendAtEnd: timestamp2
+        },
+
+        setMutationLoading,
+        setMutationError
+      )
         .then((res) => {
-          navigation.dispatch(
-            StackActions.replace("AttendanceReservationSuccess", {
-              reservation: res.data.createAttendanceReservation,
-            })
-          );
+          setMutationLoading(false);
+          navigation.navigate("Home")
+
+          // navigation.dispatch(
+          //   StackActions.replace("AttendanceReservationSuccess", {
+          //     reservation: res.data.createAttendanceReservation,
+          //   })
+          // );
         })
         .catch((err) => {});
     }
   };
-
   return (
     <>
       <Appbar.Header style={styles.appbarHeader}>
@@ -221,11 +290,12 @@ const AttendanceReservationScreen = ({ navigation }) => {
                     value: index.id,
                   }))
                 : []
-            }            visible={showOfficeDropdown}
+            }
+            visible={showOfficeDropdown}
             showDropDown={() => setShowOfficeDropdown(true)}
             onDismiss={() => setShowOfficeDropdown(false)}
             inputProps={{
-              right: loading ? null : <TextInput.Icon name={"menu-down"} />
+              right: loading ? null : <TextInput.Icon name={"menu-down"} />,
             }}
           />
           <Caption>Layanan Tujuan</Caption>
@@ -288,7 +358,7 @@ const AttendanceReservationScreen = ({ navigation }) => {
             mode={"outlined"}
             value={attendanceTimeRange}
             setValue={setAttendanceTimeRange}
-            list={generateTimeList()}
+            list={generateTimeList}
             visible={showAttendanceTimeRangeDropdown}
             showDropDown={() => setShowAttendanceTimeRangeDropdown(true)}
             onDismiss={() => setShowAttendanceTimeRangeDropdown(false)}

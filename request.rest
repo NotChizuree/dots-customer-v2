@@ -9,4 +9,27 @@ Content-Type: application/json
 ###
 GET http://192.168.18.100:8000/api/office
 Content-Type: application/json
+Authorization: Bearer 161|v5zXSnM1KMzWkvjRNykg69By0LZ7yH7Ee1nwmeAR5a33708d
+
+
+###
+
+
+POST http://192.168.18.100:8000/api/create-reservation
+Content-Type: application/json
 Authorization: Bearer 159|KtqzpiXeHpW9XikKxqZEAntPXJ5P7hprwXNxCcQS75a11507
+
+{"branchId":"001","destinationService":"1","reason":"Keluhan","attendAtStart":"2023-10-18T07:00:02.224Z","attendAtEnd":"2023-10-18T08:00:02.224Z"}
+
+  ###
+#   POST {{url}}/create-reservation
+# Content-Type: application/json
+# Authorization: Bearer {{token}}
+
+# {
+#     "destinationService" : "001",
+#     "reason" : "456",
+#     "branchId" : "001",
+#     "attendAtStart" : "2023-09-18 12:00:00.048+07",
+#     "attendAtEnd" : "2023-09-18 12:00:00.048+07"
+# }

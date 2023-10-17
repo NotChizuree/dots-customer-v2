@@ -33,6 +33,24 @@ export const userRegister = async data => {
   }
 };
 
+export const ChangePassword = async data => {
+  try {
+    const result = await ApiManager("/change-password", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json"  
+      },
+      
+      data: data
+    });
+
+    return result;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 export const findAllUser = async (token) => {
   try {
     const result = ApiManager("/user", {

@@ -1,14 +1,16 @@
 import { ApiManager } from "./ApiManager";
 
-export const createReservation = async (token, data) => {
+export const createReservationRest = async (token, data) => {
   try {
-    const result = await ApiManager("", {
+    console.log(JSON.stringify(data))
+    console.log(token)
+    const result = await ApiManager("/create-reservation", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
-        "Content-Type": "application/json",
+        "Content-Type": 'application/json'
       },
-      data: data,
+      data: JSON.stringify(data),
     });
 
     return result;
