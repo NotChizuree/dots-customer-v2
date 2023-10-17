@@ -3,7 +3,7 @@ import { ApiManager } from "./ApiManager";
 export const userLogin = async data => {
   try {
     console.log(data)
-    const result = await ApiManager("", {
+    const result = await ApiManager("/login", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
@@ -23,6 +23,7 @@ export const userRegister = async data => {
       headers: {
         "Content-Type": "application/json"
       },
+      
       data: data
     });
 

@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@apollo/client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import DropDown from "react-native-paper-dropdown";
 import { useToast } from "react-native-paper-toast";
 import { TouchableWithoutFeedback } from "react-native";
@@ -11,6 +11,7 @@ import LoadingOverlay from "../../components/common/LoadingOverlay";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { TextInput, Appbar, Caption, Button } from "react-native-paper";
 import { CreateAttendanceReservation } from "../../query/AttendanceReservationQuery";
+import { AuthContext } from '../../providers/AuthenticationProvider';
 
 const AttendanceReservationScreen = ({ navigation }) => {
   // TODO: get office operational hours from reducer
@@ -66,36 +67,39 @@ const AttendanceReservationScreen = ({ navigation }) => {
 
   // const { loading, error, data } = useQuery(FindAllOffices);
   // const { loading, error, data } =
-  const [offices, setOffices] = useState([]);
+  const [officesData, setOfficeData] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const { token } = useContext(AuthContext);
   const fetchData = async () => {
     try {
-        setLoading(true);
-        // Ensure that 'token' is defined before using it
-        const result = await findAllOffices(token);
-        setOffices(result.data);
-        setLoading(false);
+      setLoading(true);
+      findAllOffices(token).then((result) => {
+        setOfficeData(result.data);
+        console.log(officesData)
+        console.log(result.data)
+        console.log(token)
+      });
     } catch (error) {
-        console.error("Error fetching offices: ", error);
+      console.error("Error fetching offices: ", error);
         setError(error);
         setLoading(false);
         toaster.show({ message: "Gagal mendapatkan data kantor" });
     }
-};
 
+};
 
   useEffect(() => {
     fetchData();
   }, []);
 
-  // if (error) {
-  //   toaster.show({ message: 'Gagal mendapatkan data kantor' });
-  // }
+  if (error) {
+    toaster.show({ message: 'Gagal mendapatkan data kantor' });
+  }
 
   const generateOfficeList = () => {
     let res = [];
-    offices.map((value, _) => {
+    officesData.map((value, _) => {
       res.push({ label: value.name, value: value.id });
     });
     return res;
@@ -206,16 +210,22 @@ const AttendanceReservationScreen = ({ navigation }) => {
         >
           <Caption>Kantor Tujuan</Caption>
           <DropDown
-            placeholder={!offices.length ? "Loading..." : null}
+            placeholder={!officesData.length ? "Loading..." : null}
             mode={"outlined"}
             value={office}
             setValue={setOffice}
-            list={!offices.length ? [] : generateOfficeList()}
-            visible={showOfficeDropdown}
+            list={
+              officesData && officesData.length > 0
+                ? officesData.map((index) => ({
+                    label: index.name,
+                    value: index.id,
+                  }))
+                : []
+            }            visible={showOfficeDropdown}
             showDropDown={() => setShowOfficeDropdown(true)}
             onDismiss={() => setShowOfficeDropdown(false)}
             inputProps={{
-              right: loading ? null : <TextInput.Icon name={"menu-down"} />,
+              right: loading ? null : <TextInput.Icon name={"menu-down"} />
             }}
           />
           <Caption>Layanan Tujuan</Caption>

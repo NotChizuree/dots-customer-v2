@@ -1,7 +1,12 @@
-POST http://192.168.18.100:5000/graphql
+POST http://192.168.18.100:8000/api/login
 Content-Type: application/json
 
 {
-  "query": "query { findSavingsByCustomerID { id, customerID, createdAt, currentBalance, availableBalance, productType { id, name } } }",
-  "customerID": "1696056450019418234"
+  "username": "karom",
+  "password": "password123"
 }
+
+###
+GET http://192.168.18.100:8000/api/office
+Content-Type: application/json
+Authorization: Bearer 159|KtqzpiXeHpW9XikKxqZEAntPXJ5P7hprwXNxCcQS75a11507

@@ -10,7 +10,7 @@ const AuthReducer = (state, action) => {
         ...state,
         user: action.payload.user,
         token: action.payload.token,
-      };
+      }; 
     case 'SET_TENANT':
       return {
         ...state,
@@ -53,7 +53,7 @@ const AuthProvider = ({children}) => {
 
   const login = async (username, password) => {
     try {
-      const data = await RestClient.post('/auth/login', {
+      const data = await RestClient.post('/login', {
         username: username,
         password: password,
         clientType: 'CUSTOMER',

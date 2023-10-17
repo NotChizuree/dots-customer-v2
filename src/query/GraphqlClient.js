@@ -33,7 +33,7 @@ const createLogoutLink = (logout) => {
 };
 
 const AuthLink = setContext(async (_, {headers}) => {
-  const userStr = await  await SecureStore.getItemAsync('authInfo');
+  const userStr =  await SecureStore.getItemAsync('authInfo');
   const user = JSON.parse(userStr);
   return {
     headers: {

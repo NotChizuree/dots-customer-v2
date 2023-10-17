@@ -3,7 +3,7 @@ import axios from 'axios';
 
 const RestClient = axios.create({
   // baseURL: 'https://dots-api-test.dotsco.re',
-  baseURL: 'https://x8cgfzvm-8080.asse.devtunnels.ms',
+  baseURL: 'http://192.168.18.100:8000/api',            
   // baseURL: process.env.API_URL,
   timeout: 10000,
 });
