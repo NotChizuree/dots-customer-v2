@@ -36,26 +36,21 @@ const ChangePasswordScreen = ({ navigation }) => {
         "Kata sandi baru dan kata sandi konfirmasi tidak cocok"
       );
     } else {
-      console.log(1)
       try {
-        const res = await ChangePassword(token, {
+        const result = await ChangePassword(token, {
           old_password: currentPassword,
           new_password: newPassword,
         });
-        console.log(2)
-        console.log(token)
-
-        if (res.message == "Wrong password") {
+      
+        if (result.data.message === "Wrong password") {
           Alert.alert(
             "Kesalahan",
             "Kata sandi Lama salah"
           );
-          console.log(3)
         } else {
           navigation.goBack();
-          console.log(4)
-
         }
+      
       } catch (error) {
         console.log(error);
       }

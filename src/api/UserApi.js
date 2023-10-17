@@ -33,18 +33,19 @@ export const userRegister = async data => {
   }
 };
 
-export const ChangePassword = async data => {
+export const ChangePassword = async (token,data) => {
   try {
+    console.log(70)
     const result = await ApiManager("/change-password", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
         "Content-Type": "application/json"  
       },
-      
-      data: data
+      data: JSON.stringify(data)
     });
-
+    console.log(67);
+    console.log(result)
     return result;
   } catch (error) {
     console.log(error);
