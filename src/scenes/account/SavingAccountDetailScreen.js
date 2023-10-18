@@ -12,6 +12,7 @@ import LoadingOverlay from '../../components/common/LoadingOverlay';
 import { FlatGrid } from 'react-native-super-grid';
 import MenuButton from '../../components/common/MenuButton';
 import Color from '../../common/Color';
+import { findSavingById } from '../../api/SavingApi';
 
 
 const SavingAccountDetailScreen = ({ navigation, route }) => {
@@ -34,21 +35,39 @@ const SavingAccountDetailScreen = ({ navigation, route }) => {
   const toaster = useToast();
   const [isBalanceShown, setIsBalanceShown] = useState(false);
 
-  let { loading: savingLoading, error: savingError, data: savingData } = useQuery(FindSavingByID, {
-    variables: { id: savingID },
-  });
+  // let { loading: savingLoading, error: savingError, data: savingData } = useQuery(FindSavingByID, {
+  //   variables: { id: savingID },
+  // });
 
-  let { loading: transactionsLoading, error: transactionsError, data: transactionsData } = useQuery(FindSavingTransactionsBySavingID, {
-    variables: { id: savingID },
-  });
+  // let { loading: transactionsLoading, error: transactionsError, data: transactionsData } = useQuery(FindSavingTransactionsBySavingID, {
+  //   variables: { id: savingID },
+  // });
 
-  if (savingError) {
-    toaster.show({ message: 'Terjadi kesalahan dalam mengambil data tabungan' });
-  }
+  const [data,setData]=useState([])
+  const fetchData = async () => {
+    try {
+      const token = await AsyncStorage.getItem("AccessToken");
+      findSavingById(token, id).then((result) => {
+        const data = result.data;
+        // setData(result.data);
+        // setName(data.tenants.name);
+        // setAccountNumber(data.accountNumber);
+        // setAvailableBalance(data.currentBalance);
+        setLoading(false);
+      });
 
-  if (transactionsError) {
-    toaster.show({ message: 'Terjadi kesalahan dalam mengambil data transaksi' + transactionsError });
-  }
+    } catch (error) {
+      console.error("Error fetching data:", error);
+    }
+  };
+
+  // if (savingError) {
+  //   toaster.show({ message: 'Terjadi kesalahan dalam mengambil data tabungan' });
+  // }
+
+  // if (transactionsError) {
+  //   toaster.show({ message: 'Terjadi kesalahan dalam mengambil data transaksi' + transactionsError });
+  // }
 
   const renderAccountInfoPlaceholder = () => {
     return (
@@ -94,15 +113,15 @@ const SavingAccountDetailScreen = ({ navigation, route }) => {
     return (
       <>
         <Text adjustFontSizeToFit style={styles.bankName}>
-          {account.productType.name}
+          {data.productType.name}
         </Text>
         <Text style={styles.accountNumber}>
-          {account.id}
+          {data.id}
         </Text>
         <Text style={styles.balanceTitle}>Saldo Aktif</Text>
         <View style={{ flexDirection: 'row' }}>
           <Headline adjustFontSizeToFit style={styles.balance}>
-            Rp {isBalanceShown ? parseFloat(account.availableBalance).toLocaleString('en') : '******'}
+            Rp {isBalanceShown ? parseFloat(data.availableBalance).toLocaleString('en') : '******'}
           </Headline>
           <IconButton onPress={() => setIsBalanceShown(!isBalanceShown)} icon={isBalanceShown ? 'eye-off' : 'eye'} size={25} style={{ bottom: 5 }} />
         </View>
@@ -129,7 +148,7 @@ const SavingAccountDetailScreen = ({ navigation, route }) => {
       <ScrollView style={styles.screen}>
         <View style={styles.headingBlock}>
           <LinearGradient style={styles.headingGradient} colors={Color.primaryGradientColor} >
-            {savingLoading ? renderAccountInfoPlaceholder() : renderAccountInfo(savingData.findSavingByID)}
+            {/* {savingLoading ? renderAccountInfoPlaceholder() : renderAccountInfo(savingData.findSavingByID)} */}
             {/* {renderAccountInfoPlaceholder()} */}
           </LinearGradient>
         </View>

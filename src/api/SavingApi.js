@@ -26,30 +26,33 @@ export const createSavingDeposit = async (token,id,data) => {
       },
       data: data,
     });
-    console.log(result)
     return result;
   } catch (error) {
     console.log(error);
   }
 };
+export const findAllSaving = async (token)=>{
+  console.log(8);
 
-export const findAllSaving = async (token) => {
   try {
-    const result = ApiManager(``, {
+    console.log(7);
+
+    const result = ApiManager(`/saving`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
-
+    console.log(9);
     return result;
   } catch (error) {
     console.log(error);
   }
-};
+}
+
 export const findSavingById = async (token, id) => {
   try {
-    const result = ApiManager(``, {
+    const result = ApiManager(`/saving/${id}`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,

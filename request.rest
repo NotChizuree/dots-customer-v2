@@ -31,3 +31,9 @@ Authorization: Bearer 159|KtqzpiXeHpW9XikKxqZEAntPXJ5P7hprwXNxCcQS75a11507
     "old_password" : "password123",
     "new_password" : "12345678"
 }
+
+
+### ===
+GET http://192.168.18.100:8000/api/saving
+Content-Type: application/json
+Authorization: Bearer 197|Nu9Z9ufZPdndNeq9w0efd4s0eHsnYmVA2Fgj1sur1120dcf2
