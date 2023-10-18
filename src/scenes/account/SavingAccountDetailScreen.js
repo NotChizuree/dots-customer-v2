@@ -1,19 +1,21 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, FlatList, Text, Image } from 'react-native';
-import { Appbar, Headline, List, Divider, Caption, IconButton, Button, Subheading } from 'react-native-paper';
-import { ScrollView } from 'react-native-gesture-handler';
-import { LinearGradient } from 'expo-linear-gradient';
-import ShimmerPlaceholder from 'react-native-shimmer-placeholder';  // Import Shimmer Placeholder
-import { useQuery } from '@apollo/client';
-import { FindSavingByID } from '../../query/ProductQuery';
-import { useToast } from 'react-native-paper-toast';
-import { FindSavingTransactionsBySavingID } from '../../query/ProductTransactionQuery';
-import LoadingOverlay from '../../components/common/LoadingOverlay';
-import { FlatGrid } from 'react-native-super-grid';
-import MenuButton from '../../components/common/MenuButton';
-import Color from '../../common/Color';
-import { findSavingById } from '../../api/SavingApi';
-
+import React, { useContext, useEffect, useState } from "react";
+import { View, StyleSheet, FlatList, Text } from "react-native";
+import {
+  Appbar,
+  Headline,
+  List,
+  Divider,
+  Caption,
+  IconButton,
+} from "react-native-paper";
+import { LinearGradient} from "expo-linear-gradient";
+import ShimmerPlaceholder from "react-native-shimmer-placeholder";
+import { useToast } from "react-native-paper-toast";
+import { findSavingById, findSavingHistory } from "../../api/SavingApi";
+import { AuthContext } from "../../providers/AuthenticationProvider";
+import Color from "../../common/Color";
+import LoadingOverlay from "../../components/common/LoadingOverlay";
+import MenuButton from "../../components/common/MenuButton";
 
 const SavingAccountDetailScreen = ({ navigation, route }) => {
   const menus = [
@@ -31,245 +33,237 @@ const SavingAccountDetailScreen = ({ navigation, route }) => {
     // },
   ];
 
-  const { savingID } = route.params;
+
   const toaster = useToast();
   const [isBalanceShown, setIsBalanceShown] = useState(false);
+  const [data, setData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [Name, setName] = useState("");
+  const [accountNumber, setAccountNumber] = useState("");
+  const [availableBalance, setAvailableBalance] = useState("");
 
-  // let { loading: savingLoading, error: savingError, data: savingData } = useQuery(FindSavingByID, {
-  //   variables: { id: savingID },
-  // });
+  const { id } = route.params;
+  const { token } = useContext(AuthContext);
+  const [amout, setAmout] = useState([]);
 
-  // let { loading: transactionsLoading, error: transactionsError, data: transactionsData } = useQuery(FindSavingTransactionsBySavingID, {
-  //   variables: { id: savingID },
-  // });
-
-  const [data,setData]=useState([])
   const fetchData = async () => {
+    setLoading(true);
     try {
-      const token = await AsyncStorage.getItem("AccessToken");
-      findSavingById(token, id).then((result) => {
-        const data = result.data;
-        // setData(result.data);
-        // setName(data.tenants.name);
-        // setAccountNumber(data.accountNumber);
-        // setAvailableBalance(data.currentBalance);
-        setLoading(false);
-      });
-
+      findSavingById(token, id)
+        .then((result) => {
+          const data = result.data.data;
+          setName(data.productType.name);
+          setAccountNumber(data.id);
+          setAvailableBalance(data.currentBalance);
+          setLoading(false);
+        })
+        .catch((error) => {
+          console.error("Error API:", error);
+          setLoading(false);
+        });
     } catch (error) {
       console.error("Error fetching data:", error);
+      setLoading(false);
     }
   };
 
-  // if (savingError) {
-  //   toaster.show({ message: 'Terjadi kesalahan dalam mengambil data tabungan' });
-  // }
+  const fetchDataHistory = async () => {
+    try {
+      const result = await findSavingHistory(token, id);
+      setAmout(result.data.data);
+    } catch (error) {
+      console.error("Error API:", error);
+    }
+  };
 
-  // if (transactionsError) {
-  //   toaster.show({ message: 'Terjadi kesalahan dalam mengambil data transaksi' + transactionsError });
-  // }
+  useEffect(() => {
+    fetchData();
+    fetchDataHistory();
+  }, []);
 
   const renderAccountInfoPlaceholder = () => {
     return (
+      <ShimmerPlaceholder
+        style={{
+          width: "80%",
+          height: 25,
+          marginTop: 10,
+          marginBottom: 20,
+        }}
+        autoRun={true}
+      />
+    );
+  };
+
+  const renderAccountInfo = () => {
+    return (
       <>
-        <ShimmerPlaceholder
-          style={{
-            width: '80%',
-            height: 25,
-            marginTop: '7.5%',
-            marginBottom: '13%'}}
-          autoRun={true}
-        >
-        </ShimmerPlaceholder>
-        <ShimmerPlaceholder
-          style={{
-            width: '50%',
-            height: 20,
-            marginBottom: '13%'}}
-          autoRun={true}
-        >
-        </ShimmerPlaceholder>
-        <ShimmerPlaceholder
-          style={{
-            width: '30%',
-            height: 15,
-            marginBottom: '5%'}}
-          autoRun={true}
-        >
-        </ShimmerPlaceholder>
-        <ShimmerPlaceholder
-          style={{
-            width: '46%',
-            height: 20,
-            marginBottom: '7.5%'}}
-          autoRun={true}
-        >
-        </ShimmerPlaceholder>
+        <Text adjustFontSizeToFit style={styles.bankName}>
+          {Name}
+        </Text>
+        <Text style={styles.accountNumber}>{accountNumber}</Text>
+        <Text style={styles.balanceTitle}>Saldo Aktif</Text>
+        <View style={{ flexDirection: "row" }}>
+          <Headline adjustFontSizeToFit style={styles.balance}>
+            Rp{" "}
+            {isBalanceShown
+              ? parseFloat(availableBalance).toLocaleString("en")
+              : "******"}
+          </Headline>
+          <IconButton
+            onPress={() => setIsBalanceShown(!isBalanceShown)}
+            icon={isBalanceShown ? "eye-off" : "eye"}
+            size={25}
+            style={{ bottom: 5 }}
+          />
+        </View>
       </>
     );
   };
 
-  const renderAccountInfo = account => {
-    return (
-      <>
-        <Text adjustFontSizeToFit style={styles.bankName}>
-          {data.productType.name}
-        </Text>
-        <Text style={styles.accountNumber}>
-          {data.id}
-        </Text>
-        <Text style={styles.balanceTitle}>Saldo Aktif</Text>
-        <View style={{ flexDirection: 'row' }}>
-          <Headline adjustFontSizeToFit style={styles.balance}>
-            Rp {isBalanceShown ? parseFloat(data.availableBalance).toLocaleString('en') : '******'}
-          </Headline>
-          <IconButton onPress={() => setIsBalanceShown(!isBalanceShown)} icon={isBalanceShown ? 'eye-off' : 'eye'} size={25} style={{ bottom: 5 }} />
-        </View>
-      </>
-    );
-  }
-
-  const renderTransactionHistoryList = item => {
+  const renderTransactionHistoryList = (item) => {
     const readableCreatedAt = new Date(item.createdAt).toString();
     return (
-      <List.Item titleStyle={{ marginBottom: 7 }} style={{ backgroundColor: 'white' }}
+      <List.Item
+        titleStyle={{ marginBottom: 7 }}
+        style={{ backgroundColor: "white" }}
         title={<Text>{item.title}</Text>}
         description={<Text>{new Date(readableCreatedAt).toDateString()}</Text>}
-        right={() => <Caption style={[styles.transactionAmountCaption, item.transactionType == 'DEBIT' ? styles.debitTrxAmount : styles.creditTrxAmount]}>{item.transactionType == 'DEBIT' ? '-' : '+'}Rp {item.amount}</Caption>}
+        right={() => (
+          <Caption
+            style={[
+              styles.transactionAmountCaption,
+              item.transactionType === "DEBIT"
+                ? styles.debitTrxAmount
+                : styles.creditTrxAmount,
+            ]}
+          >
+            {item.transactionType === "DEBIT" ? "-" : "+"}Rp {item.amount}
+          </Caption>
+        )}
       />
     );
-  }
+  };
+
   return (
-    <>
+    <View style={styles.screen}>
       <Appbar.Header style={styles.appbarHeader}>
         <Appbar.BackAction onPress={() => navigation.goBack()} />
         <Appbar.Content title="Tabungan" />
       </Appbar.Header>
-      <ScrollView style={styles.screen}>
-        <View style={styles.headingBlock}>
-          <LinearGradient style={styles.headingGradient} colors={Color.primaryGradientColor} >
-            {/* {savingLoading ? renderAccountInfoPlaceholder() : renderAccountInfo(savingData.findSavingByID)} */}
-            {/* {renderAccountInfoPlaceholder()} */}
-          </LinearGradient>
-        </View>
+      <View style={styles.headingBlock}>
+        <LinearGradient
+          style={styles.headingGradient}
+          colors={Color.primaryGradientColor}
+        >
+          {loading ? renderAccountInfoPlaceholder() : renderAccountInfo()}
+        </LinearGradient>
+      </View>
 
-        <View style={styles.contentBlock}>
-          <FlatGrid
-            data={menus}
-            keyExtractor={(item, index) => index}
-            itemDimension={80}
-            renderItem={({ item }) => (
-              <View style={styles.buttonRow}>
-                <MenuButton
-                  style={styles.menuButton}
-                  iconName={item.icon}
-                  title={item.title}
-                  numColumns={2}
-                  onPress={item.onPress}
-                />
-              </View>
-            )}
+      <View style={styles.contentBlock}>
+        {menus.map((item) => (
+          <View style={styles.buttonRow} key={item.id}>
+            <MenuButton
+              style={styles.menuButton}
+              iconName={item.icon}
+              title={item.title}
+              numColumns={2}
+              onPress={item.onPress}
+            />
+          </View>
+        ))}
+        <Headline style={styles.detailHeading}>Sejarah Transaksi</Headline>
+        {loading ? (
+          <View style={{ marginTop: 15 }}>
+            <LoadingOverlay />
+          </View>
+        ) : (
+          <FlatList
+            style={styles.transactionList}
+            data={amout}
+            renderItem={({ item }) => renderTransactionHistoryList(item)}
+            ItemSeparatorComponent={() => <Divider />}
           />
-          <Headline style={styles.detailHeading}>
-            Sejarah Transaksi
-          </Headline>
-          {transactionsLoading ? <View style={{ marginTop: "15%" }}><LoadingOverlay /></View> :
-            <FlatList
-              style={styles.transactionList}
-              data={transactionsData.findSavingTransactionsBySavingID}
-              renderItem={({ item }) => renderTransactionHistoryList(item)}
-              ItemSeparatorComponent={() => <Divider />}
-            />}
-
-        </View>
-      </ScrollView>
-    </>
-  )
-}
+        )}
+      </View>
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   screen: {
-    backgroundColor: '#F5F8FB',
-    flexGrow: 1,
+    backgroundColor: "#F5F8FB",
+    flex: 1,
   },
   appbarHeader: {
     elevation: 0,
-    backgroundColor: '#F5F8FB',
+    backgroundColor: "#F5F8FB",
   },
   headingBlock: {
-    marginTop: '3%',
-    width: '95%',
-    borderRadius: 10,
-    alignSelf: 'center',
-  },
-  pointInfoGradient: {
-    borderRadius: 10,
-    paddingLeft: '7%',
-    paddingVertical: 10
+    marginTop: 15,
+    width: "95%",
+    alignSelf: "center",
   },
   headingGradient: {
     borderRadius: 10,
-    paddingLeft: '7%',
+    padding: 10,
   },
   balanceTitle: {
-    marginTop: '7%',
-    color: 'white',
+    marginTop: 10,
+    color: "white",
   },
   balance: {
-    marginBottom: '6%',
+    marginBottom: 10,
     fontSize: 21,
-    fontWeight: 'bold',
-    color: 'white',
+    fontWeight: "bold",
+    color: "white",
   },
   accountNumber: {
     fontSize: 18,
-    color: 'white',
-    fontFamily: 'Credit-Regular'
+    color: "white",
+    fontFamily: "Credit-Regular",
   },
   bankName: {
-    marginTop: '7.5%',
-    marginBottom: '13%',
+    marginTop: 10,
+    marginBottom: 20,
     fontSize: 18,
-    color: 'white',
+    color: "white",
   },
   contentBlock: {
-    paddingTop: '5%',
     flex: 1,
-    height: '100%',
+    height: "100%",
+    padding: 15,
   },
   detailHeading: {
-    marginTop: '1%',
-    marginLeft: '3%',
+    marginTop: 10,
     fontSize: 22,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   transactionList: {
-    marginTop: '3%',
+    marginTop: 10,
   },
   transactionAmountCaption: {
     fontSize: 16,
     top: 10,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginRight: 10,
   },
   debitTrxAmount: {
-    color: 'grey',
+    color: "grey",
   },
   creditTrxAmount: {
-    color: '#95D362',
+    color: "#95D362",
   },
   menuButton: {
     marginLeft: 12,
     marginRight: 10,
     marginBottom: 5,
-    backgroundColor: '#EAEBF8',
+    backgroundColor: "#EAEBF8",
   },
   buttonRow: {
     flex: 1,
-    flexDirection: 'column',
-    margin: 5
-  },
-  placeholderItem: {
+    flexDirection: "row",
+    margin: 5,
   },
 });
 

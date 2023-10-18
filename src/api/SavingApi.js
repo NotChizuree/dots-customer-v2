@@ -67,7 +67,7 @@ export const findSavingById = async (token, id) => {
 
 export const findSavingHistory = async (token, id) => {
   try {
-    const result = ApiManager(``,{
+    const result = ApiManager(`saving/history/${id}`,{
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,

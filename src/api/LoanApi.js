@@ -17,6 +17,22 @@ export const createLoan = async (token, data) => {
   }
 };
 
+export const findLoanById = async (token,id) => {
+  try {
+    const result = ApiManager(`loan/${id}`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    console.log(result);
+    return result;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+
 export const createLoanTopup = async (token, id,data) => {
   try {
     const result = ApiManager(``, {
@@ -54,7 +70,7 @@ export const createLoanRestructure = async (token,id,data) => {
 
 export const findAllLoan = async (token) => {
   try {
-    const result = ApiManager(``, {
+    const result = ApiManager(`/loan`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -67,20 +83,6 @@ export const findAllLoan = async (token) => {
   }
 };
 
-export const findLoanById = async (token, id) => {
-  try {
-    const result = ApiManager(``, {
-      method: "GET",
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    console.log(result);
-    return result;
-  } catch (error) {
-    console.log(error);
-  }
-};
 
 
 

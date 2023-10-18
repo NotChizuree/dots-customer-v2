@@ -19,7 +19,7 @@ export const createDeposit = async (token,data) => {
 
 export const findAllDeposit = async (token) => {
     try {
-        const result = ApiManager(``,{
+        const result = ApiManager(`/deposit`,{
             method: "GET",
             headers: {
                 Authorization: `Bearer ${token}`
@@ -33,13 +33,12 @@ export const findAllDeposit = async (token) => {
 }
 export const findDepositById = async (token,id) => {
     try {
-        const result = ApiManager(``,{
+        const result = ApiManager(`/deposit/${id}`,{    
             method: "GET",
             headers: {
                 Authorization: `Bearer ${token}`
             }
         })
-        console.log(result)
         return result
     } catch (error) {
         console.log(error)

@@ -15,13 +15,14 @@ import { SceneMap } from "react-native-tab-view";
 import { AuthContext } from "../../providers/AuthenticationProvider";
 import { TabView } from "react-native-tab-view";
 import { useQuery } from "@apollo/client";
-
 import { useToast } from "react-native-paper-toast";
 import LoadingOverlay from "../../components/common/LoadingOverlay";
 import { Colors } from "react-native/Libraries/NewAppScreen";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useEffect } from "react";
 import { findAllSaving } from "../../api/SavingApi";
+import { findAllLoan } from "../../api/LoanApi";
+import { findAllDeposit } from "../../api/DepositApi";
 
 const AccountsScreen = ({ navigation }) => {
   const { user } = useContext(AuthContext);
@@ -77,10 +78,10 @@ const AccountsScreen = ({ navigation }) => {
 
     const renderSavingItem = (data) => {
       return (
-        <View style={{backgroundColor:'blue'}}>
-          <List.Item
+        <View>
+        <List.Item
             onPress={() =>
-              navigation.navigate("SavingDetail", { savingID: data.id })
+              navigation.navigate("SavingDetail", { id: data.id })
             }
             titleStyle={{ marginBottom: 8 }}
             title={<Text>{data.productType.name}</Text>}
@@ -134,25 +135,59 @@ const AccountsScreen = ({ navigation }) => {
   const renderLoanAccountsList = () => {
 
 
-    const { loading, error, data } = useQuery(FindLoansByCustomerID);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [data, setData] = useState([]);
+
+    const { token } = useContext(AuthContext);
+
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        console.log(1);
+        const result = await findAllLoan(token);
+
+        console.log(2);
+        setLoading(false);
+        setData(result.data.data);
+        console.log(result.data.data);
+      } catch (error) {
+        setLoading(false);
+        setError(error);
+        console.log("Error fetching data:", error);
+      }
+    };
+
+    useEffect(() => {
+      fetchData();
+    }, []);
 
     if (loading) {
+      console.log("loading hehe");
       return <LoadingOverlay />;
     }
 
     if (error) {
+      console.log("error heheh");
       navigation.goBack();
       toaster.show({
-        message: "Terjadi error saat memuat data kredit: " + error.message,
+        message: "Terjadi error saat memuat data tabungan: " + error.message,
       });
     }
 
+    console.log(data);
+    console.log(loading);
+    console.log(error);
+    console.log(token);
+
     const renderLoanItem = (data) => {
-      return (
+     return (
         <View>
           <List.Item
             onPress={() =>
-              navigation.navigate("LoanDetail", { loanID: data.id })
+              navigation.navigate("LoanDetail", { id: data.id })
             }
             titleStyle={{ marginBottom: 8 }}
             title={<Text>{data.productType.name}</Text>}
@@ -160,8 +195,17 @@ const AccountsScreen = ({ navigation }) => {
             left={(props) => (
               <List.Icon
                 color={Colors.white}
-                style={{ backgroundColor: "#3629B7", borderRadius: 10 }}
-                icon="cash"
+                style={{
+                  backgroundColor: "#3629B7",
+                  backgroundColor: "#3629B7",
+                  borderRadius: 10,
+                  width: 50,
+                  height: 50,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  marginLeft:'3%'
+                }}
+                icon="wallet"
               />
             )}
           />
@@ -170,57 +214,99 @@ const AccountsScreen = ({ navigation }) => {
     };
 
     return (
-      <SafeAreaView style={{ flexGrow: 1 }}>
-        <FlatList
-          contentContainerStyle={{ height: "100%" }}
-          data={data?.findLoansByCustomerID}
-          ListFooterComponent={
-            <Button
-              onPress={() => navigation.navigate("CreateSavingAccount")}
-              title="Ajukan Kredit Baru"
-            />
-          }
-          ListFooterComponentStyle={{
-            position: "absolute",
-            width: "100%",
-            bottom: 0,
-          }}
-          ItemSeparatorComponent={() => <Divider />}
-          renderItem={({ item }) => renderLoanItem(item)}
-        />
-      </SafeAreaView>
+      <SafeAreaView>
+      <FlatList
+        contentContainerStyle={{ height: "100%" }}
+        data={data} 
+        ListFooterComponent={
+          <Button
+            onPress={() => navigation.navigate("CreateSavingAccount")}
+            title="Buat Tabungan Baru"
+          />
+        }
+        ListFooterComponentStyle={{
+          position: "absolute",
+          width: "100%",
+          bottom: 0,
+        }}
+        ItemSeparatorComponent={() => <Divider />}
+        renderItem={({ item }) => renderLoanItem(item)}
+      />
+    </SafeAreaView>
     );
   };
 
   const renderDepositAccountsList = () => {
-    const { loading, error, data } = useQuery(FindSavingsByCustomerID);
+
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    const [data, setData] = useState([]);
+
+    const { token } = useContext(AuthContext);
+
+    const fetchData = async () => {
+      try {
+        setLoading(true);
+        setError(null);
+
+        const result = await findAllDeposit(token);
+
+        setLoading(false);
+        setData(result.data.data);
+        console.log(result.data.data);
+      } catch (error) {
+        setLoading(false);
+        setError(error);
+        console.log("Error fetching data:", error);
+      }
+    };
+
+    useEffect(() => {
+      fetchData();
+    }, []);
 
     if (loading) {
+      console.log("loading hehe");
       return <LoadingOverlay />;
     }
 
     if (error) {
+      console.log("error heheh");
       navigation.goBack();
       toaster.show({
-        message: "Terjadi error saat memuat data deposito: " + error.message,
+        message: "Terjadi error saat memuat data tabungan: " + error.message,
       });
     }
+
+    console.log(data);
+    console.log(loading);
+    console.log(error);
+    console.log(token);
 
     const renderDepositItem = (data) => {
       return (
         <View>
           <List.Item
             onPress={() =>
-              navigation.navigate("DepositDetail", { savingID: data.id })
+              navigation.navigate("DepositDetail", { id: data.id })
             }
             titleStyle={{ marginBottom: 8 }}
-            title={<Text>DEPOSITO 6 BLN</Text>}
+            title={<Text>{data.productType.name}</Text>}
             description={<Text>{data.id}</Text>}
             left={(props) => (
               <List.Icon
                 color={Colors.white}
-                style={{ backgroundColor: "#3629B7", borderRadius: 10 }}
-                icon="cash"
+                style={{
+                  backgroundColor: "#3629B7",
+                  backgroundColor: "#3629B7",
+                  borderRadius: 10,
+                  width: 50,
+                  height: 50,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  marginLeft:'3%'
+                }}
+                icon="wallet"
               />
             )}
           />
@@ -228,6 +314,29 @@ const AccountsScreen = ({ navigation }) => {
       );
     };
 
+
+    return (
+      <SafeAreaView>
+      <FlatList
+        contentContainerStyle={{ height: "100%" }}
+        data={data} 
+        ListFooterComponent={
+          <Button
+            onPress={() => navigation.navigate("CreateSavingAccount")}
+            title="Buat Tabungan Baru"
+          />
+        }
+        ListFooterComponentStyle={{
+          position: "absolute",
+          width: "100%",
+          bottom: 0,
+        }}
+        ItemSeparatorComponent={() => <Divider />}
+        renderItem={({ item }) => renderDepositItem(item)}
+      />
+    </SafeAreaView>
+    );
+    
     return (
       <ScrollView>
         <FlatList
@@ -322,8 +431,8 @@ const styles = StyleSheet.create({
     paddingLeft: "5%",
     paddingTop: "3%",
     paddingBottom: "3%",
-    // backgroundColor: "#F5F8FB",
-    backgroundColor: "blue",
+    backgroundColor: "#F5F8FB",
+    // backgroundColor: "blue",
   },
 });
 

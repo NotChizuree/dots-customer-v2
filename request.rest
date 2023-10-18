@@ -2,7 +2,7 @@ POST http://192.168.18.100:8000/api/login
 Content-Type: application/json
 
 {
-  "username": "karom",
+  "username": "bpr_kn_dev_0002798",
   "password": "password123"
 }
 
@@ -36,4 +36,12 @@ Authorization: Bearer 159|KtqzpiXeHpW9XikKxqZEAntPXJ5P7hprwXNxCcQS75a11507
 ### ===
 GET http://192.168.18.100:8000/api/saving
 Content-Type: application/json
-Authorization: Bearer 197|Nu9Z9ufZPdndNeq9w0efd4s0eHsnYmVA2Fgj1sur1120dcf2
+Authorization: Bearer 203|n2D9uDIS3Z4cPQDRq8w5lxB7jgRPIlBQxVrgxqeC73bc42c4
+### ===
+GET http://192.168.18.100:8000/api/loan/00104010002479
+Content-Type: application/json
+Authorization: Bearer 203|n2D9uDIS3Z4cPQDRq8w5lxB7jgRPIlBQxVrgxqeC73bc42c4
+### ===
+GET http://192.168.18.100:8000/api/saving/history/00102070000180
+Content-Type: application/json
+Authorization: Bearer 203|n2D9uDIS3Z4cPQDRq8w5lxB7jgRPIlBQxVrgxqeC73bc42c4

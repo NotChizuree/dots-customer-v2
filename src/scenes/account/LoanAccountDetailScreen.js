@@ -1,283 +1,217 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, FlatList, Text, Image } from 'react-native';
-import { Appbar, Headline, List, Caption, IconButton, Divider } from 'react-native-paper';
-import { LinearGradient } from 'expo-linear-gradient';
-import { ScrollView } from 'react-native-gesture-handler';
-import ShimmerPlaceholder from 'react-native-shimmer-placeholder';  // Import Shimmer Placeholder
-import { useQuery } from '@apollo/client';
-import { FindLoanByID, FindLoanRepaymentScheduleByLoanID } from '../../query/ProductQuery';
-import { useToast } from 'react-native-paper-toast';
-import { FlatGrid } from 'react-native-super-grid';
-import MenuButton from '../../components/common/MenuButton';
-import Color from '../../common/Color';
-
+import React, { useContext, useEffect, useState } from "react";
+import { View, StyleSheet, Text } from "react-native";
+import { Appbar, Headline, IconButton } from "react-native-paper";
+import { LinearGradient } from "expo-linear-gradient";
+import { ScrollView } from "react-native-gesture-handler";
+import ShimmerPlaceholder from "react-native-shimmer-placeholder";
+import MenuButton from "../../components/common/MenuButton";
+import { AuthContext } from "../../providers/AuthenticationProvider";
+import { findLoanById } from "../../api/LoanApi";
 
 const LoanAccountDetailScreen = ({ navigation, route }) => {
-  const { loanID } = route.params;
-  const toaster = useToast();
   const [isBalanceShown, setIsBalanceShown] = useState(false);
+  const [loanLoading, setLoanLoading] = useState(true);
 
-  let { loading: loanLoading, error: loanError, data: loanData } = useQuery(FindLoanByID, {
-    variables: { id: loanID },
-  });
+  const { token } = useContext(AuthContext);
+  const { id } = route.params;
+  console.log(id);
+  const [data, setData] = useState({});
+  const [skeletonLoading, setSkeletonLoading] = useState(true);
 
-  let { loading: repaymentLoading, error: repaymentError, data: repaymentData } = useQuery(FindLoanRepaymentScheduleByLoanID, {
-    variables: { id: loanID },
-  });
+  const fetchData = async () => {
+    try {
+      const result = await findLoanById(token, id);
+      setData(result.data.data);
+      setSkeletonLoading(false);
+      setLoanLoading(false);
+    } catch (error) {
+      console.error("Error API:", error);
+      setSkeletonLoading(false);
+      setLoanLoading(false);
+    }
+  };
 
-  if (loanError) {
-    toaster.show({ message: 'Terjadi kesalahan dalam mengambil data kredit' });
-  }
-
-  if (repaymentError) {
-    toaster.show({ message: 'Terjadi kesalahan dalam mengambil data tagihan' });
-  }
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   const menus = [
     {
       id: 1,
-      title: 'Ajukan Restrukturisasi',
-      icon: 'clipboard-outline',
-      onPress: () => navigation.navigate('RestructureRequest'),
+      title: "Restructure",
+      icon: "clipboard-outline",
+      onPress: () => navigation.navigate("RestructureRequest"),
     },
     {
       id: 2,
-      title: 'Ajukan Top-up Kredit',
-      icon: 'journal-outline',
-      onPress: () => navigation.navigate('LoanTopupRequest'),
+      title: "Top-up Loan",
+      icon: "journal-outline",
+      onPress: () => navigation.navigate("LoanTopupRequest"),
     },
     {
       id: 3,
-      title: 'Bayar Tagihan',
-      icon: 'cash-outline',
-      onPress: () => navigation.navigate(''),
+      title: "Pay Bill",
+      icon: "cash-outline",
+      onPress: () => navigation.navigate(""),
     },
     {
       id: 4,
-      title: 'Lihat Jadwal Tagihan',
-      icon: 'list-outline',
-      onPress: () => navigation.navigate('LoanRepaymentSchedule', { loan: loanData ? loanData?.findLoanByID : null }),
+      title: "View Repayment Schedule",
+      icon: "list-outline",
+      onPress: () =>
+        navigation.navigate("LoanRepaymentSchedule", {
+          loan: data, 
+        }),
     },
   ];
 
-  const renderAccountInfoPlaceholder = () => {
+  
+
+  const renderSkeletonLoader = () => {
     return (
-      <>
+      <View>
         <ShimmerPlaceholder
           style={{
-            width: '80%',
+            width: "80%",
             height: 25,
-            marginTop: '7.5%',
-            marginBottom: '13%'}}
+            marginTop: 10,
+            marginBottom: 20,
+          }}
           autoRun={true}
-        >
-        </ShimmerPlaceholder>
+        />
         <ShimmerPlaceholder
           style={{
-            width: '50%',
+            width: "50%",
             height: 20,
-            marginBottom: '13%'}}
+            marginBottom: 20,
+          }}
           autoRun={true}
-        >
-        </ShimmerPlaceholder>
+        />
         <ShimmerPlaceholder
           style={{
-            width: '30%',
+            width: "30%",
             height: 15,
-            marginBottom: '5%'}}
+            marginBottom: 10,
+          }}
           autoRun={true}
-        >
-        </ShimmerPlaceholder>
+        />
         <ShimmerPlaceholder
           style={{
-            width: '46%',
+            width: "46%",
             height: 20,
-            marginBottom: '7.5%'}}
+            marginBottom: 20,
+          }}
           autoRun={true}
-        >
-        </ShimmerPlaceholder>
-      </>
+        />
+      </View>
     );
   };
+  console.log(data)
 
-  const renderRepaymentSchedulePlaceholder = () => {
+  const renderAccountInfo = () => {
     return (
-      <>
-        {/* <SkeletonPlaceholder>
-          <View style={{ marginLeft: 25 }}>
-            <View style={{ width: '30%', height: 15, marginTop: '7.5%', marginBottom: '8%' }} />
-            <View style={{ width: '70%', height: 15, marginBottom: '4%' }} />
-          </View>
-        </SkeletonPlaceholder> */}
-      </>
-    );
-  };
-
-  const renderAccountInfo = account => {
-    return (
-      <>
-        <Text adjustFontSizeToFit style={styles.bankName}>
-          {account.productType.name}
-        </Text>
+      <View>
+        <Text style={styles.bankName}>{data.productType.name || "gada nama"}</Text>
         <Text style={styles.accountNumber}>
-          {account.id}
+          {data.id ? data.id : "Account Number Not Available"}
         </Text>
-        <Text style={styles.balanceTitle}>Sisa Terutang</Text>
-        <View style={{ flexDirection: 'row' }}>
-          <Headline adjustFontSizeToFit style={styles.balance}>
-            Rp {isBalanceShown ? parseFloat(account.outstandingBalance).toLocaleString('en') : '******'}
+        <Text style={styles.balanceTitle}>Active Balance</Text>
+        <View style={{ flexDirection: "row" }}>
+          <Headline style={styles.balance}>
+            {isBalanceShown
+              ? data.outstandingBalance
+                ? `Rp ${parseFloat(data.outstandingBalance).toLocaleString("en-US")}`
+                : "Balance Not Available"
+              : "******"}
           </Headline>
-          <IconButton onPress={() => setIsBalanceShown(!isBalanceShown)} icon={isBalanceShown ? 'eye-off' : 'eye'} size={25} style={{ bottom: 5 }} />
+          <IconButton
+            onPress={() => setIsBalanceShown(!isBalanceShown)}
+            icon={isBalanceShown ? "eye-off" : "eye"}
+            size={25}
+          />
         </View>
-      </>
+      </View>
     );
-  }
-
-  const renderUpcomingRepayment = data => {
-    let totalRepayment = 0;
-    for (let i = 0; i < data.length; i++) {
-      totalRepayment += Number(data[i].amount);
-    }
-
-    return (
-      <List.Section>
-        <List.Accordion title={<Headline style={styles.detailHeading}>Total Tagihan s.d. Bulan Ini</Headline>} description={<Text style={{ fontSize: 17 }}>Rp {totalRepayment.toLocaleString('en')}</Text>}>
-          <View>
-            {data.map((val, _) => {
-              return (
-                <View>
-                  <Text style={{ marginTop: 10, marginLeft: 15, fontSize: 15 }}>Tagihan ke - {val.term}</Text>
-                  <List.Item title={<Text>Pokok</Text>} description={<Text>Rp {val.principalAmount}</Text>} />
-                  <List.Item title={<Text>Bunga</Text>} description={<Text>Rp {val.interestAmount}</Text>} />
-                  <List.Item title={<Text>Denda</Text>} description={<Text>Rp {val.penaltyAmount}</Text>} />
-                  <Divider />
-                </View>
-              )
-            })}
-          </View>
-        </List.Accordion>
-      </List.Section>
-    );
-  }
+  };
 
   return (
-    <>
+    <View style={{ flex: 1, flexDirection: "column" }}>
       <Appbar.Header style={styles.appbarHeader}>
         <Appbar.BackAction onPress={() => navigation.goBack()} />
-        <Appbar.Content title="Kredit" />
+        <Appbar.Content title="Loan Account" />
       </Appbar.Header>
       <ScrollView style={styles.screen}>
         <View style={styles.headingBlock}>
-          <LinearGradient style={styles.headingGradient} colors={Color.primaryGradientColor} >
-            {loanLoading ? renderAccountInfoPlaceholder() : renderAccountInfo(loanData.findLoanByID)}
+          <LinearGradient
+            style={styles.headingGradient}
+            colors={["#1E90FF", "#0073E6"]}
+          >
+            {skeletonLoading ? renderSkeletonLoader() : renderAccountInfo()}
           </LinearGradient>
         </View>
-        <FlatGrid
-          data={menus}
-          keyExtractor={(item, index) => index}
-          itemDimension={80}
-          renderItem={({ item }) => (
-            <View style={styles.buttonRow}>
+        <View style={styles.menuButtonsContainer}>
+          {menus.map((item) => (
+            <View style={styles.menuButton} key={item.id}>
               <MenuButton
-                style={styles.menuButton}
                 iconName={item.icon}
                 title={item.title}
-                numColumns={2}
                 onPress={item.onPress}
               />
             </View>
-          )}
-        />
-        <View style={styles.contentBlock}>
-          {repaymentLoading ? renderRepaymentSchedulePlaceholder() : renderUpcomingRepayment(repaymentData.findLoanRepaymentScheduleByLoanID)}
+          ))}
         </View>
       </ScrollView>
-    </>
-  )
-}
+    </View>
+  );
+};
 
 const styles = StyleSheet.create({
   screen: {
-    backgroundColor: '#F5F8FB',
-    flexGrow: 1,
+    backgroundColor: "#F5F8FB",
+    flex: 1,
   },
   appbarHeader: {
     elevation: 0,
-    backgroundColor: '#F5F8FB',
+    backgroundColor: "#F5F8FB",
   },
   headingBlock: {
-    marginTop: '3%',
-    width: '95%',
-    borderRadius: 10,
-    alignSelf: 'center',
+    marginTop: 10,
+    width: "95%",
+    alignSelf: "center",
   },
   headingGradient: {
     borderRadius: 10,
-    paddingLeft: '7%',
+    padding: 10,
   },
   balanceTitle: {
-    marginTop: '7%',
-    color: 'white',
+    marginTop: 10,
+    color: "white",
   },
   balance: {
-    marginBottom: '6%',
+    marginBottom: 10,
     fontSize: 21,
-    fontWeight: 'bold',
-    color: 'white',
+    fontWeight: "bold",
+    color: "white",
   },
   accountNumber: {
     fontSize: 18,
-    color: 'white',
-    fontFamily: 'Credit-Regular'
+    color: "white",
+    fontFamily: "Credit-Regular",
   },
   bankName: {
-    marginTop: '7.5%',
-    marginBottom: '13%',
-    fontSize: 18,
-    color: 'white',
-  },
-  contentBlock: {
-    paddingTop: '2%',
-    flex: 1,
-    width: '95%',
-    backgroundColor: 'white',
-    marginTop: 20,
-    alignSelf: 'center',
-    borderRadius: 17,
-    height: '100%',
+    marginTop: 10,
     marginBottom: 20,
+    fontSize: 18,
+    color: "white",
   },
-  detailHeading: {
-    marginTop: 5,
-    marginLeft: '3%',
-    fontSize: 22,
-    fontWeight: 'bold',
-  },
-  transactionList: {
-    marginTop: '3%',
-  },
-  transactionAmountCaption: {
-    fontSize: 16,
-    top: 10,
-    fontWeight: 'bold',
-    marginRight: 10,
-  },
-  debitTrxAmount: {
-    color: 'grey',
-  },
-  creditTrxAmount: {
-    color: '#95D362',
+  menuButtonsContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    padding: 10,
   },
   menuButton: {
-    marginLeft: 12,
-    marginRight: 10,
-    marginBottom: 5,
-    backgroundColor: '#EAEBF8',
-  },
-  buttonRow: {
     flex: 1,
-    flexDirection: 'column',
-    margin: 4
+    margin: 5,
   },
 });
 
