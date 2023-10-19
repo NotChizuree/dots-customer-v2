@@ -20,6 +20,7 @@ import LoadingOverlay from "../../components/common/LoadingOverlay";
 import { Colors } from "react-native/Libraries/NewAppScreen";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { useEffect } from "react";
+import Color from "../../common/Color";
 import { findAllSaving } from "../../api/SavingApi";
 import { findAllLoan } from "../../api/LoanApi";
 import { findAllDeposit } from "../../api/DepositApi";
@@ -79,10 +80,8 @@ const AccountsScreen = ({ navigation }) => {
     const renderSavingItem = (data) => {
       return (
         <View>
-        <List.Item
-            onPress={() =>
-              navigation.navigate("SavingDetail", { id: data.id })
-            }
+          <List.Item
+            onPress={() => navigation.navigate("SavingDetail", { id: data.id })}
             titleStyle={{ marginBottom: 8 }}
             title={<Text>{data.productType.name}</Text>}
             description={<Text>{data.id}</Text>}
@@ -90,14 +89,13 @@ const AccountsScreen = ({ navigation }) => {
               <List.Icon
                 color={Colors.white}
                 style={{
-                  backgroundColor: "#3629B7",
-                  backgroundColor: "#3629B7",
+                  backgroundColor: Color.primaryBackgroundColor.backgroundColor,
                   borderRadius: 10,
                   width: 50,
                   height: 50,
                   justifyContent: "center",
                   alignItems: "center",
-                  marginLeft:'3%'
+                  marginLeft: "3%",
                 }}
                 icon="wallet"
               />
@@ -110,24 +108,23 @@ const AccountsScreen = ({ navigation }) => {
     const { height } = Dimensions.get("window");
 
     return (
-      <SafeAreaView>
-        <FlatList
-          contentContainerStyle={{ height: "100%" }}
-          data={data} // Gunakan langsung data, karena ini adalah array objek
-          ListFooterComponent={
-            <Button
-              onPress={() => navigation.navigate("CreateSavingAccount")}
-              title="Buat Tabungan Baru"
-            />
-          }
-          ListFooterComponentStyle={{
-            position: "absolute",
-            width: "100%",
-            bottom: 0,
-          }}
-          ItemSeparatorComponent={() => <Divider />}
-          renderItem={({ item }) => renderSavingItem(item)}
-        />
+      <SafeAreaView style={{ flex: 1 }}>
+        <View style={styles.listItem}>
+          <FlatList
+            data={data}
+            ItemSeparatorComponent={() => <Divider />}
+            renderItem={({ item }) => renderSavingItem(item)}
+          />
+        </View>
+
+        <View style={styles.createButtonContainer}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("CreateSavingAccount")}
+            style={{ backgroundColor: Color.primaryBackgroundColor.backgroundColor, padding: 10, borderRadius: 5 }}
+          >
+            <Text style={{ color: "white", textAlign: "center", fontSize: 18}}>Buat Tabungan Baru</Text>
+          </TouchableOpacity>
+        </View>
       </SafeAreaView>
     );
   };
@@ -183,12 +180,10 @@ const AccountsScreen = ({ navigation }) => {
     console.log(token);
 
     const renderLoanItem = (data) => {
-     return (
+      return (
         <View>
           <List.Item
-            onPress={() =>
-              navigation.navigate("LoanDetail", { id: data.id })
-            }
+            onPress={() => navigation.navigate("LoanDetail", { id: data.id })}
             titleStyle={{ marginBottom: 8 }}
             title={<Text>{data.productType.name}</Text>}
             description={<Text>{data.id}</Text>}
@@ -196,14 +191,13 @@ const AccountsScreen = ({ navigation }) => {
               <List.Icon
                 color={Colors.white}
                 style={{
-                  backgroundColor: "#3629B7",
-                  backgroundColor: "#3629B7",
+                  backgroundColor: Color.primaryBackgroundColor.backgroundColor,
                   borderRadius: 10,
                   width: 50,
                   height: 50,
                   justifyContent: "center",
                   alignItems: "center",
-                  marginLeft:'3%'
+                  marginLeft: "3%",
                 }}
                 icon="wallet"
               />
@@ -214,25 +208,24 @@ const AccountsScreen = ({ navigation }) => {
     };
 
     return (
-      <SafeAreaView>
-      <FlatList
-        contentContainerStyle={{ height: "100%" }}
-        data={data} 
-        ListFooterComponent={
-          <Button
-            onPress={() => navigation.navigate("CreateSavingAccount")}
-            title="Buat Tabungan Baru"
-          />
-        }
-        ListFooterComponentStyle={{
-          position: "absolute",
-          width: "100%",
-          bottom: 0,
-        }}
-        ItemSeparatorComponent={() => <Divider />}
-        renderItem={({ item }) => renderLoanItem(item)}
-      />
-    </SafeAreaView>
+      <SafeAreaView style={{ flex: 1 }}>
+        <View style={styles.listItem}>
+        <FlatList
+          data={data}
+          ItemSeparatorComponent={() => <Divider />}
+          renderItem={({ item }) => renderLoanItem(item)}
+        />
+        </View>
+
+        <View style={styles.createButtonContainer}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("CreateLoanAccount")}
+            style={{ backgroundColor: Color.primaryBackgroundColor.backgroundColor, padding: 10, borderRadius: 5 }}
+          >
+            <Text style={{ color: "white", textAlign: "center", fontSize: 18}}>Buat Kredit Baru</Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
     );
   };
 
@@ -285,66 +278,50 @@ const AccountsScreen = ({ navigation }) => {
 
     const renderDepositItem = (data) => {
       return (
-        <View>
-          <List.Item
-            onPress={() =>
-              navigation.navigate("DepositDetail", { id: data.id })
-            }
-            titleStyle={{ marginBottom: 8 }}
-            title={<Text>{data.productType.name}</Text>}
-            description={<Text>{data.id}</Text>}
-            left={(props) => (
-              <List.Icon
-                color={Colors.white}
-                style={{
-                  backgroundColor: "#3629B7",
-                  backgroundColor: "#3629B7",
-                  borderRadius: 10,
-                  width: 50,
-                  height: 50,
-                  justifyContent: "center",
-                  alignItems: "center",
-                  marginLeft:'3%'
-                }}
-                icon="wallet"
-              />
-            )}
-          />
-        </View>
+        <List.Item
+          onPress={() => navigation.navigate("DepositDetail", { id: data.id })}
+          titleStyle={{ marginBottom: 8 }}
+          title={<Text>{data.productType.name}</Text>}
+          description={<Text>{data.id}</Text>}
+          left={(props) => (
+            <List.Icon
+              color={Colors.white}
+              style={{
+                backgroundColor: Color.primaryBackgroundColor.backgroundColor,
+                borderRadius: 10,
+                width: 50,
+                height: 50,
+                justifyContent: "center",
+                alignItems: "center",
+                marginLeft: "3%",
+              }}
+              icon="wallet"
+            />
+          )}
+        />
       );
     };
 
-
     return (
-      <SafeAreaView>
-      <FlatList
-        contentContainerStyle={{ height: "100%" }}
-        data={data} 
-        ListFooterComponent={
-          <Button
-            onPress={() => navigation.navigate("CreateSavingAccount")}
-            title="Buat Tabungan Baru"
-          />
-        }
-        ListFooterComponentStyle={{
-          position: "absolute",
-          width: "100%",
-          bottom: 0,
-        }}
-        ItemSeparatorComponent={() => <Divider />}
-        renderItem={({ item }) => renderDepositItem(item)}
-      />
-    </SafeAreaView>
-    );
-    
-    return (
-      <ScrollView>
+      <SafeAreaView style={{ flex: 1 }}>
+       <View style={styles.listItem}>
         <FlatList
-          data={data.findSavingsByCustomerID}
+          data={data}
           ItemSeparatorComponent={() => <Divider />}
           renderItem={({ item }) => renderDepositItem(item)}
         />
-      </ScrollView>
+        </View>
+
+        {/* Tombol "Buat Deposit Baru" di bawah tab bar */}
+        <View style={styles.createButtonContainer}>
+          <TouchableOpacity
+            onPress={() => navigation.navigate("CreateDepositAccount")}
+            style={{ backgroundColor: Color.primaryBackgroundColor.backgroundColor, padding: 10, borderRadius: 5 }}
+          >
+            <Text style={{ color: "white", textAlign: "center", fontSize: 18}}>Buat Deposit Baru</Text>
+          </TouchableOpacity>
+        </View>
+      </SafeAreaView>
     );
   };
 
@@ -359,14 +336,14 @@ const AccountsScreen = ({ navigation }) => {
             >
               {index === i && (
                 <Chip
-                  style={{ marginRight: 10 }}
-                  textStyle={{ fontWeight: "bold", fontSize: 16 }}
+                  style={{textAlign: "center" }}
+                  textStyle={{ fontWeight: "bold", fontSize: 17 }}
                 >
                   <Text>{route.title}</Text>
                 </Chip>
               )}
               {index !== i && (
-                <Text style={{ marginTop: 6, marginRight: 10, fontSize: 16 }}>
+                <Text style={{ marginTop: 6, fontSize: 18 }}>
                   {route.title}
                 </Text>
               )}
@@ -394,7 +371,7 @@ const AccountsScreen = ({ navigation }) => {
 
   return (
     <View style={styles.screen}>
-      <View style={{ backgroundColor: "#0E47A0" }}>
+      <View style={Color.primaryBackgroundColor}>
         <Headline style={styles.heading}>Akun Saya</Headline>
       </View>
 
@@ -413,26 +390,35 @@ const AccountsScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   screen: {
     backgroundColor: "white",
-    flex: 1,
     height: "100%",
   },
   heading: {
-    marginTop: "7%",
-    marginBottom: "4%",
+    marginTop: "15%",
     fontSize: 30,
-    fontWeight: "800",
     marginLeft: "5%",
     paddingBottom: "2%",
     color: "white",
   },
   tabBar: {
     flexDirection: "row",
-    marginBottom: "3%",
-    paddingLeft: "5%",
+    justifyContent: "space-between",
+    marginBottom: "-10%",
+    paddingLeft: "8%",
+    paddingRight: "8%",
     paddingTop: "3%",
     paddingBottom: "3%",
-    backgroundColor: "#F5F8FB",
-    // backgroundColor: "blue",
+    // backgroundColor: "#F5F8FB",
+  },
+  listItem: {
+    marginTop: 50,
+  },
+  createButtonContainer: {
+    position: "absolute",
+    top: 35,
+    width: "100%",
+    backgroundColor: "White",
+    padding: 10,
+  
   },
 });
 

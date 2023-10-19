@@ -11,10 +11,12 @@ import RestructureRequestScreen from '../scenes/account/RestructureRequestScreen
 import LoanTopupRequestScreen from '../scenes/account/LoanTopupRequestScreen';
 import LoanRepaymentScheduleScreen from '../scenes/account/LoanRepaymentScheduleScreen';
 import DepositAccountDetailScreen from '../scenes/account/DepositAccountDetailScreen';
-import CreateSavingAccountScreen from '../scenes/account/CreateSavingAccountScreen';
 import SavingDepositRequestScreen from '../scenes/account/SavingDepositRequestScreen';
-import IdentityPhotoScreen from '../scenes/authentication/IdentityPhotoScreen';
+// import IdentityPhotoScreen from '../scenes/authentication/IdentityPhotoScreen';
 import ChangePasswordScreen from '../scenes/authentication/ChangePasswordScreen';
+import CreateSavingAccount from '../scenes/CreateAccount/CreateSavingAccount';
+import CreateDepositAccount from '../scenes/CreateAccount/CreateDepositAccount';
+import CreateLoanAccount from '../scenes/CreateAccount/CreateLoanAccount';
 
 const AppNavigation = () => {
   const AppNavigator = createStackNavigator();
@@ -68,11 +70,6 @@ const AppNavigation = () => {
           options={{headerShown: false}}
         />
         <AppNavigator.Screen
-          name="CreateSavingAccount"
-          component={CreateSavingAccountScreen}
-          options={{headerShown: false}}
-        />
-        <AppNavigator.Screen
           name="SavingDepositRequest"
           component={SavingDepositRequestScreen}
           options={{headerShown: false}}
@@ -80,6 +77,21 @@ const AppNavigation = () => {
         <AppNavigator.Screen
           name="ChangePassword"
           component={ChangePasswordScreen}
+          options={{headerShown: false}}
+        />
+        <AppNavigator.Screen
+          name="CreateSavingAccount"
+          component={CreateSavingAccount}
+          options={{headerShown: false}}
+        />
+        <AppNavigator.Screen
+          name="CreateLoanAccount"
+          component={CreateLoanAccount}
+          options={{headerShown: false}}
+        />
+        <AppNavigator.Screen
+          name="CreateDepositAccount"
+          component={CreateDepositAccount}
           options={{headerShown: false}}
         />
       </AppNavigator.Navigator>

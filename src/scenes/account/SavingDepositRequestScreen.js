@@ -31,11 +31,12 @@ const SavingDepositRequestScreen = ({ navigation }) => {
   const handleCreateSavingAccount = () => {
     Alert.alert(
       'Terima kasih',
-      'Pengajuan setoran anda telah berhasil dilakukan. Pihak Bank akan melakukan verifikasi atas transaksi anda. Apabila transaksi telah diverifikasi, anda akan menerima notifikasi mengenai status transaksi anda'
+      'Pengajuan setoran anda telah berhasil dilakuka. Pihak Bank akan melakukan verifikasi atas transaksi anda. Apabila transaksi telah diverifikasi, anda akan menerima notifikasi mengenai status transaksi anda',
+    
     );
     navigation.goBack();
   };
-
+     
   return (
     <>
       <Appbar.Header style={styles.appbarHeader}>

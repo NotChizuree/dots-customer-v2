@@ -2,7 +2,7 @@ import { ApiManager } from "./ApiManager";
 
 export const createSaving = async (token, data) => {
   try {
-    const result = ApiManager(``, {
+    const result = ApiManager(`/saving`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -64,6 +64,20 @@ export const findSavingById = async (token, id) => {
     console.log(error);
   }
 };
+export const findSavingProdukType= async (token) => {
+  try {
+    const result = ApiManager(`/saving/product-type`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    console.log(result);
+    return result;
+  } catch (error) {
+    console.log(error);
+  }
+};
 
 export const findSavingHistory = async (token, id) => {
   try {
@@ -78,3 +92,6 @@ export const findSavingHistory = async (token, id) => {
     console.log(error);
   }
 };
+
+
+

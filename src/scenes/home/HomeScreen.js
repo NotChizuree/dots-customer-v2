@@ -1,4 +1,4 @@
-import React, {useContext, useState} from 'react';
+import React, {useContext, useEffect, useState} from 'react';
 import {StyleSheet, ScrollView, View, Image, Dimensions, Text, Alert} from 'react-native';
 import {Headline, Appbar, Subheading} from 'react-native-paper';
 import MenuButton from '../../components/common/MenuButton';
@@ -6,6 +6,7 @@ import {AuthContext} from '../../providers/AuthenticationProvider';
 import {FlatGrid} from 'react-native-super-grid';
 import Carousel, {Pagination} from 'react-native-snap-carousel';
 import Color from '../../common/Color';
+import { findAllImage } from '../../api/carosel';
 
 const HomeScreen = ({navigation}) => {
   const {user, currentTenant} = useContext(AuthContext);
@@ -72,11 +73,31 @@ const HomeScreen = ({navigation}) => {
     // },
   ];
 
-  const carouselEntries = [
-    {'title': "Test 1", 'imageUrl': 'https://kreasinusantara-dots-test.s3.ap-southeast-1.amazonaws.com/dots-mobile/carousel-1.png'}, 
-    {'title': "Test 2", 'imageUrl': 'https://kreasinusantara-dots-test.s3.ap-southeast-1.amazonaws.com/dots-mobile/carousel-2.png'}, 
-    {'title': "Test 3", 'imageUrl': 'https://kreasinusantara-dots-test.s3.ap-southeast-1.amazonaws.com/dots-mobile/carousel-3.png'}
-  ];
+  // const carouselEntries = [
+  //   {'title': "Test 1", 'imageUrl': 'https://kreasinusantara-dots-test.s3.ap-southeast-1.amazonaws.com/dots-mobile/carousel-1.png'}, 
+  //   {'title': "Test 2", 'imageUrl': 'https://kreasinusantara-dots-test.s3.ap-southeast-1.amazonaws.com/dots-mobile/carousel-2.png'}, 
+  //   {'title': "Test 3", 'imageUrl': 'https://kreasinusantara-dots-test.s3.ap-southeast-1.amazonaws.com/dots-mobile/carousel-3.png'}
+  // ];
+
+
+  const {token} = useContext(AuthContext);
+  const[image,setImage]=useState([])
+  
+const fetchdata=()=>{
+  try {
+    findAllImage(token).then((result)=>{
+      console.log(result.data.data)
+      setImage(result.data.data)
+    })
+  } catch (error) {
+    
+  }
+}
+
+useEffect(()=>{
+  fetchdata();
+},[])
+
 
   const SLIDER_WIDTH = Dimensions.get('window').width
   const ITEM_WIDTH = Math.round(SLIDER_WIDTH * 1.0)
@@ -100,7 +121,7 @@ const HomeScreen = ({navigation}) => {
           titleStyle={{ color: '#EAEBF8' }} 
         />
       </Appbar.Header>
-      <ScrollView>
+      {/* <ScrollView> */}
         <View style={Color.primaryBackgroundColor}>
           <Headline adjustFontSizeToFit style={styles.heading}>
             Selamat Datang
@@ -112,7 +133,7 @@ const HomeScreen = ({navigation}) => {
         <View style={{marginTop: 15}}>
           <Carousel
                 layout='default'
-                data={carouselEntries}
+                data={image}
                 renderItem={renderCarouselItem}
                 sliderWidth={ITEM_WIDTH}
                 useScrollView={true}
@@ -123,7 +144,7 @@ const HomeScreen = ({navigation}) => {
                 autoplayInterval={5}
               />
           <Pagination
-            dotsLength={carouselEntries.length}
+            dotsLength={image.length}
             activeDotIndex={currentSlide}
             dotStyle={{
                 width: 10,
@@ -133,7 +154,6 @@ const HomeScreen = ({navigation}) => {
                 backgroundColor: 'black'
             }}
             inactiveDotStyle={{
-                // Define styles for inactive dots here
             }}  
             inactiveDotOpacity={0.4}
             inactiveDotScale={0.6}
@@ -157,7 +177,7 @@ const HomeScreen = ({navigation}) => {
             )}
           />
         </View>
-      </ScrollView>
+      {/* </ScrollView> */}
     </View>
   );
 };

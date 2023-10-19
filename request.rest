@@ -45,3 +45,16 @@ Authorization: Bearer 203|n2D9uDIS3Z4cPQDRq8w5lxB7jgRPIlBQxVrgxqeC73bc42c4
 GET http://192.168.18.100:8000/api/saving/history/00102070000180
 Content-Type: application/json
 Authorization: Bearer 203|n2D9uDIS3Z4cPQDRq8w5lxB7jgRPIlBQxVrgxqeC73bc42c4
+### ===
+GET http://192.168.18.100:8000/api/notification
+Content-Type: application/json
+Authorization: Bearer 203|n2D9uDIS3Z4cPQDRq8w5lxB7jgRPIlBQxVrgxqeC73bc42c4
+### ===
+GET http://192.168.18.100:8000/api/loan/bill/00104010000459
+Content-Type: application/json
+Authorization: Bearer 215|BXxBhOtOHQXgFriYPMmS6YPWoYcAcsXVqFlM1v3Qc7deb2b3
+
+### ===
+GET http://192.168.18.100:8000/api/saving/product-type
+Content-Type: application/json
+Authorization: Bearer 219|qAKxOlvpXuREZupjpbACvzOTBUjNDc92c11IHviI3b9e9c28

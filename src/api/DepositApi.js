@@ -2,7 +2,7 @@ import { ApiManager } from "./ApiManager";
 
 export const createDeposit = async (token,data) => {
     try {
-        const result = ApiManager(``, {
+        const result = ApiManager(`/deposit`, {
             method: "POST",
             headers: {
                 Authorization: `Bearer ${token}`,
@@ -31,6 +31,23 @@ export const findAllDeposit = async (token) => {
         console.log(error)
     }
 }
+
+
+export const findDepositProdukType= async (token) => {
+    try {
+      const result = ApiManager(`/deposit/product-type`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log(result);
+      return result;
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
 export const findDepositById = async (token,id) => {
     try {
         const result = ApiManager(`/deposit/${id}`,{    

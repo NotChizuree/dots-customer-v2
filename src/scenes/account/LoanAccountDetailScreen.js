@@ -1,12 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
-import { View, StyleSheet, Text } from "react-native";
-import { Appbar, Headline, IconButton } from "react-native-paper";
+import { View, StyleSheet, Text, ScrollView } from "react-native";
+import { Appbar, IconButton } from "react-native-paper";
 import { LinearGradient } from "expo-linear-gradient";
-import { ScrollView } from "react-native-gesture-handler";
 import ShimmerPlaceholder from "react-native-shimmer-placeholder";
 import MenuButton from "../../components/common/MenuButton";
 import { AuthContext } from "../../providers/AuthenticationProvider";
-import { findLoanById } from "../../api/LoanApi";
+import { findLoanBillById, findLoanById } from "../../api/LoanApi";
+import { FlatGrid } from "react-native-super-grid";
 
 const LoanAccountDetailScreen = ({ navigation, route }) => {
   const [isBalanceShown, setIsBalanceShown] = useState(false);
@@ -31,41 +31,56 @@ const LoanAccountDetailScreen = ({ navigation, route }) => {
     }
   };
 
+  const [bill, setBill] = useState([]);
+
+  const fetchDataBill = async () => {
+    try {
+      const result = await findLoanBillById(token, id);
+      console.log("Bill Data from API:", result.data);
+      setBill(result.data.data);
+      setSkeletonLoading(false);
+      setLoanLoading(false);
+    } catch (error) {
+      console.error("Error API:", error);
+      setSkeletonLoading(false);
+      setLoanLoading(false);
+    }
+  };
+
   useEffect(() => {
     fetchData();
+    fetchDataBill();
   }, []);
 
   const menus = [
     {
       id: 1,
-      title: "Restructure",
+      title: "Ajukan Restrukturisasi",
       icon: "clipboard-outline",
       onPress: () => navigation.navigate("RestructureRequest"),
     },
     {
       id: 2,
-      title: "Top-up Loan",
+      title: "Ajukan Top-up Kredit",
       icon: "journal-outline",
       onPress: () => navigation.navigate("LoanTopupRequest"),
     },
     {
       id: 3,
-      title: "Pay Bill",
+      title: "Bayar Tagihan",
       icon: "cash-outline",
       onPress: () => navigation.navigate(""),
     },
     {
       id: 4,
-      title: "View Repayment Schedule",
+      title: "Lihat Jadwal Tagihan",
       icon: "list-outline",
       onPress: () =>
         navigation.navigate("LoanRepaymentSchedule", {
-          loan: data, 
+          loan: loanData ? loanData?.findLoanByID : null,
         }),
     },
   ];
-
-  
 
   const renderSkeletonLoader = () => {
     return (
@@ -106,24 +121,29 @@ const LoanAccountDetailScreen = ({ navigation, route }) => {
       </View>
     );
   };
-  console.log(data)
 
   const renderAccountInfo = () => {
     return (
       <View>
-        <Text style={styles.bankName}>{data.productType.name || "gada nama"}</Text>
+        <Text style={styles.bankName}>
+          {data.productType && data.productType.name
+            ? data.productType.name
+            : "Product Name Not Available"}
+        </Text>
         <Text style={styles.accountNumber}>
           {data.id ? data.id : "Account Number Not Available"}
         </Text>
         <Text style={styles.balanceTitle}>Active Balance</Text>
         <View style={{ flexDirection: "row" }}>
-          <Headline style={styles.balance}>
+          <Text style={styles.balance}>
             {isBalanceShown
               ? data.outstandingBalance
-                ? `Rp ${parseFloat(data.outstandingBalance).toLocaleString("en-US")}`
+                ? `Rp ${parseFloat(data.outstandingBalance).toLocaleString(
+                    "en-US"
+                  )}`
                 : "Balance Not Available"
               : "******"}
-          </Headline>
+          </Text>
           <IconButton
             onPress={() => setIsBalanceShown(!isBalanceShown)}
             icon={isBalanceShown ? "eye-off" : "eye"}
@@ -134,13 +154,39 @@ const LoanAccountDetailScreen = ({ navigation, route }) => {
     );
   };
 
+  const renderUpcomingRepayment = () => {
+    let totalRepayment = 0;
+    for (let i = 0; i < bill.length; i++) {
+      totalRepayment += Number(bill[i].amount);
+    }
+
+    return (
+      <View>
+        <Text style={styles.detailHeading}>Total Tagihan s.d. Bulan Ini</Text>
+        <Text style={{ fontSize: 17 }}>
+          Rp {totalRepayment.toLocaleString("en")}
+        </Text>
+        {bill.map((val, index) => (
+          <View key={index}>
+            <Text style={{ marginTop: 10, marginLeft: 15, fontSize: 15 }}>
+              Tagihan ke - {val.term}
+            </Text>
+            <Text>Pokok: Rp {val.principalAmount}</Text>
+            <Text>Bunga: Rp {val.interestAmount}</Text>
+            <Text>Denda: Rp {val.penaltyAmount}</Text>
+          </View>
+        ))}
+      </View>
+    );
+  };
+
   return (
-    <View style={{ flex: 1, flexDirection: "column" }}>
+    <View style={styles.screen}>
       <Appbar.Header style={styles.appbarHeader}>
         <Appbar.BackAction onPress={() => navigation.goBack()} />
         <Appbar.Content title="Loan Account" />
       </Appbar.Header>
-      <ScrollView style={styles.screen}>
+      <ScrollView>
         <View style={styles.headingBlock}>
           <LinearGradient
             style={styles.headingGradient}
@@ -148,18 +194,24 @@ const LoanAccountDetailScreen = ({ navigation, route }) => {
           >
             {skeletonLoading ? renderSkeletonLoader() : renderAccountInfo()}
           </LinearGradient>
+          <FlatGrid
+            data={menus}
+            keyExtractor={(item, index) => index}
+            itemDimension={80}
+            renderItem={({ item }) => (
+              <View style={styles.buttonRow}>
+                <MenuButton
+                  style={styles.menuButton}
+                  iconName={item.icon}
+                  title={item.title}
+                  numColumns={2}
+                  onPress={item.onPress}
+                />
+              </View>
+            )}
+          />
         </View>
-        <View style={styles.menuButtonsContainer}>
-          {menus.map((item) => (
-            <View style={styles.menuButton} key={item.id}>
-              <MenuButton
-                iconName={item.icon}
-                title={item.title}
-                onPress={item.onPress}
-              />
-            </View>
-          ))}
-        </View>
+        {renderUpcomingRepayment()}
       </ScrollView>
     </View>
   );
@@ -168,27 +220,28 @@ const LoanAccountDetailScreen = ({ navigation, route }) => {
 const styles = StyleSheet.create({
   screen: {
     backgroundColor: "#F5F8FB",
-    flex: 1,
+    flexGrow: 1,
   },
   appbarHeader: {
     elevation: 0,
     backgroundColor: "#F5F8FB",
   },
   headingBlock: {
-    marginTop: 10,
+    marginTop: "3%",
     width: "95%",
+    borderRadius: 10,
     alignSelf: "center",
   },
   headingGradient: {
     borderRadius: 10,
-    padding: 10,
+    paddingLeft: "7%",
   },
   balanceTitle: {
-    marginTop: 10,
+    marginTop: "7%",
     color: "white",
   },
   balance: {
-    marginBottom: 10,
+    marginBottom: "6%",
     fontSize: 21,
     fontWeight: "bold",
     color: "white",
@@ -199,19 +252,53 @@ const styles = StyleSheet.create({
     fontFamily: "Credit-Regular",
   },
   bankName: {
-    marginTop: 10,
-    marginBottom: 20,
+    marginTop: "7.5%",
+    marginBottom: "13%",
     fontSize: 18,
     color: "white",
   },
-  menuButtonsContainer: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    padding: 10,
+  contentBlock: {
+    paddingTop: "2%",
+    flex: 1,
+    width: "95%",
+    backgroundColor: "white",
+    marginTop: 20,
+    alignSelf: "center",
+    borderRadius: 17,
+    height: "100%",
+    marginBottom: 20,
+  },
+  detailHeading: {
+    marginTop: 5,
+    marginLeft: "3%",
+    fontSize: 22,
+    fontWeight: "bold",
+  },
+  transactionList: {
+    marginTop: "3%",
+  },
+  transactionAmountCaption: {
+    fontSize: 16,
+    top: 10,
+    fontWeight: "bold",
+    marginRight: 10,
+  },
+  debitTrxAmount: {
+    color: "grey",
+  },
+  creditTrxAmount: {
+    color: "#95D362",
   },
   menuButton: {
+    marginLeft: 12,
+    marginRight: 10,
+    marginBottom: 5,
+    backgroundColor: "#EAEBF8",
+  },
+  buttonRow: {
     flex: 1,
-    margin: 5,
+    flexDirection: "column",
+    margin: 4,
   },
 });
 

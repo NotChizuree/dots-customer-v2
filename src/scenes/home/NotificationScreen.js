@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import {
   View,
   StyleSheet,
@@ -6,112 +6,171 @@ import {
   Modal,
   Text,
   Button,
+  ScrollView,
+  RefreshControl,
 } from "react-native";
-import { Headline, List, Divider } from "react-native-paper";
+import { Headline, Card, Divider } from "react-native-paper";
 import { AuthContext } from "../../providers/AuthenticationProvider";
 import Color from "../../common/Color";
+import { findAllNotificationByToken } from "../../api/NotificationApi";
 
 const NotificationScreen = () => {
   const { logout } = useContext(AuthContext);
   const [pressedNotifications, setPressedNotifications] = useState([]);
-  const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isModalVisible1, setIsModalVisible1] = useState(false);
+  const [isModalVisible2, setIsModalVisible2] = useState(false);
 
-  const notifications = [
-    {
-      id: 1,
-      title: "Notifikasi 1",
-      description: "Deskripsi notifikasi 1",
-      date: "21-04-06",
-    },
-    {
-      id: 2,
-      title: "Notifikasi 2",
-      description: "Deskripsi notifikasi 2",
-      date: "21-04-06",
-    },
-  ];
+  const { token } = useContext(AuthContext);
+  const [data, setData] = useState([]);
+  const [refreshing, setRefreshing] = useState(false);
+
+  const fetchData = async () => {
+    try {
+      findAllNotificationByToken(token).then((result) => {
+        const apiData = result.data.data;
+        setData(apiData);
+        setRefreshing(false);
+        console.log(apiData);
+      });
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setRefreshing(false);
+    }
+  };
+
+  const onRefresh = () => {
+    setRefreshing(true);
+    fetchData();
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
 
   const toggleModal = () => {
-    setIsModalVisible(!isModalVisible);
+    setIsModalVisible1(false);
+    setIsModalVisible2(false);
   };
 
   const isNotificationPressed = (notificationId) => {
     return pressedNotifications.includes(notificationId);
   };
 
-  const toggleNotificationPress = (notificationId) => {
-    setPressedNotifications((prevState) =>
-      isNotificationPressed(notificationId)
-        ? prevState.filter((id) => id !== notificationId)
-        : [...prevState, notificationId]
-    );
-  };  
+  const toggleNotificationPress = (notification) => {
+    console.log(notification.type);
+    if (notification.type == 1 || 2 || 3) {
+      setIsModalVisible1(true);
+    } else if (notification.type == 4 || 5 || 6) {
+      setIsModalVisible2(true);
+    } else {
+      return null;
+    }
+
+    // setPressedNotifications((prevState) =>
+    //   isNotificationPressed(notification.id)
+    //     ? prevState.filter((id) => id !== notification.id)
+    //     : [...prevState, notification.id]
+    // );
+  };
+  console.log(isModalVisible1);
+  console.log(isModalVisible2);
+  const formatDateString = (dateString) => {
+    const date = new Date(dateString);
+    return date.toDateString();
+  };
 
   return (
     <View style={styles.screen}>
       <View style={Color.primaryBackgroundColor}>
         <Headline style={styles.heading}>Notifikasi</Headline>
       </View>
-
-      <List.Section>
-        {notifications.map((notification) => (
-          <React.Fragment key={notification.id}>
-            <TouchableOpacity
-              onPress={() => {
-                console.log("Notifikasi diklik:", notification.title);
-                toggleNotificationPress(notification.id);
-                toggleModal();
-              }}
-            >
-              <View
-                style={[
-                  styles.notificationItem,
-                  {
-                    backgroundColor: isNotificationPressed(notification.id)
-                      ? "#F1EFEF"
-                      : "transparent",
-                  },
-                ]}
-              >
-                <List.Item
-                  title={notification.title}
-                  description={notification.description}     
-                />
-                <View
-                  style={[
-                    styles.circleButton,
-                    {
-                      backgroundColor: isNotificationPressed(notification.id)
-                        ? "white"
-                        : "blue",
-                    },
-                  ]}
-                >
-                  <View style={styles.circle} />
-                </View>
-                <Text style={styles.dateItem}>{notification.date}</Text>
-
-              </View> 
-              
-            </TouchableOpacity>
-            <Divider />
-          </React.Fragment>
-        ))}
-      </List.Section>
-
-      <Modal
-        animationType="slide"
-        transparent={true}
-        visible={isModalVisible}
-        onRequestClose={() => {
-          toggleModal();
-        }}
+      <ScrollView
+        refreshControl={
+          <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+        }
       >
-        <View style={styles.modalView}>
-          <Text style={styles.modalText}>Isi konten modal Anda di sini.</Text>
-          <Button title="Tutup" onPress={toggleModal} />
-        </View>
-      </Modal>
+        <Card>
+          {data && data.length > 0 ? (
+            data.map((notification) => (
+              <React.Fragment key={notification.id}>
+                <TouchableOpacity
+                  onPress={() => {
+                    console.log("Notifikasi diklik:", notification.title);
+                    toggleNotificationPress(notification);
+                  }}
+                >
+                  <Card.Content
+                    style={[
+                      styles.notificationItem,
+                      {
+                        backgroundColor: isNotificationPressed(notification.id)
+                          ? "#F1EFEF"
+                          : "transparent",
+                      },
+                    ]}
+                  >
+                    <View style={styles.titleContainer}>
+                      <Text style={styles.notificationTitle}>
+                        {notification.title}
+                      </Text>
+                    </View>
+                    <View
+                      style={[
+                        styles.circleButton,
+                        {
+                          backgroundColor: isNotificationPressed(
+                            notification.id
+                          )
+                            ? "white"
+                            : "blue",
+                        },
+                      ]}
+                    >
+                      <View style={styles.circle} />
+                    </View>
+                    <Text style={styles.dateItem}>
+                      {formatDateString(notification.created_at)}
+                    </Text>
+                  </Card.Content>
+                </TouchableOpacity>
+                <Divider />
+              </React.Fragment>
+            ))
+          ) : (
+            <Card.Content>
+              <Text>Tidak ada notifikasi yang tersedia</Text>
+            </Card.Content>
+          )}
+        </Card>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={isModalVisible1}
+          onRequestClose={() => {
+            toggleModal();
+          }}
+        >
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <Text style={styles.modalText}>Ini adalah Modal 1</Text>
+              <Button title="Tutup" onPress={toggleModal} />
+            </View>
+          </View>
+        </Modal>
+        <Modal
+          animationType="slide"
+          transparent={true}
+          visible={isModalVisible2}
+          onRequestClose={() => {
+            toggleModal();
+          }}
+        >
+          <View style={styles.modalView}>
+            <Text style={styles.modalText}>Ini adalah Modal 2</Text>
+            <Button title="Tutup" onPress={toggleModal} />
+          </View>
+        </Modal>
+      </ScrollView>
     </View>
   );
 };
@@ -128,9 +187,6 @@ const styles = StyleSheet.create({
     paddingBottom: "2%",
     color: "white",
   },
-  settingMenuButton: {
-    backgroundColor: "white",
-  },
   notificationItem: {
     flexDirection: "row",
     alignItems: "center",
@@ -138,6 +194,15 @@ const styles = StyleSheet.create({
     paddingRight: 10,
     position: "relative",
     paddingVertical: 10,
+  },
+  centeredView: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+
+  titleContainer: {
+    flex: 1,
   },
   circleButton: {
     position: "absolute",
@@ -158,8 +223,9 @@ const styles = StyleSheet.create({
   },
   modalView: {
     margin: 20,
+    width:'80%',
+    height:'50%',
     backgroundColor: "white",
-    borderRadius: 20,
     padding: 35,
     alignItems: "center",
     shadowColor: "#000",
@@ -175,11 +241,17 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     textAlign: "center",
     color: "black",
-  },dateItem:{
-    top:25,
-    color:'grey',
-  }
-  
+  },
+  dateItem: {
+    position: "absolute",
+    bottom: 0,
+    right: 10,
+    color: "grey",
+  },
+  notificationTitle: {
+    fontSize: 16,
+    marginBottom: 20,
+  },
 });
 
 export default NotificationScreen;

@@ -1,14 +1,14 @@
-import { ApiManager } from "./ApiManager";
+import { ApiManager } from "./ApiManager"
 
-export const findAllNotificationByToken = async (token) => {
+export const findAllImage = async (token) => {
     try {
-        const result = await ApiManager("/notification", {
+        const result = ApiManager(`/image`,{
             method: "GET",
             headers: {
                 Authorization: `Bearer ${token}`
             }
         })
-
+        console.log(result)
         return result
     } catch (error) {
         console.log(error)

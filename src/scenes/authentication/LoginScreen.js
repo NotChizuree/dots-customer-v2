@@ -100,7 +100,7 @@ const LoginScreen = ({ navigation }) => {
         Login
       </Button>
 
-      <Caption onPress={() => navigation.navigate('UserRegistration')} style={{ alignSelf: 'center', fontSize: 14 }}>Belum punya akun? Buat sekarang!</Caption>
+      {/* <Caption onPress={() => navigation.navigate('UserRegistration')} style={{ alignSelf: 'center', fontSize: 14 }}>Belum punya akun? Buat sekarang!</Caption> */}
     </View>
   );
 };
