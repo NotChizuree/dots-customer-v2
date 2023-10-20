@@ -58,3 +58,9 @@ Authorization: Bearer 215|BXxBhOtOHQXgFriYPMmS6YPWoYcAcsXVqFlM1v3Qc7deb2b3
 GET http://192.168.18.100:8000/api/saving/product-type
 Content-Type: application/json
 Authorization: Bearer 219|qAKxOlvpXuREZupjpbACvzOTBUjNDc92c11IHviI3b9e9c28
+
+
+###
+GET http://192.168.8.143:8000/api/notification
+# Content-Type: application/json
+Authorization: Bearer 269|MVqhBU28S3M3Y26UOCU4hRL1CEQnux1Gt65LoDfy84e09d8a

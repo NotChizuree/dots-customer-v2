@@ -121,7 +121,7 @@ const CreateLoanAccount = ({ navigation }) => {
             disabled={mutationLoading}
             loading={mutationLoading}
           >
-            {mutationLoading ? "Mengirim..." : "Submit"}
+            {mutationLoading ? "Mengirim..." : ""}
             Simpan
           </Button>
         </View>

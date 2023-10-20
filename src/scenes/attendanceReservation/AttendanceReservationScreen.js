@@ -1,4 +1,3 @@
-import { useMutation, useQuery } from "@apollo/client";
 import React, { useState, useEffect, useContext } from "react";
 import DropDown from "react-native-paper-dropdown";
 import { useToast } from "react-native-paper-toast";
@@ -10,7 +9,7 @@ import { View, StyleSheet, ScrollView } from "react-native";
 import LoadingOverlay from "../../components/common/LoadingOverlay";
 import DateTimePicker from "@react-native-community/datetimepicker";
 import { TextInput, Appbar, Caption, Button } from "react-native-paper";
-import { CreateAttendanceReservation } from "../../query/AttendanceReservationQuery";
+// import { CreateAttendanceReservation } from "../../query/AttendanceReservationQuery";
 import { AuthContext } from "../../providers/AuthenticationProvider";
 import createReservation from "../../api/ReservationApi";
 import { createReservationRest } from "../../api/ReservationApi";

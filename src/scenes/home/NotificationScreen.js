@@ -12,8 +12,12 @@ import {
 import { Headline, Card, Divider } from "react-native-paper";
 import { AuthContext } from "../../providers/AuthenticationProvider";
 import Color from "../../common/Color";
-import { findAllNotificationByToken } from "../../api/NotificationApi";
+import {
+  NotificationStatus,
+  findAllNotificationByToken,
+} from "../../api/NotificationApi";
 import LoadingOverlay from "../../components/common/LoadingOverlay";
+import axios from "axios";
 
 const NotificationScreen = () => {
   const { logout } = useContext(AuthContext);
@@ -28,10 +32,10 @@ const NotificationScreen = () => {
   const fetchData = async () => {
     try {
       findAllNotificationByToken(token).then((result) => {
-        const apiData = result.data.data;
+        const apiData = JSON.parse(result.data.data);
         setData(apiData);
         setRefreshing(false);
-        console.log(apiData);
+        console.log("yoooooooooooowwwwwwwww", apiData);
       });
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -58,7 +62,8 @@ const NotificationScreen = () => {
   };
 
   const toggleNotificationPress = (notification) => {
-    console.log(notification.type);
+    console.log("notif nih:", notification);
+    NotificationStatus(token, notification.id);
     if (
       notification.type === 1 ||
       notification.type === 2 ||
@@ -75,14 +80,9 @@ const NotificationScreen = () => {
       return null;
     }
 
-    // setPressedNotifications((prevState) =>
-    //   isNotificationPressed(notification.id)
-    //     ? prevState.filter((id) => id !== notification.id)
-    //     : [...prevState, notification.id]
-    // );
+    setPressedNotifications((prevState) => [...prevState, notification.id]);
   };
-  console.log(isModalVisible1);
-  console.log(isModalVisible2);
+
   const formatDateString = (dateString) => {
     const date = new Date(dateString);
     return date.toDateString();
@@ -101,7 +101,7 @@ const NotificationScreen = () => {
         <Card>
           {data && data.length > 0 ? (
             data.map((notification) => (
-              <React.Fragment key={notification.id}>
+              <React.Fragment>
                 <TouchableOpacity
                   onPress={() => {
                     console.log("Notifikasi diklik:", notification.title);
@@ -112,9 +112,11 @@ const NotificationScreen = () => {
                     style={[
                       styles.notificationItem,
                       {
-                        backgroundColor: isNotificationPressed(notification.id)
-                          ? "#F1EFEF"
-                          : "transparent",
+                        backgroundColor:
+                          isNotificationPressed(notification.id) &&
+                          notification.status === 0
+                            ? "#F1EFEF"
+                            : "transparent",
                       },
                     ]}
                   >
@@ -127,11 +129,11 @@ const NotificationScreen = () => {
                       style={[
                         styles.circleButton,
                         {
-                          backgroundColor: isNotificationPressed(
-                            notification.id
-                          )
-                            ? "white"
-                            : "blue",
+                          backgroundColor:
+                            isNotificationPressed(notification.id) &&
+                            notification.status === 0
+                              ? "white"
+                              : "blue",
                         },
                       ]}
                     >
@@ -146,11 +148,12 @@ const NotificationScreen = () => {
               </React.Fragment>
             ))
           ) : (
-            // <Card.Content>
-            <>             
-             <LoadingOverlay />
-            </>
-            // </Card.Content> 
+            // Tampilkan pesan "Tidak ada notifikasi" jika data kosong
+            <View style={styles.noNotificationContainer}>
+              <Text style={styles.noNotificationText}>
+                Tidak ada notifikasi
+              </Text>
+            </View>
           )}
         </Card>
 
@@ -165,6 +168,15 @@ const NotificationScreen = () => {
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
               <Text style={styles.modalText}>Ini adalah Modal 1</Text>
+              {isModalVisible1 && data.length > 0 && (
+                <Text style={styles.modalText}>
+                  {
+                    data.find(
+                      (notification) => notification.id === isModalVisible1
+                    )?.description
+                  }
+                </Text>
+              )}
               <Button title="Tutup" onPress={toggleModal} />
             </View>
           </View>
@@ -181,6 +193,15 @@ const NotificationScreen = () => {
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
               <Text style={styles.modalText}>Ini adalah Modal 2</Text>
+              {isModalVisible2 && data.length > 0 && (
+                <Text style={styles.modalText}>
+                  {
+                    data.find(
+                      (notification) => notification.id === isModalVisible2
+                    )?.description
+                  }
+                </Text>
+              )}
               <Button title="Tutup" onPress={toggleModal} />
             </View>
           </View>
@@ -215,7 +236,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
   },
-
   titleContainer: {
     flex: 1,
   },
@@ -266,6 +286,16 @@ const styles = StyleSheet.create({
   notificationTitle: {
     fontSize: 16,
     marginBottom: 20,
+  },
+  noNotificationContainer: {
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 20,
+  },
+  noNotificationText: {
+    fontSize: 18,
+    fontWeight: "bold",
+    color: "gray",
   },
 });
 

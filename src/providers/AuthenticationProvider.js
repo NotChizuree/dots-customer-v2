@@ -1,7 +1,7 @@
 import React, { createContext, useReducer } from "react";
 import RNSInfo from "react-native-sensitive-info";
-import RestClient from "../query/RestClient";
 import * as SecureStore from "expo-secure-store";
+import { ApiManager } from "../api/ApiManager";
 
 const AuthReducer = (state, action) => {
   switch (action.type) {
@@ -52,7 +52,7 @@ const AuthProvider = ({ children }) => {
 
   const login = async (username, password) => {
     try {
-      const data = await RestClient.post("/login", {
+      const data = await ApiManager.post("/login", {
         username: username,
         password: password,
         clientType: "CUSTOMER",
@@ -61,7 +61,8 @@ const AuthProvider = ({ children }) => {
 
       await SecureStore.setItemAsync("authInfo", JSON.stringify(data.data));
       setUser(data.data.user, data.data.accessToken);
-      setTenant(data.data.user.tenantReadableName)
+      // setTenant(data.data.user.tenantReadableName)
+      // console.log('data',data.data.user)
       return data;
     } catch (error) {
       switch (error.response?.status) {
@@ -82,7 +83,6 @@ const AuthProvider = ({ children }) => {
         setUser,
         logout,
         login,
-        setTenant,
       }}
     >
       {children}

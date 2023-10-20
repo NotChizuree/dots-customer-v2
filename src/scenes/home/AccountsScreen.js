@@ -14,7 +14,6 @@ import { Caption, Chip, Divider, Headline, List } from "react-native-paper";
 import { SceneMap } from "react-native-tab-view";
 import { AuthContext } from "../../providers/AuthenticationProvider";
 import { TabView } from "react-native-tab-view";
-import { useQuery } from "@apollo/client";
 import { useToast } from "react-native-paper-toast";
 import LoadingOverlay from "../../components/common/LoadingOverlay";
 import { Colors } from "react-native/Libraries/NewAppScreen";

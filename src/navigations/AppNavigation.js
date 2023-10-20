@@ -1,15 +1,15 @@
 import React from 'react';
 import {createStackNavigator} from '@react-navigation/stack';
 import HomeNavigation from './HomeNavigation';
-import {createGraphqlClient} from '../query/GraphqlClient';
-import {ApolloProvider} from '@apollo/client';
+// import {createGraphqlClient} from '../query/GraphqlClient';
+// import {ApolloProvider} from '@apollo/client';
 import SavingAccountDetailScreen from '../scenes/account/SavingAccountDetailScreen';
 import LoanAccountDetailScreen from '../scenes/account/LoanAccountDetailScreen';
 import AttendanceReservationScreen from '../scenes/attendanceReservation/AttendanceReservationScreen';
-import AttendanceReservationSuccessScreen from '../scenes/attendanceReservation/AttendanceReservationSuccessScreen';
-import RestructureRequestScreen from '../scenes/account/RestructureRequestScreen';
-import LoanTopupRequestScreen from '../scenes/account/LoanTopupRequestScreen';
-import LoanRepaymentScheduleScreen from '../scenes/account/LoanRepaymentScheduleScreen';
+// import AttendanceReservationSuccessScreen from '../scenes/attendanceReservation/AttendanceReservationSuccessScreen';
+// import RestructureRequestScreen from '../scenes/account/RestructureRequestScreen';
+// import LoanTopupRequestScreen from '../scenes/account/LoanTopupRequestScreen';
+// import LoanRepaymentScheduleScreen from '../scenes/account/LoanRepaymentScheduleScreen';
 import DepositAccountDetailScreen from '../scenes/account/DepositAccountDetailScreen';
 import SavingDepositRequestScreen from '../scenes/account/SavingDepositRequestScreen';
 // import IdentityPhotoScreen from '../scenes/authentication/IdentityPhotoScreen';
@@ -20,9 +20,9 @@ import CreateLoanAccount from '../scenes/CreateAccount/CreateLoanAccount';
 
 const AppNavigation = () => {
   const AppNavigator = createStackNavigator();
-  const GraphqlClient = createGraphqlClient();
+  // const GraphqlClient = createGraphqlClient();
   return (
-    <ApolloProvider client={GraphqlClient}>
+    // <ApolloProvider client={GraphqlClient}>
       <AppNavigator.Navigator initialRouteName="Home">
         <AppNavigator.Screen
           name="Home"
@@ -49,7 +49,7 @@ const AppNavigation = () => {
           component={AttendanceReservationScreen}
           options={{headerShown: false}}
         />
-        <AppNavigator.Screen
+        {/* <AppNavigator.Screen
           name="AttendanceReservationSuccess"
           component={AttendanceReservationSuccessScreen}
           options={{headerShown: false}}
@@ -68,7 +68,7 @@ const AppNavigation = () => {
           name="LoanRepaymentSchedule"
           component={LoanRepaymentScheduleScreen}
           options={{headerShown: false}}
-        />
+        /> */}
         <AppNavigator.Screen
           name="SavingDepositRequest"
           component={SavingDepositRequestScreen}
@@ -95,7 +95,7 @@ const AppNavigation = () => {
           options={{headerShown: false}}
         />
       </AppNavigator.Navigator>
-    </ApolloProvider>
+    // </ApolloProvider>
   );
 };
 

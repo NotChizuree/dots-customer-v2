@@ -1,21 +1,21 @@
-import React, { useState, useContext } from 'react';
-import { StyleSheet, View, Image } from 'react-native';
+import React, { useState, useContext } from "react";
+import { StyleSheet, View, Image } from "react-native";
 import {
   Button,
   Caption,
   Headline,
   Subheading,
   TextInput,
-} from 'react-native-paper';
-import { useToast } from 'react-native-paper-toast';
-import LoadingOverlay from '../../components/common/LoadingOverlay';
-import RNSInfo from 'react-native-sensitive-info';
-import { AuthContext } from '../../providers/AuthenticationProvider';
-import { StackActions } from '@react-navigation/native';
-import Color from '../../common/Color';
+} from "react-native-paper";
+import { useToast } from "react-native-paper-toast";
+import LoadingOverlay from "../../components/common/LoadingOverlay";
+import RNSInfo from "react-native-sensitive-info";
+import { AuthContext } from "../../providers/AuthenticationProvider";
+import { StackActions } from "@react-navigation/native";
+import Color from "../../common/Color";
 
 const LoginScreen = ({ navigation }) => {
-  const { currentTenant, setTenant } = useContext(AuthContext);
+  const { login, currentTenant } = useContext(AuthContext);
   const toaster = useToast();
   const [showPassword, setShowPassword] = useState(false);
 
@@ -24,14 +24,26 @@ const LoginScreen = ({ navigation }) => {
   const [password, setPassword] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const { login } = useContext(AuthContext);
-
   const handleLogin = () => {
+    if (!username || !password) {
+      // Jika username atau password kosong, tampilkan pemberitahuan
+      toaster.show({
+        message: "Harap isi username dan password terlebih dahulu",
+      });
+      return;
+    }
+    
     setLoading(true);
     login(username, password)
       .then((result) => {
+        const msg = result.data.message;
+        console.log('kk',msg)
+        if (msg === "Unauthorized") {
+          toaster.show({
+            message: "Username atau password tidak ditemukan",
+          });
+        }
         setLoading(false);
-        console.log(result.data.data)
       })
       .catch((error) => {
         toaster.show({ message: error.toString() });
@@ -39,23 +51,14 @@ const LoginScreen = ({ navigation }) => {
       });
   };
 
-  // const changeTenant = () => {
-  //   RNSInfo.deleteItem('currentTenant', {}).then(() => {
-  //     navigation.dispatch(
-  //       StackActions.replace('MainOnboarding')
-  //     );
-  //     setTenant(null);
-  //   });
-  // };
-
   return (
     <View style={styles.screen}>
       {loading && <LoadingOverlay />}
-      <View style={{ marginTop: '40%', marginBottom: '12%' }}>
+      <View style={{ marginTop: "40%", marginBottom: "12%" }}>
         <Headline style={styles.heading}>Halo.</Headline>
         <Headline style={styles.heading}>Selamat Datang</Headline>
-        <View style={{ flexDirection: 'row' }}>
-          <Subheading style={styles.subheading}>{currentTenant ? currentTenant : null}</Subheading>
+        <View style={{ flexDirection: "row" }}>
+          <Subheading style={styles.subheading}>BPR Sukma Jaya</Subheading>
           {/* <Button
             mode='outlined'
             onPress={() => changeTenant()}
@@ -70,9 +73,9 @@ const LoginScreen = ({ navigation }) => {
       <TextInput
         style={styles.textInput}
         value={username}
-        mode='outlined'
-        placeholder='Masukan Username'
-        placeholderTextColor={'#99999'}
+        mode="outlined"
+        placeholder="Masukan Username"
+        placeholderTextColor={"#99999"}
         underlineColor="transparent"
         onChangeText={(text) => setUsername(text)}
       />
@@ -81,23 +84,41 @@ const LoginScreen = ({ navigation }) => {
         style={styles.textInput}
         secureTextEntry={!showPassword}
         value={password}
-        mode='outlined'
-        placeholder='Masukan Password'
-        placeholderTextColor={'#99999'}
+        mode="outlined"
+        placeholder="Masukan Password"
+        placeholderTextColor={"#99999"}
         underlineColor="transparent"
         onChangeText={(text) => setPassword(text)}
         right={
           <TextInput.Icon
             style={styles.showPasswordIcon}
-            name={showPassword ? 'eye-off' : 'eye'}
+            name={showPassword ? "eye-off" : "eye"}
             onPress={() => {
               setShowPassword(!showPassword);
             }}
           />
         }
       />
-      <Caption style={{ ...Color.primaryTextColor, marginBottom: '1%', marginTop: '3%', fontWeight: 'bold', fontSize: 13 }}>Lupa Password? </Caption>
-      <Button style={{ marginTop: '5%', marginBottom: '5%', ...Color.primaryBackgroundColor,}} mode="contained" onPress={() => handleLogin()}>
+      <Caption
+        style={{
+          ...Color.primaryTextColor,
+          marginBottom: "1%",
+          marginTop: "3%",
+          fontWeight: "bold",
+          fontSize: 13,
+        }}
+      >
+        Lupa Password?{" "}
+      </Caption>
+      <Button
+        style={{
+          marginTop: "5%",
+          marginBottom: "5%",
+          ...Color.primaryBackgroundColor,
+        }}
+        mode="contained"
+        onPress={() => handleLogin()}
+      >
         Login
       </Button>
 
@@ -108,18 +129,18 @@ const LoginScreen = ({ navigation }) => {
 
 const styles = StyleSheet.create({
   screen: {
-    backgroundColor: '#ffffff',
+    backgroundColor: "#ffffff",
     flex: 1,
     padding: 20,
   },
   heading: {
     fontSize: 30,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   subheading: {
     fontSize: 18,
-    marginTop: '3%',
-    marginBottom: '5%',
+    marginTop: "3%",
+    marginBottom: "5%",
   },
   textInput: {
     height: 60,
