@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Alert } from "react-native";
 import { Appbar, TextInput, Button, Caption } from "react-native-paper";
 import { AuthContext } from "../../providers/AuthenticationProvider";
 import { useContext } from "react";
@@ -37,19 +37,33 @@ const CreateLoanAccount = ({ navigation }) => {
   const formatToRupiah = (angka) => {
     return `Rp ${angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`;
   };
+  const [mutationLoading, setMutationLoading] = useState(false);
 
   const handleSumit = async () => {
-    try {
-      createLoan(token, {
-        productType: Service,
-        currentBalance: ProdukNumber,
-        period:JangkaDropdown
-      }).then((result) => {
-        navigation.goBack();
-        console.log(result.data.data);
-      });
-    } catch (error) {
-      console.log(error);
+    if (!Service) {
+      Alert.alert("Error", "Kolom Produk Belum Dipilih.");
+    } else if (!ProdukNumber) {
+      Alert.alert("Error", "Kolom Jumlah Pengajuan Belum Dipilih.");
+    } else if (!JangkaDropdown) {
+      Alert.alert("Error", "Kolom Jangka Dropdown Belum Dipilih.");
+    } else {
+      setMutationLoading(true)
+      try {
+        createLoan(token, {
+          productType: Service,
+          currentBalance: ProdukNumber,
+          period: JangkaDropdown,
+        }).then((result) => {
+          navigation.goBack();
+          Alert.alert(
+            "Sukses",
+            "Berhasil Mengajukan Kredit Baru. Silahkan cek notifikasi secara berkala"
+          );
+          console.log(result.data.data);
+        });
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
@@ -104,7 +118,10 @@ const CreateLoanAccount = ({ navigation }) => {
             mode="contained"
             style={{ marginTop: 20, ...Color.primaryBackgroundColor }}
             onPress={handleSumit}
+            disabled={mutationLoading}
+            loading={mutationLoading}
           >
+            {mutationLoading ? "Mengirim..." : "Submit"}
             Simpan
           </Button>
         </View>

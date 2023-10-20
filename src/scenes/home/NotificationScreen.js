@@ -13,6 +13,7 @@ import { Headline, Card, Divider } from "react-native-paper";
 import { AuthContext } from "../../providers/AuthenticationProvider";
 import Color from "../../common/Color";
 import { findAllNotificationByToken } from "../../api/NotificationApi";
+import LoadingOverlay from "../../components/common/LoadingOverlay";
 
 const NotificationScreen = () => {
   const { logout } = useContext(AuthContext);
@@ -58,9 +59,17 @@ const NotificationScreen = () => {
 
   const toggleNotificationPress = (notification) => {
     console.log(notification.type);
-    if (notification.type == 1 || 2 || 3) {
+    if (
+      notification.type === 1 ||
+      notification.type === 2 ||
+      notification.type === 3
+    ) {
       setIsModalVisible1(true);
-    } else if (notification.type == 4 || 5 || 6) {
+    } else if (
+      notification.type === 4 ||
+      notification.type === 5 ||
+      notification.type === 6
+    ) {
       setIsModalVisible2(true);
     } else {
       return null;
@@ -137,13 +146,16 @@ const NotificationScreen = () => {
               </React.Fragment>
             ))
           ) : (
-            <Card.Content>
-              <Text>Tidak ada notifikasi yang tersedia</Text>
-            </Card.Content>
+            // <Card.Content>
+            <>             
+             <LoadingOverlay />
+            </>
+            // </Card.Content> 
           )}
         </Card>
+
         <Modal
-          animationType="slide"
+          animationType="fade"
           transparent={true}
           visible={isModalVisible1}
           onRequestClose={() => {
@@ -157,17 +169,20 @@ const NotificationScreen = () => {
             </View>
           </View>
         </Modal>
+
         <Modal
-          animationType="slide"
+          animationType="fade"
           transparent={true}
           visible={isModalVisible2}
           onRequestClose={() => {
             toggleModal();
           }}
         >
-          <View style={styles.modalView}>
-            <Text style={styles.modalText}>Ini adalah Modal 2</Text>
-            <Button title="Tutup" onPress={toggleModal} />
+          <View style={styles.centeredView}>
+            <View style={styles.modalView}>
+              <Text style={styles.modalText}>Ini adalah Modal 2</Text>
+              <Button title="Tutup" onPress={toggleModal} />
+            </View>
           </View>
         </Modal>
       </ScrollView>
@@ -223,8 +238,8 @@ const styles = StyleSheet.create({
   },
   modalView: {
     margin: 20,
-    width:'80%',
-    height:'50%',
+    width: "80%",
+    height: "50%",
     backgroundColor: "white",
     padding: 35,
     alignItems: "center",

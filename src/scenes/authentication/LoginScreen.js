@@ -29,8 +29,9 @@ const LoginScreen = ({ navigation }) => {
   const handleLogin = () => {
     setLoading(true);
     login(username, password)
-      .then(() => {
+      .then((result) => {
         setLoading(false);
+        console.log(result.data.data)
       })
       .catch((error) => {
         toaster.show({ message: error.toString() });
@@ -38,14 +39,14 @@ const LoginScreen = ({ navigation }) => {
       });
   };
 
-  const changeTenant = () => {
-    RNSInfo.deleteItem('currentTenant', {}).then(() => {
-      navigation.dispatch(
-        StackActions.replace('MainOnboarding')
-      );
-      setTenant(null);
-    });
-  };
+  // const changeTenant = () => {
+  //   RNSInfo.deleteItem('currentTenant', {}).then(() => {
+  //     navigation.dispatch(
+  //       StackActions.replace('MainOnboarding')
+  //     );
+  //     setTenant(null);
+  //   });
+  // };
 
   return (
     <View style={styles.screen}>
@@ -54,7 +55,7 @@ const LoginScreen = ({ navigation }) => {
         <Headline style={styles.heading}>Halo.</Headline>
         <Headline style={styles.heading}>Selamat Datang</Headline>
         <View style={{ flexDirection: 'row' }}>
-          <Subheading style={styles.subheading}>{currentTenant ? currentTenant.name : null}</Subheading>
+          <Subheading style={styles.subheading}>{currentTenant ? currentTenant : null}</Subheading>
           {/* <Button
             mode='outlined'
             onPress={() => changeTenant()}

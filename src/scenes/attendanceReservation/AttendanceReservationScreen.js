@@ -2,7 +2,7 @@ import { useMutation, useQuery } from "@apollo/client";
 import React, { useState, useEffect, useContext } from "react";
 import DropDown from "react-native-paper-dropdown";
 import { useToast } from "react-native-paper-toast";
-import { TouchableWithoutFeedback } from "react-native";
+import { Alert, TouchableWithoutFeedback } from "react-native";
 import { StackActions } from "@react-navigation/native";
 import { findAllOffices } from "../../api/OfficeApi";
 // import { FindAllOffices } from '../../query/CompanyQueZry';
@@ -205,61 +205,55 @@ const AttendanceReservationScreen = ({ navigation }) => {
   const [mutationError, setMutationError] = useState(null);
   const onSubmitForm = () => {
     if (!mutationLoading) {
-      console.log(office);
-      console.log(destinationService);
-      console.log(Service);
-      console.log(date);
-      console.log(attendanceTimeRange);
+      if (!office) {
+        Alert.alert("Error", "Kantor Tujuan is required");
+      } else if (!destinationService) {
+        Alert.alert("Error", "Layanan Tujuan is required");
+      } else if (!Service) {
+        Alert.alert("Error", "Tujuan Kedatangan is required");
+      } else if (!attendanceTimeRange) {
+        Alert.alert("Error", "Waktu Kedatangan is required");
+      } else {
+        setMutationLoading(true)
+        const clock = attendanceTimeRange.split("-");
+        const jam1 = `${Math.floor(clock[0] / 100)}:${clock[0] % 100}`;
+        const jam2 = `${Math.floor(clock[1] / 100)}:${clock[1] % 100}`;
+        const tanggalDanJam1 = new Date(date);
+        tanggalDanJam1.setHours(Math.floor(clock[0] / 100));
+        tanggalDanJam1.setMinutes(clock[0] % 100);
+        const tanggalDanJam2 = new Date(date);
+        tanggalDanJam2.setHours(Math.floor(clock[1] / 100));
+        tanggalDanJam2.setMinutes(clock[1] % 100);
+        const timestamp1 = tanggalDanJam1;
+        const timestamp2 = tanggalDanJam2;
 
-      // Ambil jam mulai dan selesai dari waktu0
-      const clock = attendanceTimeRange.split("-");
-
-      // Ubah jam dari indeks array waktu ke format yang sesuai (HH:mm)
-      const jam1 = `${Math.floor(clock[0] / 100)}:${clock[0] % 100}`;
-      const jam2 = `${Math.floor(clock[1] / 100)}:${clock[1] % 100}`;
-
-      // Buat objek Date untuk tanggal
-      const tanggalDanJam1 = new Date(date);
-      tanggalDanJam1.setHours(Math.floor(clock[0] / 100));
-      tanggalDanJam1.setMinutes(clock[0] % 100);
-
-      const tanggalDanJam2 = new Date(date);
-      tanggalDanJam2.setHours(Math.floor(clock[1] / 100));
-      tanggalDanJam2.setMinutes(clock[1] % 100);
-
-      // Ambil timestamp dari tanggal dan jam yang sudah diubah
-      const timestamp1 = tanggalDanJam1;
-      const timestamp2 = tanggalDanJam2;
-
-      console.log('waktu 1 :',timestamp1);
-      console.log('waktu 2 : ',timestamp2);
-
-      createReservationRest(
-        token,
-        {
-          branchId: office,
-          destinationService: destinationService,
-          reason: Service,
-          attendAtStart: timestamp1,
-          attendAtEnd: timestamp2
-        },
-
-        setMutationLoading,
-        setMutationError
-      )
-        .then((res) => {
-          setMutationLoading(false);
-          navigation.navigate("Home")
-
-          // navigation.dispatch(
-          //   StackActions.replace("AttendanceReservationSuccess", {
-          //     reservation: res.data.createAttendanceReservation,
-          //   })
-          // );
-        })
-        .catch((err) => {});
+        createReservationRest(
+          token,
+          {
+            branchId: office,
+            destinationService: destinationService,
+            reason: Service,
+            attendAtStart: timestamp1,
+            attendAtEnd: timestamp2,
+          },
+          setMutationLoading,
+          setMutationError
+        )
+          .then((res) => {
+            setMutationLoading(false);
+            navigation.navigate("Home");
+            Alert.alert(
+              "Sukses",
+              "Berhasil Mengajukan Reservasi. Silahkan cek notifikasi secara berkala"
+            );
+          })
+          .catch((err) => {
+            Alert.alert("Error", "Failed to create reservation");
+          });
+      }
     }
   };
+
   return (
     <>
       <Appbar.Header style={styles.appbarHeader}>
@@ -370,8 +364,10 @@ const AttendanceReservationScreen = ({ navigation }) => {
             mode="contained"
             onPress={() => onSubmitForm()}
             style={{ marginTop: 20, ...Color.primaryBackgroundColor }}
+            disabled={mutationLoading}
+            loading={mutationLoading}
           >
-            Submit
+            {mutationLoading ? "Mengirim..." : "Submit"}
           </Button>
         </View>
       </ScrollView>

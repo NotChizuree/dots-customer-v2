@@ -22,8 +22,9 @@ const ChangePasswordScreen = ({ navigation }) => {
   const [currentPassword, setCurrentPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
+  const [mutationLoading, setMutationLoading] = useState(false);
 
-  const handleSumit = async() => {
+  const handleSumit = async () => {
     if (
       currentPassword === "" ||
       newPassword === "" ||
@@ -36,21 +37,24 @@ const ChangePasswordScreen = ({ navigation }) => {
         "Kata sandi baru dan kata sandi konfirmasi tidak cocok"
       );
     } else {
+      setMutationLoading(true);
+
       try {
         const result = await ChangePassword(token, {
           old_password: currentPassword,
           new_password: newPassword,
         });
-      
+
         if (result.data.message === "Wrong password") {
-          Alert.alert(
-            "Kesalahan",
-            "Kata sandi Lama salah"
-          );
+          Alert.alert("Kesalahan", "Kata sandi Lama salah");
         } else {
           navigation.goBack();
+          Alert.alert("Berhasil", "Kata sandi berhasil diubah", [
+            {
+              text: "OK",
+            },
+          ]);
         }
-      
       } catch (error) {
         console.log(error);
       }
@@ -86,22 +90,6 @@ const ChangePasswordScreen = ({ navigation }) => {
     //     { cancelable: false }
     //   );
     // }
-  };
-
-  const handlePasswordChangeConfirmation = () => {
-    Alert.alert("Berhasil", "Kata sandi berhasil diubah", [
-      {
-        text: "OK",
-        onPress: () => {
-          setCurrentPassword("");
-          setNewPassword("");
-          setConfirmPassword("");
-          setIsOldPasswordCorrect(true);
-
-          navigation.goBack();
-        },
-      },
-    ]);
   };
 
   const [passwordVisible, setPasswordVisible] = useState(false);
@@ -153,7 +141,10 @@ const ChangePasswordScreen = ({ navigation }) => {
             mode="contained"
             style={{ marginTop: 20, ...Color.primaryBackgroundColor }}
             onPress={handleSumit}
+            disabled={mutationLoading}
+            loading={mutationLoading}
           >
+            {mutationLoading ? "Mengirim..." : "Submit"}
             Simpan
           </Button>
         </View>

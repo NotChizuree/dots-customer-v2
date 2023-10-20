@@ -117,7 +117,7 @@ useEffect(()=>{
       <Appbar.Header style={Color.primaryBackgroundColor}>
         <Appbar.Content
           style={styles.appbarContent}
-          title={user.firstName}
+          title={currentTenant}
           titleStyle={{ color: '#EAEBF8' }} 
         />
       </Appbar.Header>

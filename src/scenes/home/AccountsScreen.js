@@ -108,7 +108,7 @@ const AccountsScreen = ({ navigation }) => {
     const { height } = Dimensions.get("window");
 
     return (
-      <SafeAreaView style={{ flex: 1 }}>
+      <SafeAreaView style={{marginTop: "-10%"}}>
         <View style={styles.listItem}>
           <FlatList
             data={data}
@@ -120,9 +120,15 @@ const AccountsScreen = ({ navigation }) => {
         <View style={styles.createButtonContainer}>
           <TouchableOpacity
             onPress={() => navigation.navigate("CreateSavingAccount")}
-            style={{ backgroundColor: Color.primaryBackgroundColor.backgroundColor, padding: 10, borderRadius: 5 }}
+            style={{
+              backgroundColor: Color.primaryBackgroundColor.backgroundColor,
+              padding: 10,
+              borderRadius: 5,
+            }}
           >
-            <Text style={{ color: "white", textAlign: "center", fontSize: 18}}>Buat Tabungan Baru</Text>
+            <Text style={{ color: "white", textAlign: "center", fontSize: 18 }}>
+              Buat Tabungan Baru
+            </Text>
           </TouchableOpacity>
         </View>
       </SafeAreaView>
@@ -130,8 +136,6 @@ const AccountsScreen = ({ navigation }) => {
   };
 
   const renderLoanAccountsList = () => {
-
-
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [data, setData] = useState([]);
@@ -208,21 +212,27 @@ const AccountsScreen = ({ navigation }) => {
     };
 
     return (
-      <SafeAreaView style={{ flex: 1 }}>
+      <SafeAreaView style={{marginTop: "-10%"}}>
         <View style={styles.listItem}>
-        <FlatList
-          data={data}
-          ItemSeparatorComponent={() => <Divider />}
-          renderItem={({ item }) => renderLoanItem(item)}
-        />
+          <FlatList
+            data={data}
+            ItemSeparatorComponent={() => <Divider />}
+            renderItem={({ item }) => renderLoanItem(item)}
+          />
         </View>
 
         <View style={styles.createButtonContainer}>
           <TouchableOpacity
             onPress={() => navigation.navigate("CreateLoanAccount")}
-            style={{ backgroundColor: Color.primaryBackgroundColor.backgroundColor, padding: 10, borderRadius: 5 }}
+            style={{
+              backgroundColor: Color.primaryBackgroundColor.backgroundColor,
+              padding: 10,
+              borderRadius: 5,
+            }}
           >
-            <Text style={{ color: "white", textAlign: "center", fontSize: 18}}>Buat Kredit Baru</Text>
+            <Text style={{ color: "white", textAlign: "center", fontSize: 18 }}>
+              Buat Kredit Baru
+            </Text>
           </TouchableOpacity>
         </View>
       </SafeAreaView>
@@ -230,7 +240,6 @@ const AccountsScreen = ({ navigation }) => {
   };
 
   const renderDepositAccountsList = () => {
-
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const [data, setData] = useState([]);
@@ -303,22 +312,28 @@ const AccountsScreen = ({ navigation }) => {
     };
 
     return (
-      <SafeAreaView style={{ flex: 1 }}>
-       <View style={styles.listItem}>
-        <FlatList
-          data={data}
-          ItemSeparatorComponent={() => <Divider />}
-          renderItem={({ item }) => renderDepositItem(item)}
-        />
+      <SafeAreaView style={{marginTop: "-10%"}}>
+        <View style={styles.listItem}>
+          <FlatList
+            data={data}
+            ItemSeparatorComponent={() => <Divider />}
+            renderItem={({ item }) => renderDepositItem(item)}
+          />
         </View>
 
         {/* Tombol "Buat Deposit Baru" di bawah tab bar */}
         <View style={styles.createButtonContainer}>
           <TouchableOpacity
             onPress={() => navigation.navigate("CreateDepositAccount")}
-            style={{ backgroundColor: Color.primaryBackgroundColor.backgroundColor, padding: 10, borderRadius: 5 }}
+            style={{
+              backgroundColor: Color.primaryBackgroundColor.backgroundColor,
+              padding: 10,
+              borderRadius: 5,
+            }}
           >
-            <Text style={{ color: "white", textAlign: "center", fontSize: 18}}>Buat Deposit Baru</Text>
+            <Text style={{ color: "white", textAlign: "center", fontSize: 18 }}>
+              Buat Deposit Baru
+            </Text>
           </TouchableOpacity>
         </View>
       </SafeAreaView>
@@ -333,17 +348,18 @@ const AccountsScreen = ({ navigation }) => {
             <TouchableOpacity
               style={styles.tabItem}
               onPress={() => setIndex(i)}
+              key={route.key}
             >
               {index === i && (
                 <Chip
-                  style={{textAlign: "center" }}
-                  textStyle={{ fontWeight: "bold", fontSize: 17 }}
+                  style={{ marginRight: 10 }}
+                  textStyle={{ fontWeight: "bold", fontSize: 16 }}
                 >
                   <Text>{route.title}</Text>
                 </Chip>
               )}
               {index !== i && (
-                <Text style={{ marginTop: 6, fontSize: 18 }}>
+                <Text style={{ marginTop: 6, marginRight: 10, fontSize: 16 }}>
                   {route.title}
                 </Text>
               )}
@@ -402,7 +418,6 @@ const styles = StyleSheet.create({
   tabBar: {
     flexDirection: "row",
     justifyContent: "space-between",
-    marginBottom: "-10%",
     paddingLeft: "8%",
     paddingRight: "8%",
     paddingTop: "3%",
@@ -418,7 +433,6 @@ const styles = StyleSheet.create({
     width: "100%",
     backgroundColor: "White",
     padding: 10,
-  
   },
 });
 

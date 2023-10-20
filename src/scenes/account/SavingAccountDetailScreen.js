@@ -24,7 +24,7 @@ const SavingAccountDetailScreen = ({ navigation, route }) => {
       title: "Setoran Tabungan",
       icon: "wallet-outline",
       onPress: () => navigation.navigate("SavingDepositRequest"),
-    }
+    },
   ];
 
   const toaster = useToast();
@@ -64,6 +64,7 @@ const SavingAccountDetailScreen = ({ navigation, route }) => {
     try {
       const result = await findSavingHistory(token, id);
       setAmout(result.data.data);
+      console.log(result.data.data);
     } catch (error) {
       console.error("Error API:", error);
     }
@@ -81,7 +82,7 @@ const SavingAccountDetailScreen = ({ navigation, route }) => {
           width: "80%",
           height: 25,
           marginTop: 10,
-          marginBottom: 20
+          marginBottom: 20,
         }}
         autoRun={true}
       />
@@ -126,12 +127,12 @@ const SavingAccountDetailScreen = ({ navigation, route }) => {
           <Caption
             style={[
               styles.transactionAmountCaption,
-              item.transactionType === "DEBIT"
+              item.transactionType === "D"
                 ? styles.debitTrxAmount
-                : styles.creditTrxAmount
+                : styles.creditTrxAmount,
             ]}
           >
-            {item.transactionType === "DEBIT" ? "-" : "+"}Rp {item.amount}
+            {item.transactionType === "D" ? "-" : "+"}Rp {item.amount}
           </Caption>
         )}
       />
@@ -153,7 +154,7 @@ const SavingAccountDetailScreen = ({ navigation, route }) => {
         </LinearGradient>
       </View>
 
-      <View style={styles.contentBlock}>
+      <View>
         {menus.map((item) => (
           <View style={styles.buttonRow} key={item.id}>
             <MenuButton
@@ -165,19 +166,21 @@ const SavingAccountDetailScreen = ({ navigation, route }) => {
             />
           </View>
         ))}
+      </View>
+      <View style={styles.contentBlock}>
         <Headline style={styles.detailHeading}>Sejarah Transaksi</Headline>
-        {/* {loading ? (
+        {loading ? (
           <View style={{ marginTop: 15 }}>
             <LoadingOverlay />
           </View>
-        ) : ( */}
+        ) : (
           <FlatList
             style={styles.transactionList}
             data={amout}
             renderItem={({ item }) => renderTransactionHistoryList(item)}
             ItemSeparatorComponent={() => <Divider />}
           />
-        {/* )} */}
+        )}
       </View>
     </View>
   );
@@ -186,79 +189,76 @@ const SavingAccountDetailScreen = ({ navigation, route }) => {
 const styles = StyleSheet.create({
   screen: {
     backgroundColor: "#F5F8FB",
-    flex: 1
+    flex: 1,
   },
   appbarHeader: {
     elevation: 0,
-    backgroundColor: "#F5F8FB"
+    backgroundColor: "#F5F8FB",
   },
   headingBlock: {
     marginTop: 15,
     width: "95%",
-    alignSelf: "center"
+    alignSelf: "center",
   },
   headingGradient: {
     borderRadius: 10,
-    padding: 10
+    padding: 10,
   },
   balanceTitle: {
     marginTop: 10,
-    color: "white"
+    color: "white",
   },
   balance: {
     marginBottom: 10,
     fontSize: 21,
     fontWeight: "bold",
-    color: "white"
+    color: "white",
   },
   accountNumber: {
     fontSize: 18,
     color: "white",
-    fontFamily: "Credit-Regular"
+    fontFamily: "Credit-Regular",
   },
   bankName: {
     marginTop: 10,
     marginBottom: 20,
     fontSize: 18,
-    color: "white"
+    color: "white",
   },
   contentBlock: {
-    flex: 1,
-    height: "100%",
-    padding: 15
+    height: "50%",
+    padding: 15,
   },
   detailHeading: {
     marginTop: 10,
     fontSize: 22,
-    fontWeight: "bold"
+    fontWeight: "bold",
   },
   transactionList: {
-    marginTop: 10
+    marginTop: 10,
   },
   transactionAmountCaption: {
     fontSize: 16,
     top: 10,
     fontWeight: "bold",
-    marginRight: 10
+    marginRight: 10,
   },
   debitTrxAmount: {
-    color: "grey"
+    color: "red",
   },
   creditTrxAmount: {
-    color: "#95D362"
+    color: "#95D362",
   },
   menuButton: {
-    marginLeft: 12,
-    marginRight: 10,
-    marginBottom: 5,
-    marginTop: 10,
-    backgroundColor: "#EAEBF8"
+    margin: 10,
+    backgroundColor: "#EAEBF8",
+    height: 90,
   },
   buttonRow: {
-    flex: 1,
     flexDirection: "row",
     margin: 5,
-  }
+    height: 100,
+  },
 });
 
 export default SavingAccountDetailScreen;

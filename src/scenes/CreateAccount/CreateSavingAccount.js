@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { View, StyleSheet } from "react-native";
+import { View, StyleSheet, Alert } from "react-native";
 import { Appbar, TextInput, Button, Caption } from "react-native-paper";
 import { AuthContext } from "../../providers/AuthenticationProvider";
 import { createSaving, findSavingProdukType } from "../../api/SavingApi";
@@ -37,18 +37,30 @@ const CreateSavingAccount = ({ navigation }) => {
   const formatToRupiah = (angka) => {
     return `Rp ${angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`;
   };
+  const [mutationLoading, setMutationLoading] = useState(false);
 
   const handleSumit = async () => {
-    try {
-      createSaving(token, {
-        productType: Service,
-        currentBalance: ProdukNumber,
-      }).then((result) => {
-        navigation.goBack();
-        console.log(result.data.data);
-      });
-    } catch (error) {
-      console.log(error);
+    if (!Service) {
+      Alert.alert("Error", "Kolom Produk Belum Dipilih.");
+    } else if (!ProdukNumber) {
+      Alert.alert("Error", "Kolom Jumlah Pengajuan Belum Dipilih.");
+    } else {
+      setMutationLoading(true);
+      try {
+        createSaving(token, {
+          productType: Service,
+          currentBalance: ProdukNumber,
+        }).then((result) => {
+          navigation.goBack();
+          Alert.alert(
+            "Sukses",
+            "Berhasil Mengajukan Tabungan Baru. Silahkan cek notifikasi secara berkala"
+          );
+          console.log(result.data.data);
+        });
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
@@ -86,7 +98,10 @@ const CreateSavingAccount = ({ navigation }) => {
             mode="contained"
             style={{ marginTop: 20, ...Color.primaryBackgroundColor }}
             onPress={handleSumit}
+            disabled={mutationLoading}
+            loading={mutationLoading}
           >
+            {mutationLoading ? "Mengirim..." : "Submit"}
             Simpan
           </Button>
         </View>

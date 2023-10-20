@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { View, StyleSheet, Text, ScrollView } from "react-native";
+import { View, StyleSheet, Text, ScrollView, FlatList } from "react-native";
 import { Appbar, IconButton } from "react-native-paper";
 import { LinearGradient } from "expo-linear-gradient";
 import ShimmerPlaceholder from "react-native-shimmer-placeholder";
@@ -7,6 +7,7 @@ import MenuButton from "../../components/common/MenuButton";
 import { AuthContext } from "../../providers/AuthenticationProvider";
 import { findLoanBillById, findLoanById } from "../../api/LoanApi";
 import { FlatGrid } from "react-native-super-grid";
+import { Card, Paragraph, Title } from "react-native-paper";
 
 const LoanAccountDetailScreen = ({ navigation, route }) => {
   const [isBalanceShown, setIsBalanceShown] = useState(false);
@@ -84,41 +85,15 @@ const LoanAccountDetailScreen = ({ navigation, route }) => {
 
   const renderSkeletonLoader = () => {
     return (
-      <View>
-        <ShimmerPlaceholder
-          style={{
-            width: "80%",
-            height: 25,
-            marginTop: 10,
-            marginBottom: 20,
-          }}
-          autoRun={true}
-        />
-        <ShimmerPlaceholder
-          style={{
-            width: "50%",
-            height: 20,
-            marginBottom: 20,
-          }}
-          autoRun={true}
-        />
-        <ShimmerPlaceholder
-          style={{
-            width: "30%",
-            height: 15,
-            marginBottom: 10,
-          }}
-          autoRun={true}
-        />
-        <ShimmerPlaceholder
-          style={{
-            width: "46%",
-            height: 20,
-            marginBottom: 20,
-          }}
-          autoRun={true}
-        />
-      </View>
+      <ShimmerPlaceholder
+        style={{
+          width: "80%",
+          height: 25,
+          marginTop: 10,
+          marginBottom: 20,
+        }}
+        autoRun={true}
+      />
     );
   };
 
@@ -159,24 +134,39 @@ const LoanAccountDetailScreen = ({ navigation, route }) => {
     for (let i = 0; i < bill.length; i++) {
       totalRepayment += Number(bill[i].amount);
     }
-
     return (
-      <View>
-        <Text style={styles.detailHeading}>Total Tagihan s.d. Bulan Ini</Text>
-        <Text style={{ fontSize: 17 }}>
-          Rp {totalRepayment.toLocaleString("en")}
-        </Text>
-        {bill.map((val, index) => (
-          <View key={index}>
-            <Text style={{ marginTop: 10, marginLeft: 15, fontSize: 15 }}>
-              Tagihan ke - {val.term}
-            </Text>
-            <Text>Pokok: Rp {val.principalAmount}</Text>
-            <Text>Bunga: Rp {val.interestAmount}</Text>
-            <Text>Denda: Rp {val.penaltyAmount}</Text>
-          </View>
-        ))}
-      </View>
+      <Card style={{ ...styles.card, backgroundColor: 'white' }}>
+        <Card.Content>
+          <Title style={styles.detailHeading}>
+            Total Tagihan s.d. Bulan Ini
+          </Title>
+          <Paragraph style={styles.totalAmount}>
+            Rp {totalRepayment.toLocaleString("en")}
+          </Paragraph>
+          <FlatList
+            data={bill}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({ item }) => (
+              <View style={styles.billItem}>  
+                <Text style={styles.billInfo}>Tagihan ke - {item.term}</Text>
+                <Text style={styles.paragraph}>Pokok :</Text>
+                <Paragraph>
+                  Rp {parseFloat(item.principalAmount).toLocaleString("en")}
+                </Paragraph>
+                <Text style={styles.paragraph}>Bunga :</Text>
+                <Paragraph>
+                  Rp {parseFloat(item.interestAmount).toLocaleString("en")}
+                </Paragraph>
+                <Text style={styles.paragraph}>Denda :</Text>
+                <Paragraph>
+                  Rp {parseFloat(item.penaltyAmount).toLocaleString("en")}
+                </Paragraph>
+              </View>
+            )}
+            ItemSeparatorComponent={() => <View style={styles.separator} />}
+          />
+        </Card.Content>
+      </Card>
     );
   };
 
@@ -190,13 +180,13 @@ const LoanAccountDetailScreen = ({ navigation, route }) => {
         <View style={styles.headingBlock}>
           <LinearGradient
             style={styles.headingGradient}
-            colors={["#1E90FF", "#0073E6"]}
+            colors={Color.primaryGradientColor}
           >
             {skeletonLoading ? renderSkeletonLoader() : renderAccountInfo()}
           </LinearGradient>
           <FlatGrid
             data={menus}
-            keyExtractor={(item, index) => index}
+            keyExtractor={(item, index) => index.toString()}
             itemDimension={80}
             renderItem={({ item }) => (
               <View style={styles.buttonRow}>
@@ -270,7 +260,6 @@ const styles = StyleSheet.create({
   },
   detailHeading: {
     marginTop: 5,
-    marginLeft: "3%",
     fontSize: 22,
     fontWeight: "bold",
   },
@@ -299,6 +288,28 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: "column",
     margin: 4,
+  },
+  billItem: {
+    borderBottomWidth: 1,
+    borderBottomColor: "#ddd",
+    paddingVertical: 10,
+  },
+  separator: {
+    height: 1,
+    backgroundColor: "#ddd",
+  },
+  billInfo: {
+    marginTop: 5,
+    fontSize: 18,
+    fontWeight: "400",
+  },
+  paragraph: {
+    marginTop: 5,
+    fontSize: 17,
+  },
+  card: {
+    margin: 20,
+    marginBottom: "30%",
   },
 });
 

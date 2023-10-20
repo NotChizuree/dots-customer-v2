@@ -5,6 +5,7 @@ import { AuthContext } from "../../providers/AuthenticationProvider";
 import { useContext } from "react";
 import DropDown from "react-native-paper-dropdown";
 import { createDeposit, findDepositProdukType } from "../../api/DepositApi";
+import { Alert } from "react-native";
 
 const CreateDepositAccount = ({ navigation }) => {
   const { token } = useContext(AuthContext);
@@ -37,18 +38,31 @@ const CreateDepositAccount = ({ navigation }) => {
   const formatToRupiah = (angka) => {
     return `Rp ${angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`;
   };
+  const [mutationLoading, setMutationLoading] = useState(false);
 
   const handleSumit = async () => {
-    try {
-      createDeposit(token, {
-        productType: Service,
-        currentBalance: ProdukNumber,
-      }).then((result) => {
-        navigation.goBack();
-        console.log(result.data.data);
-      });
-    } catch (error) {
-      console.log(error);
+    if (!Service) {
+      Alert.alert("Error", "Kolom Produk Belum Dipilih.");
+    } else if (!ProdukNumber) {
+      Alert.alert("Error", "Kolom Jumlah Pengajuan Belum Dipilih.");
+    } else {
+      setMutationLoading(true)
+      try {
+        createDeposit(token, {
+          productType: Service,
+          currentBalance: ProdukNumber,
+        }).then((result) => {
+          navigation.goBack();
+          Alert.alert(
+            "Sukses",
+            "Berhasil Mengajukan Deposit Baru. Silahkan cek notifikasi secara berkala"
+          );
+
+          console.log(result.data.data);
+        });
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
@@ -86,7 +100,10 @@ const CreateDepositAccount = ({ navigation }) => {
             mode="contained"
             style={{ marginTop: 20, ...Color.primaryBackgroundColor }}
             onPress={handleSumit}
+            disabled={mutationLoading}
+            loading={mutationLoading}
           >
+            {mutationLoading ? "Mengirim..." : "Submit"}
             Simpan
           </Button>
         </View>
