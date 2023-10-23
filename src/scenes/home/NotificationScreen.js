@@ -5,11 +5,10 @@ import {
   TouchableOpacity,
   Modal,
   Text,
-  Button,
   ScrollView,
   RefreshControl,
 } from "react-native";
-import { Headline, Card, Divider } from "react-native-paper";
+import { Headline, Card, Divider, Button } from "react-native-paper";
 import { AuthContext } from "../../providers/AuthenticationProvider";
 import Color from "../../common/Color";
 import {
@@ -29,6 +28,7 @@ const NotificationScreen = () => {
   const [data, setData] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
   const [selectedNotification, setSelectedNotification] = useState(null);
+  const [parsedDescription, setParsedDescription] = useState(null);
 
   const fetchData = async () => {
     try {
@@ -36,7 +36,6 @@ const NotificationScreen = () => {
         const apiData = JSON.parse(result.data.data);
         setData(apiData);
         setRefreshing(false);
-        console.log("yoooooooooooowwwwwwwww", apiData);
       });
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -46,7 +45,7 @@ const NotificationScreen = () => {
 
   const onRefresh = () => {
     setRefreshing(true);
-    fetchData();
+    fetchData();  
   };
 
   useEffect(() => {
@@ -82,11 +81,17 @@ const NotificationScreen = () => {
     }
 
     setPressedNotifications((prevState) => [...prevState, notification.id]);
+    setParsedDescription(parseDescription(notification.description));
   };
 
-  const formatDateString = (dateString) => {
-    const date = new Date(dateString);
-    return date.toDateString();
+  const parseDescription = (description) => {
+    try {
+      const parsedData = JSON.parse(description);
+      return parsedData;
+    } catch (error) {
+      console.error("Error parsing description:", error);
+      return { destination: "N/A" };
+    }
   };
 
   return (
@@ -141,7 +146,7 @@ const NotificationScreen = () => {
                       <View style={styles.circle} />
                     </View>
                     <Text style={styles.dateItem}>
-                      {formatDateString(notification.created_at)}
+                      {notification.created_at}
                     </Text>
                   </Card.Content>
                 </TouchableOpacity>
@@ -149,7 +154,6 @@ const NotificationScreen = () => {
               </React.Fragment>
             ))
           ) : (
-            // Tampilkan pesan "Tidak ada notifikasi" jika data kosong
             <View style={styles.noNotificationContainer}>
               <Text style={styles.noNotificationText}>
                 Tidak ada notifikasi
@@ -158,7 +162,6 @@ const NotificationScreen = () => {
           )}
         </Card>
 
-        {/* Modal for notification details 1 */}
         <Modal
           animationType="fade"
           transparent={true}
@@ -167,20 +170,48 @@ const NotificationScreen = () => {
             toggleModal();
           }}
         >
-          <View style={styles.centeredView}>
+          <View
+            style={isModalVisible1 ? styles.centeredView : styles.modalHidden}
+          >
             <View style={styles.modalView}>
-              <Text style={styles.modalText}>Ini adalah Modal 1</Text>
-              {selectedNotification && (
-                <Text style={styles.modalText}>
-                  {selectedNotification.description}
-                </Text>
+              <Text style={styles.modalTitle}>
+                {selectedNotification ? selectedNotification.title : ""}
+              </Text>
+              <View style={styles.horizontalLine} />
+
+              {parsedDescription ? (
+                <>
+                  <Text style={styles.modalTextTitle}>Tempat Tujuan:</Text>
+                  <Text style={styles.modalText}>
+                    {parsedDescription.destinantion}
+                  </Text>
+                  <Text style={styles.modalTextTitle}>alasan :</Text>
+                  <Text style={styles.modalText}>
+                    {parsedDescription.reason}
+                  </Text>
+                  <Text style={styles.modalTextTitle}>Tanggal :</Text>
+                  <Text style={styles.modalText}>
+                    {parsedDescription.attend_start}
+                  </Text>
+                  <Text style={styles.modalTextTitle}>Waktu :</Text>
+                  <Text style={styles.modalText}>
+                    {parsedDescription.attend_end}
+                  </Text>
+                </>
+              ) : (
+                <Text style={styles.modalText}>No description available</Text>
               )}
-              <Button title="Tutup" onPress={toggleModal} />
+              <Button
+                mode="contained"
+                style={{ marginTop: 20, ...Color.primaryBackgroundColor }}
+                onPress={toggleModal}
+              >
+                Tutup
+              </Button>
             </View>
           </View>
         </Modal>
 
-        {/* Modal for notification details 2 */}
         <Modal
           animationType="fade"
           transparent={true}
@@ -189,15 +220,46 @@ const NotificationScreen = () => {
             toggleModal();
           }}
         >
-          <View style={styles.centeredView}>
+          <View
+            style={isModalVisible2 ? styles.centeredView : styles.modalHidden}
+          >
             <View style={styles.modalView}>
-              <Text style={styles.modalText}>Ini adalah Modal 2</Text>
-              {selectedNotification && (
-                <Text style={styles.modalText}>
-                  {selectedNotification.description}
-                </Text>
+              <Text style={styles.modalTitle}>
+                {selectedNotification ? selectedNotification.title : ""}
+              </Text>
+              <View style={styles.horizontalLine} />
+
+              {parsedDescription ? (
+                <>
+                  <Text style={styles.modalTextTitle}>Tempat Tujuan:</Text>
+                  <Text style={styles.modalText}>
+                    {parsedDescription.destination}
+                  </Text>
+                  <Text style={styles.modalTextTitle}>
+                    alasan : {parsedDescription.reason}
+                  </Text>
+                  <Text style={styles.modalTextTitle}>
+                    {parsedDescription.reason}
+                  </Text>
+                  <Text style={styles.modalTextTitle}>Tanggal :</Text>
+                  <Text style={styles.modalText}>
+                    {parsedDescription.attend_start}
+                  </Text>
+                  <Text style={styles.modalTextTitle}>Waktu :</Text>
+                  <Text style={styles.modalText}>
+                    {parsedDescription.attend_end}
+                  </Text>
+                </>
+              ) : (
+                <Text style={styles.modalText}>No description available</Text>
               )}
-              <Button title="Tutup" onPress={toggleModal} />
+              <Button
+                mode="contained"
+                style={{ marginTop: 20, ...Color.primaryBackgroundColor }}
+                onPress={toggleModal}
+              >
+                Tutup
+              </Button>
             </View>
           </View>
         </Modal>
@@ -218,6 +280,12 @@ const styles = StyleSheet.create({
     paddingBottom: "2%",
     color: "white",
   },
+  horizontalLine: {
+    height: 1,
+    backgroundColor: "gray",
+    marginVertical: 10,
+    marginBottom: 10,
+  },
   notificationItem: {
     flexDirection: "row",
     alignItems: "center",
@@ -233,6 +301,10 @@ const styles = StyleSheet.create({
   },
   titleContainer: {
     flex: 1,
+  },
+  modalTextTitle: {
+    fontSize: 17,
+    fontWeight: "600",
   },
   circleButton: {
     position: "absolute",
@@ -251,13 +323,16 @@ const styles = StyleSheet.create({
     height: 20,
     borderRadius: 10,
   },
+  modalTitle: {
+    fontSize: 20,
+    fontWeight: "500",
+  },
   modalView: {
     margin: 20,
     width: "80%",
     height: "50%",
     backgroundColor: "white",
     padding: 35,
-    alignItems: "center",
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -269,7 +344,6 @@ const styles = StyleSheet.create({
   },
   modalText: {
     marginBottom: 15,
-    textAlign: "center",
     color: "black",
   },
   dateItem: {
@@ -291,6 +365,12 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     color: "gray",
+  },
+  isiDescription: {
+    left: 10,
+  },
+  modalHidden: {
+    display: "none",
   },
 });
 
