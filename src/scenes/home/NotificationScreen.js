@@ -28,6 +28,7 @@ const NotificationScreen = () => {
   const { token } = useContext(AuthContext);
   const [data, setData] = useState([]);
   const [refreshing, setRefreshing] = useState(false);
+  const [selectedNotification, setSelectedNotification] = useState(null);
 
   const fetchData = async () => {
     try {
@@ -62,8 +63,8 @@ const NotificationScreen = () => {
   };
 
   const toggleNotificationPress = (notification) => {
-    console.log("notif nih:", notification);
-    NotificationStatus(token, notification.id);
+    setSelectedNotification(notification);
+
     if (
       notification.type === 1 ||
       notification.type === 2 ||
@@ -101,7 +102,7 @@ const NotificationScreen = () => {
         <Card>
           {data && data.length > 0 ? (
             data.map((notification) => (
-              <React.Fragment>
+              <React.Fragment key={notification.id}>
                 <TouchableOpacity
                   onPress={() => {
                     console.log("Notifikasi diklik:", notification.title);
@@ -157,6 +158,7 @@ const NotificationScreen = () => {
           )}
         </Card>
 
+        {/* Modal for notification details 1 */}
         <Modal
           animationType="fade"
           transparent={true}
@@ -168,13 +170,9 @@ const NotificationScreen = () => {
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
               <Text style={styles.modalText}>Ini adalah Modal 1</Text>
-              {isModalVisible1 && data.length > 0 && (
+              {selectedNotification && (
                 <Text style={styles.modalText}>
-                  {
-                    data.find(
-                      (notification) => notification.id === isModalVisible1
-                    )?.description
-                  }
+                  {selectedNotification.description}
                 </Text>
               )}
               <Button title="Tutup" onPress={toggleModal} />
@@ -182,6 +180,7 @@ const NotificationScreen = () => {
           </View>
         </Modal>
 
+        {/* Modal for notification details 2 */}
         <Modal
           animationType="fade"
           transparent={true}
@@ -193,13 +192,9 @@ const NotificationScreen = () => {
           <View style={styles.centeredView}>
             <View style={styles.modalView}>
               <Text style={styles.modalText}>Ini adalah Modal 2</Text>
-              {isModalVisible2 && data.length > 0 && (
+              {selectedNotification && (
                 <Text style={styles.modalText}>
-                  {
-                    data.find(
-                      (notification) => notification.id === isModalVisible2
-                    )?.description
-                  }
+                  {selectedNotification.description}
                 </Text>
               )}
               <Button title="Tutup" onPress={toggleModal} />
