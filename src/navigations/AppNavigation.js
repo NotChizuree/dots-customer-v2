@@ -3,6 +3,7 @@ import {createStackNavigator} from '@react-navigation/stack';
 import HomeNavigation from './HomeNavigation';
 // import {createGraphqlClient} from '../query/GraphqlClient';
 // import {ApolloProvider} from '@apollo/client';
+import BlogScreen from '../scenes/blogs/BlogsScreen';
 import SavingAccountDetailScreen from '../scenes/account/SavingAccountDetailScreen';
 import LoanAccountDetailScreen from '../scenes/account/LoanAccountDetailScreen';
 import AttendanceReservationScreen from '../scenes/attendanceReservation/AttendanceReservationScreen';
@@ -27,6 +28,11 @@ const AppNavigation = () => {
         <AppNavigator.Screen
           name="Home"
           component={HomeNavigation}
+          options={{headerShown: false}}
+        />
+        <AppNavigator.Screen
+          name="Blog"
+          component={BlogScreen}
           options={{headerShown: false}}
         />
         <AppNavigator.Screen

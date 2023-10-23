@@ -30,13 +30,16 @@ const DepositAccountDetailScreen = ({ navigation, route }) => {
   const [isBalanceShown, setIsBalanceShown] = useState(false);
 
   const [Name, setName] = useState("");
+  const [loading, setLoading] = useState(true);
   const [accountNumber, setAccountNumber] = useState("");
+  const [jangkaWaktu, setJangkaWaktu] = useState("");
   const [availableBalance, setAvailableBalance] = useState("");
 
   const { id } = route.params;
   const { token } = useContext(AuthContext);
 
   const fetchData = async () => {
+    setLoading(true);
     try {
       const result = await findDepositById(token, id);
       const data = result.data.data;
@@ -44,8 +47,11 @@ const DepositAccountDetailScreen = ({ navigation, route }) => {
       setName(data.productType.name);
       setAccountNumber(data.id);
       setAvailableBalance(data.currentBalance);
+      setJangkaWaktu(data.jangkawaktu)
+      setLoading(false);
     } catch (error) {
       console.error('Error API:', error);
+      setLoading(false);
     }
   };
 
@@ -115,6 +121,7 @@ const DepositAccountDetailScreen = ({ navigation, route }) => {
             style={{ bottom: 5 }}
           />
         </View>
+        <Text style={styles.timePeriod}>Jangka Waktu :  {jangkaWaktu} Bulan</Text>
       </View>
     );
   };
@@ -131,21 +138,8 @@ const DepositAccountDetailScreen = ({ navigation, route }) => {
             style={styles.headingGradient}
             colors={Color.primaryGradientColor}
           >
-            {renderAccountInfo()}
+          {loading ? renderAccountInfoPlaceholder() : renderAccountInfo()}
           </LinearGradient>
-        </View>
-        <View style={styles.contentBlock}>
-          {menus.map((item) => (
-            <View style={styles.buttonRow} key={item.id}>
-              <MenuButton
-                style={styles.menuButton}
-                iconName={item.icon}
-                title={item.title}
-                numColumns={2}
-                onPress={item.onPress}
-              />
-            </View>
-          ))}
         </View>
       </ScrollView>
     </View>
@@ -170,6 +164,12 @@ const styles = StyleSheet.create({
   headingGradient: {
     borderRadius: 10,
     paddingLeft: '7%',
+  },
+  timePeriod: {
+    fontSize: 15,
+    color: "white",
+    marginBottom: 20,
+    fontWeight: "bold",
   },
   balanceTitle: {
     marginTop: '7%',

@@ -77,15 +77,44 @@ const SavingAccountDetailScreen = ({ navigation, route }) => {
 
   const renderAccountInfoPlaceholder = () => {
     return (
-      <ShimmerPlaceholder
-        style={{
-          width: "80%",
-          height: 25,
-          marginTop: 10,
-          marginBottom: 20,
-        }}
-        autoRun={true}
-      />
+      <>
+        <ShimmerPlaceholder
+          style={{
+            width: "80%",
+            height: 25,
+            marginTop: 10,
+            marginBottom: 20,
+          }}
+          autoRun={true}
+        />
+        <ShimmerPlaceholder
+          style={{
+            width: "45%",
+            height: 20,
+            marginTop: 16,
+            marginBottom: 20,
+          }}
+          autoRun={true}
+        />
+        <ShimmerPlaceholder
+          style={{
+            width: "40%",
+            height: 15,
+            marginTop: 10,
+            marginBottom: 10,
+          }}
+          autoRun={true}
+        />
+        <ShimmerPlaceholder
+          style={{
+            width: "50%",
+            height: 17,
+            marginTop: 10,
+            marginBottom: 20,
+          }}
+          autoRun={true}
+        />
+      </>
     );
   };
 
@@ -96,13 +125,13 @@ const SavingAccountDetailScreen = ({ navigation, route }) => {
           {Name}
         </Text>
         <Text style={styles.accountNumber}>{accountNumber}</Text>
-        <Text style={styles.balanceTitle}>Saldo Aktif</Text>
+        <Text style={styles.balanceTitle}>Saldo Tabungan</Text>
         <View style={{ flexDirection: "row" }}>
           <Headline adjustFontSizeToFit style={styles.balance}>
             Rp{" "}
             {isBalanceShown
               ? parseFloat(availableBalance).toLocaleString("en")
-              : "******"}
+              : "**********"}
           </Headline>
           <IconButton
             onPress={() => setIsBalanceShown(!isBalanceShown)}
@@ -117,6 +146,9 @@ const SavingAccountDetailScreen = ({ navigation, route }) => {
 
   const renderTransactionHistoryList = (item) => {
     const readableCreatedAt = new Date(item.createdAt).toString();
+    const formatToRupiah = (angka) => {
+      return `${angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`;
+    };
     return (
       <List.Item
         titleStyle={{ marginBottom: 7 }}
@@ -132,7 +164,8 @@ const SavingAccountDetailScreen = ({ navigation, route }) => {
                 : styles.creditTrxAmount,
             ]}
           >
-            {item.transactionType === "D" ? "-" : "+"}Rp {item.amount}
+            {item.transactionType === "D" ? "-" : "+"}Rp{" "}
+            {formatToRupiah(item.amount)}
           </Caption>
         )}
       />
@@ -202,10 +235,11 @@ const styles = StyleSheet.create({
   },
   headingGradient: {
     borderRadius: 10,
-    padding: 10,
+    padding: 30,
   },
   balanceTitle: {
     marginTop: 10,
+    fontSize: 15,
     color: "white",
   },
   balance: {
@@ -215,14 +249,15 @@ const styles = StyleSheet.create({
     color: "white",
   },
   accountNumber: {
-    fontSize: 18,
+    fontSize: 20,
+    marginBottom: 16,
+    marginTop: 25,
     color: "white",
     fontFamily: "Credit-Regular",
   },
   bankName: {
-    marginTop: 10,
     marginBottom: 20,
-    fontSize: 18,
+    fontSize: 20,
     color: "white",
   },
   contentBlock: {

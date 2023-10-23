@@ -1,4 +1,4 @@
-import React, { useContext, useState, useEffect } from "react";
+import React, { useContext, useState, useEffect, useRef } from "react";
 import {
   View,
   StyleSheet,
@@ -23,6 +23,7 @@ const NotificationScreen = () => {
   const [pressedNotifications, setPressedNotifications] = useState([]);
   const [isModalVisible1, setIsModalVisible1] = useState(false);
   const [isModalVisible2, setIsModalVisible2] = useState(false);
+  const modalRef = useRef(null);
 
   const { token } = useContext(AuthContext);
   const [data, setData] = useState([]);
@@ -64,6 +65,9 @@ const NotificationScreen = () => {
 
   const toggleNotificationPress = (notification) => {
     setSelectedNotification(notification);
+    // NotificationStatus(token, notification.id).then((result) => {
+    //   console.log(result)
+    // })
 
     if (
       notification.type === 1 ||
@@ -120,12 +124,20 @@ const NotificationScreen = () => {
                       styles.notificationItem,
                       {
                         backgroundColor:
-                          isNotificationPressed(notification.id) &&
-                          notification.status === 0
+                          isNotificationPressed(notification.id) ||
+                          notification.status == 1
                             ? "#F1EFEF"
                             : "transparent",
                       },
                     ]}
+                    onLayout={(e) => {
+                      // Set tinggi modal saat item di dalamnya diukur
+                      if (modalRef.current) {
+                        modalRef.current.setNativeProps({
+                          style: { height: e.nativeEvent.layout.height },
+                        });
+                      }
+                    }}
                   >
                     <View style={styles.titleContainer}>
                       <Text style={styles.notificationTitle}>
@@ -137,8 +149,8 @@ const NotificationScreen = () => {
                         styles.circleButton,
                         {
                           backgroundColor:
-                            isNotificationPressed(notification.id) &&
-                            notification.status === 0
+                            isNotificationPressed(notification.id) ||
+                            notification.status == 1
                               ? "white"
                               : "blue",
                         },
@@ -163,6 +175,7 @@ const NotificationScreen = () => {
           )}
         </Card>
 
+        
         <Modal
           animationType="fade"
           transparent={true}
@@ -186,7 +199,7 @@ const NotificationScreen = () => {
                   <Text style={styles.modalText}>
                     {parsedDescription.destinantion}
                   </Text>
-                  <Text style={styles.modalTextTitle}>alasan :</Text>
+                  <Text style={styles.modalTextTitle}>Alasan :</Text>
                   <Text style={styles.modalText}>
                     {parsedDescription.reason}
                   </Text>
@@ -232,23 +245,15 @@ const NotificationScreen = () => {
 
               {parsedDescription ? (
                 <>
-                  <Text style={styles.modalTextTitle}>Tempat Tujuan:</Text>
+                  <Text style={styles.modalTextTitle}>Tipe Produk :</Text>
                   <Text style={styles.modalText}>
-                    {parsedDescription.destination}
+                    {parsedDescription.productType}
                   </Text>
                   <Text style={styles.modalTextTitle}>
-                    alasan : {parsedDescription.reason}
+                    Jumlah :
                   </Text>
-                  <Text style={styles.modalTextTitle}>
-                    {parsedDescription.reason}
-                  </Text>
-                  <Text style={styles.modalTextTitle}>Tanggal :</Text>
                   <Text style={styles.modalText}>
-                    {parsedDescription.attend_start}
-                  </Text>
-                  <Text style={styles.modalTextTitle}>Waktu :</Text>
-                  <Text style={styles.modalText}>
-                    {parsedDescription.attend_end}
+                    {parsedDescription.currentBalance}
                   </Text>
                 </>
               ) : (
@@ -256,7 +261,7 @@ const NotificationScreen = () => {
               )}
               <Button
                 mode="contained"
-                style={{ marginTop: 20, ...Color.primaryBackgroundColor }}
+                style={{ marginTop: 5, ...Color.primaryBackgroundColor }}
                 onPress={toggleModal}
               >
                 Tutup
@@ -331,7 +336,6 @@ const styles = StyleSheet.create({
   modalView: {
     margin: 20,
     width: "80%",
-    height: "50%",
     backgroundColor: "white",
     padding: 35,
     shadowColor: "#000",

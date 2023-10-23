@@ -126,7 +126,7 @@ const AccountsScreen = ({ navigation }) => {
             }}
           >
             <Text style={{ color: "white", textAlign: "center", fontSize: 18 }}>
-              Buat Tabungan Baru
+              Ajukan Tabungan Baru
             </Text>
           </TouchableOpacity>
         </View>
@@ -230,7 +230,7 @@ const AccountsScreen = ({ navigation }) => {
             }}
           >
             <Text style={{ color: "white", textAlign: "center", fontSize: 18 }}>
-              Buat Kredit Baru
+              Ajukan Kredit Baru
             </Text>
           </TouchableOpacity>
         </View>
@@ -320,7 +320,7 @@ const AccountsScreen = ({ navigation }) => {
           />
         </View>
 
-        {/* Tombol "Buat Deposit Baru" di bawah tab bar */}
+        {/* Tombol "Ajukan Deposit Baru" di bawah tab bar */}
         <View style={styles.createButtonContainer}>
           <TouchableOpacity
             onPress={() => navigation.navigate("CreateDepositAccount")}
@@ -331,7 +331,7 @@ const AccountsScreen = ({ navigation }) => {
             }}
           >
             <Text style={{ color: "white", textAlign: "center", fontSize: 18 }}>
-              Buat Deposit Baru
+              Ajukan Deposit Baru
             </Text>
           </TouchableOpacity>
         </View>

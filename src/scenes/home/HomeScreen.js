@@ -7,6 +7,7 @@ import {
   Dimensions,
   Text,
   Alert,
+  TouchableOpacity
 } from "react-native";
 import { Headline, Appbar, Subheading } from "react-native-paper";
 import MenuButton from "../../components/common/MenuButton";
@@ -117,14 +118,22 @@ const HomeScreen = ({ navigation }) => {
 
   const [currentSlide, setCurrentSlide] = useState({ activeSlide: 0 });
 
+  const onCarouselItemPress = (item) => {
+    navigation.navigate("Blog", {
+      item: item,
+    });
+  };
+
   const renderCarouselItem = ({ item, index }) => {
     return (
-      <View style={{ alignSelf: "center" }}>
-        <Image
-          style={{ width: ITEM_WIDTH, height: 140 }}
-          source={{ uri: item.imageUrl }}
-        />
-      </View>
+      <TouchableOpacity onPress={() => onCarouselItemPress(item)}>
+        <View style={{ alignSelf: "center" }}>
+          <Image
+            style={{ width: ITEM_WIDTH, height: 140 }}
+            source={{ uri: item.imageUrl }}
+          />
+        </View>
+      </TouchableOpacity>
     );
   };
 

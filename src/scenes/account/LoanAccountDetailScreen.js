@@ -85,15 +85,44 @@ const LoanAccountDetailScreen = ({ navigation, route }) => {
 
   const renderSkeletonLoader = () => {
     return (
-      <ShimmerPlaceholder
-        style={{
-          width: "80%",
-          height: 25,
-          marginTop: 10,
-          marginBottom: 20,
-        }}
-        autoRun={true}
-      />
+      <>
+        <ShimmerPlaceholder
+          style={{
+            width: "80%",
+            height: 25,
+            marginTop: 10,
+            marginBottom: 20,
+          }}
+          autoRun={true}
+        />
+        <ShimmerPlaceholder
+          style={{
+            width: "45%",
+            height: 20,
+            marginTop: 16,
+            marginBottom: 20,
+          }}
+          autoRun={true}
+        />
+        <ShimmerPlaceholder
+          style={{
+            width: "20%",
+            height: 15,
+            marginTop: 10,
+            marginBottom: 10,
+          }}
+          autoRun={true}
+        />
+        <ShimmerPlaceholder
+          style={{
+            width: "50%",
+            height: 17,
+            marginTop: 10,
+            marginBottom: 20,
+          }}
+          autoRun={true}
+        />
+      </>
     );
   };
 
@@ -108,12 +137,13 @@ const LoanAccountDetailScreen = ({ navigation, route }) => {
         <Text style={styles.accountNumber}>
           {data.id ? data.id : "Account Number Not Available"}
         </Text>
-        <Text style={styles.balanceTitle}>Active Balance</Text>
+        <Text style={styles.balanceTitle}>Sisa Pinjaman</Text>
         <View style={{ flexDirection: "row" }}>
           <Text style={styles.balance}>
+          Rp{" "}
             {isBalanceShown
               ? data.outstandingBalance
-                ? `Rp ${parseFloat(data.outstandingBalance).toLocaleString(
+                ? ` ${parseFloat(data.outstandingBalance).toLocaleString(
                     "en-US"
                   )}`
                 : "Balance Not Available"
@@ -123,6 +153,7 @@ const LoanAccountDetailScreen = ({ navigation, route }) => {
             onPress={() => setIsBalanceShown(!isBalanceShown)}
             icon={isBalanceShown ? "eye-off" : "eye"}
             size={25}
+            style={{ bottom: 5 }}
           />
         </View>
       </View>
@@ -174,7 +205,7 @@ const LoanAccountDetailScreen = ({ navigation, route }) => {
     <View style={styles.screen}>
       <Appbar.Header style={styles.appbarHeader}>
         <Appbar.BackAction onPress={() => navigation.goBack()} />
-        <Appbar.Content title="Loan Account" />
+        <Appbar.Content title="Kredit" />
       </Appbar.Header>
       <ScrollView>
         <View style={styles.headingBlock}>
@@ -225,6 +256,7 @@ const styles = StyleSheet.create({
   headingGradient: {
     borderRadius: 10,
     paddingLeft: "7%",
+    padding: 30,
   },
   balanceTitle: {
     marginTop: "7%",
@@ -232,6 +264,7 @@ const styles = StyleSheet.create({
   },
   balance: {
     marginBottom: "6%",
+    marginTop: 5,
     fontSize: 21,
     fontWeight: "bold",
     color: "white",
@@ -242,7 +275,6 @@ const styles = StyleSheet.create({
     fontFamily: "Credit-Regular",
   },
   bankName: {
-    marginTop: "7.5%",
     marginBottom: "13%",
     fontSize: 18,
     color: "white",
