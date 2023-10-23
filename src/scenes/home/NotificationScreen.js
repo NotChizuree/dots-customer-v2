@@ -29,13 +29,14 @@ const NotificationScreen = () => {
   const [refreshing, setRefreshing] = useState(false);
   const [selectedNotification, setSelectedNotification] = useState(null);
   const [parsedDescription, setParsedDescription] = useState(null);
-
+   
   const fetchData = async () => {
     try {
       findAllNotificationByToken(token).then((result) => {
         const apiData = JSON.parse(result.data.data);
         setData(apiData);
         setRefreshing(false);
+        console.log(apiData)
       });
     } catch (error) {
       console.error("Error fetching data:", error);
