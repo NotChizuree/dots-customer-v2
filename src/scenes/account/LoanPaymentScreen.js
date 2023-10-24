@@ -23,20 +23,18 @@ import { StackActions } from "@react-navigation/native";
 import DropDownPicker from "react-native-dropdown-picker";
 import DropDown from "react-native-paper-dropdown";
 
-const SavingDepositRequestScreen = ({ navigation }) => {
-  const [open, setOpen] = useState(false);
+const LoanPaymentScreen = ({ navigation }) => {
   const { currentTenant } = useContext(AuthContext);
   const [isFocused, setIsFocused] = useState(false);
-  const [inputValue, setInputValue] = useState("");
-  const [showTabunganContainer, setShowTabunganContainer] = useState(false);
   const [showDropDown, setShowDropDown] = useState(false);
+  const [open, setOpen] = useState(false);
   const [itemsDropdown, setItemDropdown] = useState(null);
   const [items] = useState([
     { label: "Transfer Bank BCA (Dicek Manual)", value: "01" },
     { label: "Transfer Bank Permata (Dicek Manual)", value: "02" },
   ]);
 
-  const [amount, setAmount] = useState("Rp. 0");
+  const [amount, setAmount] = useState();
 
   const { login } = useContext(AuthContext);
 
@@ -56,16 +54,6 @@ const SavingDepositRequestScreen = ({ navigation }) => {
     setIsFocused(false);
   };
 
-  const handleRekeningPengirimChange = (text) => {
-    setRekeningPengirim(text);
-    checkTabunganContainerVisibility(inputValue, text, itemsDropdown);
-  };
-
-  const handlePaymentChange = (itemValue) => {
-    setPaymentDropdown(itemValue);
-    checkTabunganContainerVisibility(inputValue, rekeningPengirim, itemValue);
-  };
-
   const handleInputChange = (text) => {
     const cleanedText = text.replace(/[^\d]/g, "");
     const numericValue = Number.parseInt(cleanedText, 10);
@@ -75,23 +63,11 @@ const SavingDepositRequestScreen = ({ navigation }) => {
     }
   };
 
-  const checkTabunganContainerVisibility = (
-    inputValue,
-    rekeningPengirim,
-    paymentDropdown
-  ) => {
-    if ((inputValue, paymentDropdown, rekeningPengirim)) {
-      setShowTabunganContainer(true);
-    } else {
-      setShowTabunganContainer(false);
-    }
-  };
-
   return (
     <>
       <Appbar.Header style={styles.appbarHeader}>
         <Appbar.BackAction onPress={() => navigation.goBack()} />
-        <Appbar.Content title="Setoran Tabungan" />
+        <Appbar.Content title="Bayar Tagihan" />
       </Appbar.Header>
 
       <View style={styles.box}>
@@ -116,51 +92,13 @@ const SavingDepositRequestScreen = ({ navigation }) => {
           value={itemsDropdown}
           setValue={setItemDropdown}
           list={items}
-          onChangeText={handlePaymentChange}
         />
 
-        <View style={styles.pickerContainer}>
-          <Text>Nama Rekening Pengirim</Text>
-          <TextInput
-            style={styles.input}
-            underlineColor="transparent"
-            placeholderTextColor="#999999"
-            onChangeText={handleRekeningPengirimChange}
-          />
-        </View>
-        {showTabunganContainer && (
-          <View style={styles.tabunganContainer}>
-            <Text style={styles.tabunganText}>Tata Cara Setoran</Text>
-            <Text style={styles.txt}>
-              1. Masuk pada menu transfer di ATM/M-Banking anda
-            </Text>
-            <Text style={styles.txt}>2. Pilih "Transfer sesama bank"</Text>
-            <Text style={styles.txt}>
-              3. Pada Bagian rekening tujuan, Masukan 0010101010101 a.n PT BPR
-              Kreasi Nusantara
-            </Text>
-            <Text style={styles.txt}>
-              4. Pada Bagian Nominal Masukan Sebesar Rp. {amount} "jangan
-              dibulatkan ke atas"
-            </Text>
-            <Text style={styles.txt}>
-              5. Apabila Telah melakukan transfer Klik Tombol "saya Sudah
-              Transfer" Dibawah ini
-            </Text>
-            <TouchableOpacity
-              style={styles.customButton}
-              onPress={handleSubmit}
-            >
-              <Text style={styles.buttonText}>SAYA SUDAH TRANSFER</Text>
-            </TouchableOpacity>
-          </View>
-        )}
-
-        {/* <TouchableOpacity>
+        <TouchableOpacity>
           <Button style={styles.btn}>
             <Text style={styles.btnSubmit}>SUBMIT</Text>
           </Button>
-        </TouchableOpacity> */}
+        </TouchableOpacity>
       </View>
     </>
   );
@@ -219,31 +157,6 @@ const styles = StyleSheet.create({
   text: {
     marginTop: 10,
   },
-  tabunganContainer: {
-    borderWidth: 1,
-    borderColor: "gray",
-    padding: 16,
-  },
-  tabunganText: {
-    fontSize: 18,
-    fontWeight: "bold",
-    marginBottom: 8,
-  },
-  txt: {
-    marginBottom: 10,
-  },
-  customButton: {
-    backgroundColor: "#041562",
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 8,
-    alignItems: "center",
-  },
-  buttonText: {
-    color: "white",
-    fontSize: 16,
-    fontWeight: "bold",
-  },
 });
 
-export default SavingDepositRequestScreen;
+export default LoanPaymentScreen;

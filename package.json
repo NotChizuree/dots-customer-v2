@@ -25,6 +25,7 @@
     "react-native-dropdown-picker": "^5.4.6",
     "react-native-gesture-handler": "~2.12.0",
     "react-native-global-props": "^1.1.5",
+    "react-native-lightbox-v2": "^0.9.0",
     "react-native-linear-gradient": "^2.8.3",
     "react-native-pager-view": "6.2.0",
     "react-native-paper": "^5.10.6",
@@ -37,6 +38,7 @@
     "react-native-snap-carousel": "^3.9.1",
     "react-native-super-grid": "^5.0.0",
     "react-native-tab-view": "^3.5.2",
+    "react-native-table-component": "^1.2.2",
     "react-test-renderer": "^17.0.2",
     "terbilang-js": "^1.0.1"
   },

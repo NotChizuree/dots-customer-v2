@@ -16,6 +16,7 @@ import { AuthContext } from "../../providers/AuthenticationProvider";
 import Color from "../../common/Color";
 import LoadingOverlay from "../../components/common/LoadingOverlay";
 import MenuButton from "../../components/common/MenuButton";
+import { ScrollView } from "react-native-gesture-handler";
 
 const SavingAccountDetailScreen = ({ navigation, route }) => {
   const menus = [
@@ -173,7 +174,7 @@ const SavingAccountDetailScreen = ({ navigation, route }) => {
   };
 
   return (
-    <View style={styles.screen}>
+    <ScrollView style={styles.screen}>
       <Appbar.Header style={styles.appbarHeader}>
         <Appbar.BackAction onPress={() => navigation.goBack()} />
         <Appbar.Content title="Tabungan" />
@@ -215,7 +216,7 @@ const SavingAccountDetailScreen = ({ navigation, route }) => {
           />
         )}
       </View>
-    </View>
+    </ScrollView>
   );
 };
 
@@ -223,6 +224,7 @@ const styles = StyleSheet.create({
   screen: {
     backgroundColor: "#F5F8FB",
     flex: 1,
+    flexGrow: 1,
   },
   appbarHeader: {
     elevation: 0,
@@ -261,7 +263,7 @@ const styles = StyleSheet.create({
     color: "white",
   },
   contentBlock: {
-    height: "50%",
+    // height: "50%",
     padding: 15,
   },
   detailHeading: {

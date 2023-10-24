@@ -1,4 +1,4 @@
-import React, { createContext, useReducer } from "react";
+import React, { createContext, useReducer, useEffect } from "react";
 import RNSInfo from "react-native-sensitive-info";
 import * as SecureStore from "expo-secure-store";
 import { ApiManager } from "../api/ApiManager";
@@ -10,11 +10,7 @@ const AuthReducer = (state, action) => {
         ...state,
         user: action.payload.user,
         token: action.payload.token,
-      };
-    case "SET_TENANT":
-      return {
-        ...state,
-        currentTenant: action.payload.tenant,
+        exp: action.payload.exp,
       };
     default:
       return state;
@@ -25,24 +21,17 @@ export const AuthContext = createContext({});
 const AuthProvider = ({ children }) => {
   const [state, dispatch] = useReducer(AuthReducer, {});
 
-  const setUser = (user, token) => {
+  const setUser = (user, token, exp) => {
     dispatch({
       type: "SET_USER",
-      payload: { user: user, token: token },
-    });
-  };
-
-  const setTenant = (tenant) => {
-    dispatch({
-      type: "SET_TENANT",
-      payload: { tenant: tenant },
+      payload: { user: user, token: token, exp: exp },
     });
   };
 
   const logout = async () => {
     try {
       await SecureStore.deleteItemAsync("authInfo");
-      setUser(null, "");
+      setUser(null, "", null);
     } catch (error) {
       console.error("Error deleting authInfo:", error);
     }
@@ -60,9 +49,7 @@ const AuthProvider = ({ children }) => {
       });
 
       await SecureStore.setItemAsync("authInfo", JSON.stringify(data.data));
-      setUser(data.data.user, data.data.accessToken);
-      // setTenant(data.data.user.tenantReadableName)
-      // console.log('data',data.data.user)
+      setUser(data.data.user, data.data.accessToken, data.exp);
       return data;
     } catch (error) {
       switch (error.response?.status) {
@@ -74,12 +61,29 @@ const AuthProvider = ({ children }) => {
     }
   };
 
+  useEffect(() => {
+    // Lakukan pengecekan waktu ekspirasi (exp) di sini
+    const checkTokenExpiration = () => {
+      const { exp } = state;
+      const currentTime = Math.floor(Date.now() / 1000); // Waktu saat ini dalam detik
+      if (exp && exp < currentTime) {
+        logout();
+      }
+    };
+
+    checkTokenExpiration();
+
+    const interval = setInterval(checkTokenExpiration, 24 * 60 * 60);
+
+    return () => clearInterval(interval);
+  }, [state, logout]);
+
   return (
     <AuthContext.Provider
       value={{
         user: state.user,
         token: state.token,
-        currentTenant: state.currentTenant,
+        exp: state.exp,
         setUser,
         logout,
         login,

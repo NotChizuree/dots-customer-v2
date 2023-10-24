@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import { View, StyleSheet, Text, ScrollView, FlatList } from "react-native";
+import { View, StyleSheet, Text, ScrollView, FlatList, Alert } from "react-native";
 import { Appbar, IconButton } from "react-native-paper";
 import { LinearGradient } from "expo-linear-gradient";
 import ShimmerPlaceholder from "react-native-shimmer-placeholder";
@@ -12,7 +12,7 @@ import { Card, Paragraph, Title } from "react-native-paper";
 const LoanAccountDetailScreen = ({ navigation, route }) => {
   const [isBalanceShown, setIsBalanceShown] = useState(false);
   const [loanLoading, setLoanLoading] = useState(true);
-
+  const { user, exp } = useContext(AuthContext);
   const { token } = useContext(AuthContext);
   const { id } = route.params;
   console.log(id);
@@ -58,7 +58,17 @@ const LoanAccountDetailScreen = ({ navigation, route }) => {
       id: 1,
       title: "Ajukan Restrukturisasi",
       icon: "clipboard-outline",
-      onPress: () => navigation.navigate("RestructureRequest"),
+      onPress: () => {
+        // Cek akses di sini jika diperlukan
+        if (user.hasRestructureAccess) {
+          navigation.navigate("");
+        } else {
+          Alert.alert(
+            "Akses Ditolak",
+            "Anda tidak memiliki akses untuk Ajukan Restrukturisasi."
+          );
+        }
+      },
     },
     {
       id: 2,
@@ -67,19 +77,17 @@ const LoanAccountDetailScreen = ({ navigation, route }) => {
       onPress: () => navigation.navigate("LoanTopupRequest"),
     },
     {
-      id: 3,
+      id: 2,
       title: "Bayar Tagihan",
       icon: "cash-outline",
-      onPress: () => navigation.navigate(""),
+      onPress: () => navigation.navigate("LoanPayment"),
     },
     {
       id: 4,
       title: "Lihat Jadwal Tagihan",
       icon: "list-outline",
       onPress: () =>
-        navigation.navigate("LoanRepaymentSchedule", {
-          loan: loanData ? loanData?.findLoanByID : null,
-        }),
+        navigation.navigate("LoanRepaymentScheduleScreen"),
     },
   ];
 

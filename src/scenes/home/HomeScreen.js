@@ -7,7 +7,7 @@ import {
   Dimensions,
   Text,
   Alert,
-  TouchableOpacity
+  TouchableOpacity,
 } from "react-native";
 import { Headline, Appbar, Subheading } from "react-native-paper";
 import MenuButton from "../../components/common/MenuButton";
@@ -15,10 +15,11 @@ import { AuthContext } from "../../providers/AuthenticationProvider";
 import { FlatGrid } from "react-native-super-grid";
 import Carousel, { Pagination } from "react-native-snap-carousel";
 import Color from "../../common/Color";
+import SplashScreen from "../../components/common/SplashScreen";
 import { findAllImage } from "../../api/carosel";
 
 const HomeScreen = ({ navigation }) => {
-  const { user, currentTenant } = useContext(AuthContext);
+  const { user, exp } = useContext(AuthContext);
 
   // TODO: get menus from reducer
   const menus = [
@@ -99,12 +100,15 @@ const HomeScreen = ({ navigation }) => {
 
   const { token } = useContext(AuthContext);
   const [image, setImage] = useState([]);
+  const [isLoading, setIsLoading] = useState(true); // Tambahkan variabel isLoading
 
   const fetchdata = () => {
     try {
       findAllImage(token).then((result) => {
         console.log(result.data.data);
+        console.log("expired : ", user.exp);
         setImage(result.data.data);
+        setIsLoading(false);
       });
     } catch (error) {}
   };
@@ -147,62 +151,66 @@ const HomeScreen = ({ navigation }) => {
           titleStyle={{ color: "#EAEBF8" }}
         />
       </Appbar.Header>
-      {/* <ScrollView> */}
-      <View style={Color.primaryBackgroundColor}>
-        <Headline adjustFontSizeToFit style={styles.heading}>
-          Selamat Datang
-        </Headline>
-        <Subheading adjustFontSizeToFit style={styles.subheading}>
-          {user.firstName} {user.lastName}
-        </Subheading>
-      </View>
-      <View style={{ marginTop: 15 }}>
-        <Carousel
-          layout="default"
-          data={image}
-          renderItem={renderCarouselItem}
-          sliderWidth={ITEM_WIDTH}
-          useScrollView={true}
-          onSnapToItem={(index) => setCurrentSlide({ activeSlide: index })}
-          itemWidth={ITEM_WIDTH}
-          loop={true}
-          autoplayDelay={5}
-          autoplayInterval={5}
-        />
-        <Pagination
-          dotsLength={image.length}
-          activeDotIndex={currentSlide}
-          dotStyle={{
-            width: 10,
-            height: 10,
-            borderRadius: 5,
-            marginHorizontal: 6,
-            backgroundColor: "black",
-          }}
-          inactiveDotStyle={{}}
-          inactiveDotOpacity={0.4}
-          inactiveDotScale={0.6}
-        />
-      </View>
-      <View>
-        <FlatGrid
-          data={menus}
-          keyExtractor={(item, index) => index}
-          itemDimension={80}
-          renderItem={({ item }) => (
-            <View style={styles.buttonRow}>
-              <MenuButton
-                style={styles.menuButton}
-                iconName={item.icon}
-                title={item.title}
-                numColumns={2}
-                onPress={item.onPress}
-              />
-            </View>
-          )}
-        />
-      </View>
-      {/* </ScrollView> */}
+      {isLoading ? (
+        <SplashScreen /> // Tampilkan SplashScreen saat isLoading adalah true
+      ) : (
+        <>
+          <View style={Color.primaryBackgroundColor}>
+            <Headline adjustFontSizeToFit style={styles.heading}>
+              Selamat Datang
+            </Headline>
+            <Subheading adjustFontSizeToFit style={styles.subheading}>
+              {user.firstName} {user.lastName}
+            </Subheading>
+          </View>
+          <View style={{ marginTop: 15 }}>
+            <Carousel
+              layout="default"
+              data={image}
+              renderItem={renderCarouselItem}
+              sliderWidth={ITEM_WIDTH}
+              useScrollView={true}
+              onSnapToItem={(index) => setCurrentSlide({ activeSlide: index })}
+              itemWidth={ITEM_WIDTH}
+              loop={true}
+              autoplayDelay={5}
+              autoplayInterval={5}
+            />
+            <Pagination
+              dotsLength={image.length}
+              activeDotIndex={currentSlide}
+              dotStyle={{
+                width: 10,
+                height: 10,
+                borderRadius: 5,
+                marginHorizontal: 6,
+                backgroundColor: "black",
+              }}
+              inactiveDotStyle={{}}
+              inactiveDotOpacity={0.4}
+              inactiveDotScale={0.6}
+            />
+          </View>
+          <View>
+            <FlatGrid
+              data={menus}
+              keyExtractor={(item, index) => index}
+              itemDimension={80}
+              renderItem={({ item }) => (
+                <View style={styles.buttonRow}>
+                  <MenuButton
+                    style={styles.menuButton}
+                    iconName={item.icon}
+                    title={item.title}
+                    numColumns={2}
+                    onPress={item.onPress}
+                  />
+                </View>
+              )}
+            />
+          </View>
+        </>
+      )}
     </View>
   );
 };
