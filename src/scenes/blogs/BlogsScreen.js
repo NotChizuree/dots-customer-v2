@@ -1,30 +1,43 @@
-import React from 'react'; 
+import React from "react";
 import { Headline, Appbar, Subheading } from "react-native-paper";
-import { View, Text, Image, StyleSheet } from 'react-native';
+import { View, Text, Image, StyleSheet } from "react-native";
+import { ScrollView } from "react-native-gesture-handler";
 
-function BlogScreen({ route }) {
+function BlogScreen({ route, navigation }) {
   const { item } = route.params;
+  console.log(item);
 
   return (
-    <View>
+    <ScrollView contentContainerStyle={styles.scrollViewContent}>
       <Appbar.Header style={styles.appbarHeader}>
         <Appbar.BackAction onPress={() => navigation.goBack()} />
         <Appbar.Content title="Blogs" />
       </Appbar.Header>
-      <Text style={{ fontSize: 20, alignSelf: "center", margin: 10, }}>{item.title}</Text>
-      <Image
-        style={{ width: "100%", height: 140 }}
-        source={{ uri: item.imageUrl }}
-      />
-    </View>
+      <View style={styles.content}>
+        <Text style={{ fontSize: 20, alignSelf: "center" }}>
+          {item.title}
+        </Text>
+        <Image
+          style={{ width: "100%", height: 140, marginVertical: 10 }}
+          source={{ uri: item.imageUrl }}
+        />
+        <Text>{item.description}</Text>
+      </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-    appbarHeader: {
-        elevation: 0,
-        backgroundColor: "#F5F8FB",
-      },
+  scrollViewContent: {
+    flexGrow: 1, // Ensure the content fills the entire available height
+  },
+  content: {
+    padding: 20
+  },
+  appbarHeader: {
+    elevation: 0,
+    backgroundColor: "#F5F8FB",
+  },
 });
 
 export default BlogScreen;
