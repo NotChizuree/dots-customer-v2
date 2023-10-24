@@ -2,6 +2,7 @@ import React from "react";
 import { Headline, Appbar, Subheading } from "react-native-paper";
 import { View, Text, Image, StyleSheet } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
+import HTML from 'react-native-render-html';
 
 function BlogScreen({ route, navigation }) {
   const { item } = route.params;
@@ -14,14 +15,15 @@ function BlogScreen({ route, navigation }) {
         <Appbar.Content title="Blogs" />
       </Appbar.Header>
       <View style={styles.content}>
-        <Text style={{ fontSize: 20, alignSelf: "center" }}>
+        <Text style={{ fontSize: 30, alignSelf: "center" }}>
           {item.title}
         </Text>
         <Image
           style={{ width: "100%", height: 140, marginVertical: 10 }}
           source={{ uri: item.imageUrl }}
         />
-        <Text>{item.description}</Text>
+        {/* <Text>{item.description}</Text> */}
+        <HTML source={{ html: item.description }} />
       </View>
     </ScrollView>
   );
