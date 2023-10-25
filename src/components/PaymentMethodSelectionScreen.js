@@ -1,5 +1,15 @@
 import React, { useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import {
+  Button,
+  Caption,
+  TextInput,
+  Text, // Import Text from react-native
+  View,
+  TouchableOpacity,
+  StyleSheet,
+} from "react-native";
+import { Headline, Appbar, Subheading } from "react-native-paper";
+import Color from "../common/Color";
 
 const PaymentMethodSelectionScreen = ({ navigation }) => {
   const [selectedMethod, setSelectedMethod] = useState(null);
@@ -10,43 +20,65 @@ const PaymentMethodSelectionScreen = ({ navigation }) => {
 
   const handleContinue = () => {
     if (selectedMethod) {
-      // Lakukan apa yang Anda perlu lakukan setelah pemilihan metode pembayaran
-      // Misalnya, Anda bisa menavigasi kembali ke halaman sebelumnya dengan metode pembayaran yang dipilih.
+      // Do what you need to do after selecting the payment method
+      // For example, you can navigate back to the previous page with the selected payment method.
       navigation.goBack();
     } else {
-      // Tampilkan pesan kesalahan jika metode pembayaran belum dipilih.
+      // Show an error message if a payment method hasn't been selected.
       alert("Pilih metode pembayaran terlebih dahulu.");
     }
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.heading}>Pilih Metode Pembayaran</Text>
-      <TouchableOpacity
-        style={selectedMethod === "Transfer BCA" ? styles.selectedMethod : styles.method}
-        onPress={() => handleMethodSelection("Transfer BCA")}
-      >
-        <Text>Transfer Bank BCA (Dicek Manual)</Text>
-      </TouchableOpacity>
-      <TouchableOpacity
-        style={selectedMethod === "Transfer Permata" ? styles.selectedMethod : styles.method}
-        onPress={() => handleMethodSelection("Transfer Permata")}
-      >
-        <Text>Transfer Bank Permata (Dicek Manual)</Text>
-      </TouchableOpacity>
-      <TouchableOpacity style={styles.continueButton} onPress={handleContinue}>
-        <Text style={styles.buttonText}>LANJUT</Text>
-      </TouchableOpacity>
-    </View>
+    <>
+      <Appbar.Header style={styles.appbarHeader}>
+        <Appbar.BackAction onPress={() => navigation.goBack()} />
+        <Appbar.Content title="Pilih Metde Pembayaran" />
+      </Appbar.Header>
+      <View style={styles.box}>
+        <TouchableOpacity
+          style={{
+            ...(
+              selectedMethod === "Transfer BCA" ? styles.selectedMethod : styles.method
+            ),
+            borderWidth: 1, 
+            borderColor: 'black',
+            backgroundColor: selectedMethod === "Transfer BCA" ? Color.primaryBackgroundColor.backgroundColor : 'white', // Ganti warna latar belakang saat diklik
+          }}
+          onPress={() => handleMethodSelection("Transfer BCA")}
+        >
+          <Text>Transfer Bank BCA (Dicek Manual)</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={{
+            ...(
+              selectedMethod === "Transfer Permata" ? styles.selectedMethod : styles.method
+            ),
+            borderWidth: 1, 
+            borderColor: 'black',
+            backgroundColor: selectedMethod === "Transfer Permata" ? Color.primaryBackgroundColor.backgroundColor : 'white',
+          }}
+          onPress={() => handleMethodSelection("Transfer Permata")}
+        >
+          <Text>Transfer Bank Permata (Dicek Manual)</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.continueButton} onPress={handleContinue}>
+          <Text style={styles.buttonText}>LANJUT</Text>
+        </TouchableOpacity>
+      </View>
+    </>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 20,
-    backgroundColor: "#F5F8FB",
-  },
+    box: {
+      backgroundColor: "#ffffff",
+      padding: 30,
+      margin: 20,
+      borderRadius: 10,
+      marginTop: 20,
+    },
+
   heading: {
     fontSize: 20,
     fontWeight: "bold",
@@ -65,7 +97,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   continueButton: {
-    backgroundColor: "blue",
+    backgroundColor: Color.primaryBackgroundColor.backgroundColor,
     padding: 10,
     marginVertical: 20,
     borderRadius: 5,

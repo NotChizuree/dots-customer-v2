@@ -22,7 +22,11 @@ import { AuthContext } from "../../providers/AuthenticationProvider";
 import { StackActions } from "@react-navigation/native";
 import DropDownPicker from "react-native-dropdown-picker";
 import DropDown from "react-native-paper-dropdown";
-import { ScrollView } from "react-native-gesture-handler";
+import PaymentMethodSelection from "../../components/PaymentMethodSelectionScreen";
+import {
+  ScrollView,
+  TouchableWithoutFeedback,
+} from "react-native-gesture-handler";
 
 const SavingDepositRequestScreen = ({ navigation }) => {
   const [open, setOpen] = useState(false);
@@ -139,13 +143,15 @@ const SavingDepositRequestScreen = ({ navigation }) => {
             onChangeText={handleInputChange}
           />
           <Caption style={styles.text}>Metode Pembayaran</Caption>
-          <TextInput
-            style={styles.input}
-            placeholder="Pilih Metode Pembayaran"
-            value={selectedMethod}
-            editable={false} // Tidak dapat diedit
-            onFocus={handleSelectPaymentMethod} // Akan memicu pemilihan metode pembayaran saat diklik
-          />
+          <TouchableOpacity onPress={handleSelectPaymentMethod}>
+            <View style={styles.inputContainer}>
+              <TextInput
+                style={styles.input}
+                placeholder="Pilih Metode Pembayaran"
+                editable={false}
+              />
+            </View>
+          </TouchableOpacity>
           <View style={styles.pickerContainer}>
             <Caption style={styles.text}>Nama Rekening Pengirim</Caption>
             <TextInput
