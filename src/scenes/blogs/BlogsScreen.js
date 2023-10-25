@@ -2,8 +2,8 @@ import React from "react";
 import { Headline, Appbar, Subheading } from "react-native-paper";
 import { View, Text, Image, StyleSheet } from "react-native";
 import { ScrollView } from "react-native-gesture-handler";
-import HTML from "react-native-render-html";
-import Lightbox from "react-native-lightbox-v2";
+// import HTML from "react-native-render-html";
+// import Lightbox from "react-native-lightbox-v2";
 
 function BlogScreen({ route, navigation, navigator }) {
   const { item } = route.params;

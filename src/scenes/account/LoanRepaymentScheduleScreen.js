@@ -8,7 +8,7 @@ import {
   SafeAreaView,
 } from "react-native";
 import { Headline, Appbar, Subheading } from "react-native-paper";
-import { Table, Row } from "react-native-table-component";
+// import { Table, Row } from "react-native-table-component";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { Button } from "react-native-paper";
 

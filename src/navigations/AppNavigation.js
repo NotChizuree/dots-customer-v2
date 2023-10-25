@@ -21,6 +21,7 @@ import CreateLoanAccount from "../scenes/CreateAccount/CreateLoanAccount";
 import LoanRepaymentScheduleScreen from "../scenes/account/LoanRepaymentScheduleScreen";
 import LoanTopupRequestScreen from "../scenes/account/LoanTopupRequestScreen";
 import LoanPaymentScreen from "../scenes/account/LoanPaymentScreen";
+import PaymentMethodSelectionScreen from "../components/PaymentMethodSelectionScreen";
 
 const AppNavigation = () => {
   const AppNavigator = createStackNavigator();
@@ -106,6 +107,11 @@ const AppNavigation = () => {
       <AppNavigator.Screen
         name="LoanPayment"
         component={LoanPaymentScreen}
+        options={{ headerShown: false }}
+      />
+      <AppNavigator.Screen
+        name="PaymentMethodSelection"
+        component={PaymentMethodSelectionScreen}
         options={{ headerShown: false }}
       />
     </AppNavigator.Navigator>

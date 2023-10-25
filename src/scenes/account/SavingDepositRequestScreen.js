@@ -22,12 +22,15 @@ import { AuthContext } from "../../providers/AuthenticationProvider";
 import { StackActions } from "@react-navigation/native";
 import DropDownPicker from "react-native-dropdown-picker";
 import DropDown from "react-native-paper-dropdown";
+import { ScrollView } from "react-native-gesture-handler";
 
 const SavingDepositRequestScreen = ({ navigation }) => {
   const [open, setOpen] = useState(false);
   const { currentTenant } = useContext(AuthContext);
   const [isFocused, setIsFocused] = useState(false);
   const [inputValue, setInputValue] = useState("");
+  const [selectedMethod, setSelectedMethod] = useState(null);
+  const [rekeningPengirim, setRekeningPengirim] = useState("");
   const [showTabunganContainer, setShowTabunganContainer] = useState(false);
   const [showDropDown, setShowDropDown] = useState(false);
   const [itemsDropdown, setItemDropdown] = useState(null);
@@ -37,6 +40,15 @@ const SavingDepositRequestScreen = ({ navigation }) => {
   ]);
 
   const [amount, setAmount] = useState("Rp. 0");
+
+  const array = [
+    "hjashefjk Tata Cara Setoran",
+    "askljdlkas bMasuk pada menu transfer di ATM/M-Banking anda",
+    ' alksdlkasPilih "Transfer sesama bank"',
+    "Pada Bagian rekening tujuan, Masukan 0010101010101 a.n PT BPR Kreasi Nusantara",
+    'Pada Bagian Nominal Masukan Sebesar Rp. {amount} "jangan dibulatkan ke atas"',
+    'Apabila Telah melakukan transfer Klik Tombol "saya Sudah Transfer" Dibawah ini',
+  ];
 
   const { login } = useContext(AuthContext);
 
@@ -87,6 +99,24 @@ const SavingDepositRequestScreen = ({ navigation }) => {
     }
   };
 
+  const handleSubmit = async () => {
+    try {
+      createSavingDeposit(token, id, {
+        amount: parseInt(amount.replace(/[^0-9]/g, "")),
+      }).then((result) => {
+        setData(result.data);
+        console.log(data);
+        navigation.navigate("DetailSaving", { id });
+      });
+    } catch (error) {
+      console.log("API Error:", error);
+    }
+  };
+
+  const handleSelectPaymentMethod = () => {
+    navigation.navigate("PaymentMethodSelection");
+  };
+
   return (
     <>
       <Appbar.Header style={styles.appbarHeader}>
@@ -94,74 +124,61 @@ const SavingDepositRequestScreen = ({ navigation }) => {
         <Appbar.Content title="Setoran Tabungan" />
       </Appbar.Header>
 
-      <View style={styles.box}>
-        <Caption>Jumlah</Caption>
-        <TextInput
-          style={styles.input}
-          underlineColor=""
-          placeholder={isFocused ? "Rp." : ""}
-          placeholderTextColor="#999999"
-          onFocus={handleTextInputFocus}
-          onBlur={handleTextInputBlur}
-          keyboardType="numeric"
-          value={amount}
-          onChangeText={handleInputChange}
-        />
-        <Caption style={styles.text}>Metode Pembayaran</Caption>
-        <DropDown
-          mode={"outlined"}
-          visible={showDropDown}
-          showDropDown={() => setShowDropDown(true)}
-          onDismiss={() => setShowDropDown(false)}
-          value={itemsDropdown}
-          setValue={setItemDropdown}
-          list={items}
-          onChangeText={handlePaymentChange}
-        />
-
-        <View style={styles.pickerContainer}>
-          <Text>Nama Rekening Pengirim</Text>
+      <ScrollView>
+        <View style={styles.box}>
+          <Caption style={styles.text}>Jumlah</Caption>
           <TextInput
             style={styles.input}
-            underlineColor="transparent"
+            underlineColor=""
+            placeholder={isFocused ? "Rp." : ""}
             placeholderTextColor="#999999"
-            onChangeText={handleRekeningPengirimChange}
+            onFocus={handleTextInputFocus}
+            onBlur={handleTextInputBlur}
+            keyboardType="numeric"
+            value={amount}
+            onChangeText={handleInputChange}
           />
-        </View>
-        {showTabunganContainer && (
-          <View style={styles.tabunganContainer}>
-            <Text style={styles.tabunganText}>Tata Cara Setoran</Text>
-            <Text style={styles.txt}>
-              1. Masuk pada menu transfer di ATM/M-Banking anda
-            </Text>
-            <Text style={styles.txt}>2. Pilih "Transfer sesama bank"</Text>
-            <Text style={styles.txt}>
-              3. Pada Bagian rekening tujuan, Masukan 0010101010101 a.n PT BPR
-              Kreasi Nusantara
-            </Text>
-            <Text style={styles.txt}>
-              4. Pada Bagian Nominal Masukan Sebesar Rp. {amount} "jangan
-              dibulatkan ke atas"
-            </Text>
-            <Text style={styles.txt}>
-              5. Apabila Telah melakukan transfer Klik Tombol "saya Sudah
-              Transfer" Dibawah ini
-            </Text>
-            <TouchableOpacity
-              style={styles.customButton}
-              onPress={handleSubmit}
-            >
-              <Text style={styles.buttonText}>SAYA SUDAH TRANSFER</Text>
-            </TouchableOpacity>
+          <Caption style={styles.text}>Metode Pembayaran</Caption>
+          <TextInput
+            style={styles.input}
+            placeholder="Pilih Metode Pembayaran"
+            value={selectedMethod}
+            editable={false} // Tidak dapat diedit
+            onFocus={handleSelectPaymentMethod} // Akan memicu pemilihan metode pembayaran saat diklik
+          />
+          <View style={styles.pickerContainer}>
+            <Caption style={styles.text}>Nama Rekening Pengirim</Caption>
+            <TextInput
+              style={styles.input}
+              underlineColor="transparent"
+              placeholderTextColor="#999999"
+              onChangeText={handleRekeningPengirimChange}
+            />
           </View>
-        )}
+          {showTabunganContainer && (
+            <View style={styles.tabunganContainer}>
+              <Text style={styles.tabunganText}>Tata Cara Setoran</Text>
+              {array.map((item, index) => (
+                <Text key={index} style={styles.txt}>
+                  {index + 1}. {item}
+                </Text>
+              ))}
+              <TouchableOpacity
+                style={styles.customButton}
+                onPress={handleSubmit}
+              >
+                <Text style={styles.buttonText}>SAYA SUDAH TRANSFER</Text>
+              </TouchableOpacity>
+            </View>
+          )}
 
-        {/* <TouchableOpacity>
+          {/* <TouchableOpacity>
           <Button style={styles.btn}>
-            <Text style={styles.btnSubmit}>SUBMIT</Text>
+          <Text style={styles.btnSubmit}>SUBMIT</Text>
           </Button>
         </TouchableOpacity> */}
-      </View>
+        </View>
+      </ScrollView>
     </>
   );
 };
@@ -189,9 +206,10 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "#080808",
     borderRadius: 5,
-    marginBottom: 10,
-    marginTop: 10,
     fontSize: 18,
+  },
+  DropDown: {
+    textAlign: "auto",
   },
   btn: {
     backgroundColor: Color.primaryBackgroundColor.backgroundColor,
@@ -217,7 +235,7 @@ const styles = StyleSheet.create({
     marginTop: 15,
   },
   text: {
-    marginTop: 10,
+    marginTop: 15,
   },
   tabunganContainer: {
     borderWidth: 1,
@@ -233,7 +251,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   customButton: {
-    backgroundColor: "#041562",
+    backgroundColor: Color.primaryBackgroundColor.backgroundColor,
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 8,
