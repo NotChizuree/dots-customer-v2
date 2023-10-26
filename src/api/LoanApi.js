@@ -60,9 +60,25 @@ export const findLoanProdukType= async (token) => {
   }
 };
 
-export const createLoanTopup = async (token, id,data) => {
+export const createLoanTopup = async (token,data) => {
   try {
-    const result = ApiManager(``, {
+    const result = ApiManager(`/loan/topup`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      data: data,
+    });
+
+    return result;
+  } catch (error) {
+    console.log(error);
+  }
+};
+export const createPayment = async (token,data) => {
+  try {
+    const result = ApiManager(`/loan/repay`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,

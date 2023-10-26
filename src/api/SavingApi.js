@@ -16,9 +16,9 @@ export const createSaving = async (token, data) => {
     console.log(error);
   }
 };
-export const createSavingDeposit = async (token,id,data) => {
+export const createSavingDeposit = async (token,data) => {
   try {
-    const result = ApiManager(``, {
+    const result = ApiManager(`saving/deposit`, {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
@@ -92,6 +92,5 @@ export const findSavingHistory = async (token, id) => {
     console.log(error);
   }
 };
-
 
 

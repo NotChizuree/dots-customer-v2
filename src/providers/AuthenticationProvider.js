@@ -64,10 +64,11 @@ const AuthProvider = ({ children }) => {
   useEffect(() => {
     // Lakukan pengecekan waktu ekspirasi (exp) di sini
     const checkTokenExpiration = () => {
-      const { exp } = state;
+      const { exp, token } = state;
       const currentTime = Math.floor(Date.now() / 1000); // Waktu saat ini dalam detik
       if (exp && exp < currentTime) {
         logout();
+        navigation.navigate("Login");
       }
     };
 

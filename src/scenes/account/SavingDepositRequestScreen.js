@@ -1,69 +1,41 @@
 import React, { useState, useContext } from "react";
-import {
-  StyleSheet,
-  View,
-  Image,
-  Text,
-  Alert,
-  TouchableOpacity,
-} from "react-native";
-import {
-  Appbar,
-  Button,
-  Caption,
-  Headline,
-  Subheading,
-  TextInput,
-} from "react-native-paper";
+import { StyleSheet, View, Text, Alert, TouchableOpacity } from "react-native";
+import { Appbar, Caption, TextInput } from "react-native-paper";
 import { useRoute } from "@react-navigation/native";
-import { useToast } from "react-native-paper-toast";
-import LoadingOverlay from "../../components/common/LoadingOverlay";
-import RNSInfo from "react-native-sensitive-info";
 import { AuthContext } from "../../providers/AuthenticationProvider";
-import { StackActions } from "@react-navigation/native";
-import DropDownPicker from "react-native-dropdown-picker";
-import DropDown from "react-native-paper-dropdown";
-import PaymentMethodSelection from "../../components/PaymentMethodSelectionScreen";
-import {
-  ScrollView,
-  TouchableWithoutFeedback,
-} from "react-native-gesture-handler";
+import { ScrollView } from "react-native-gesture-handler";
+import { createSavingDeposit } from "../../api/SavingApi";
 
 const SavingDepositRequestScreen = ({ navigation }) => {
-  const [open, setOpen] = useState(false);
-  const { currentTenant } = useContext(AuthContext);
   const [isFocused, setIsFocused] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [rekeningPengirim, setRekeningPengirim] = useState("");
   const [showTabunganContainer, setShowTabunganContainer] = useState(false);
-  const [showDropDown, setShowDropDown] = useState(false);
   const [itemsDropdown, setItemDropdown] = useState(null);
-  const [items] = useState([
-    { label: "Transfer Bank BCA (Dicek Manual)", value: "01" },
-    { label: "Transfer Bank Permata (Dicek Manual)", value: "02" },
-  ]);
 
   const route = useRoute();
-  const { selectedMethod = "Pilih Metode Pembayaran" } = route.params || {};
+  const { selectedMethod = "Pilih Metode Pembayaran", parameter } =
+    route.params || {};
   const selectedPaymentMethod = selectedMethod || "Pilih Metode Pembayaran";
 
+  // Define 'method' with a try-catch block to handle parsing errors.
+  let method = [];
+
+  if (selectedMethod && selectedMethod.description) {
+    try {
+      method = JSON.parse(selectedMethod.description);
+    } catch (error) {
+      console.error("Error parsing selectedMethod.description:", error);
+    }
+  }
+
   const [amount, setAmount] = useState("Rp. 0");
-
-  const array = [
-    "hjashefjk Tata Cara Setoran",
-    "askljdlkas bMasuk pada menu transfer di ATM/M-Banking anda",
-    ' alksdlkasPilih "Transfer sesama bank"',
-    "Pada Bagian rekening tujuan, Masukan 0010101010101 a.n PT BPR Kreasi Nusantara",
-    'Pada Bagian Nominal Masukan Sebesar Rp. {amount} "jangan dibulatkan ke atas"',
-    'Apabila Telah melakukan transfer Klik Tombol "saya Sudah Transfer" Dibawah ini',
-  ];
-
   const { login } = useContext(AuthContext);
 
   const handleCreateSavingAccount = () => {
     Alert.alert(
       "Terima kasih",
-      "Pengajuan setoran anda telah berhasil dilakuka. Pihak Bank akan melakukan verifikasi atas transaksi anda. Apabila transaksi telah diverifikasi, anda akan menerima notifikasi mengenai status transaksi anda"
+      "Pengajuan setoran anda telah berhasil dilakukan. Pihak Bank akan melakukan verifikasi atas transaksi anda. Apabila transaksi telah diverifikasi, anda akan menerima notifikasi mengenai status transaksi anda"
     );
     navigation.goBack();
   };
@@ -76,14 +48,12 @@ const SavingDepositRequestScreen = ({ navigation }) => {
     setIsFocused(false);
   };
 
-  const handleRekeningPengirimChange = (text) => {
-    setRekeningPengirim(text);
-    checkTabunganContainerVisibility(inputValue, text, itemsDropdown);
-  };
-
-  const handlePaymentChange = (itemValue) => {
-    setSelectedMethod(itemValue);
-    checkTabunganContainerVisibility(inputValue, rekeningPengirim, itemValue);
+  const checkTabunganContainerVisibility = (rekeningPengirim, inputValue) => {
+    if (rekeningPengirim && inputValue && inputValue !== "Rp.") {
+      setShowTabunganContainer(true);
+    } else {
+      setShowTabunganContainer(false);
+    }
   };
 
   const handleInputChange = (text) => {
@@ -92,34 +62,58 @@ const SavingDepositRequestScreen = ({ navigation }) => {
     if (!isNaN(numericValue)) {
       const formattedValue = "Rp. " + numericValue.toLocaleString();
       setAmount(formattedValue);
-    }
-  };
-
-  const checkTabunganContainerVisibility = (
-    inputValue,
-    rekeningPengirim,
-    paymentDropdown
-  ) => {
-    if ((inputValue, paymentDropdown, rekeningPengirim)) {
-      setShowTabunganContainer(true);
+      setInputValue(text);
+      checkTabunganContainerVisibility(rekeningPengirim, text);
     } else {
+      // Jika "Jumlah" kosong atau tidak valid, sembunyikan tabunganContainer
       setShowTabunganContainer(false);
     }
   };
 
+  const handleRekeningPengirimChange = (text) => {
+    setRekeningPengirim(text);
+    checkTabunganContainerVisibility(text, inputValue);
+  };
+
+  const [loading, setLoading] = useState(true);
+
   const handleSubmit = async () => {
-    try {
-      createSavingDeposit(token, id, {
-        amount: parseInt(amount.replace(/[^0-9]/g, "")),
-      }).then((result) => {
-        setData(result.data);
-        console.log(data);
-        navigation.navigate("DetailSaving", { id });
-      });
-    } catch (error) {
-      console.log("API Error:", error);
+    if (!amount) {
+      Alert.alert("Error", "Kolom Jumlah Belum Di isi.");
+    } else if (!rekeningPengirim) {
+      Alert.alert("Error", "Kolom Rekening Pengirim Belum Di isi.");
+    } else {
+      Alert.alert("Konfirmasi", "Pastikan data yang anda masukan sudah benar", [
+        {
+          text: "Batal",
+          onPress: () => console.log("Transaksi dibatalkan"),
+          style: "cancel",
+        },
+        {
+          text: "Ya",
+          onPress: async () => {
+            try {
+              createSavingDeposit(token, {
+                savingId: parameter.norek,
+                paymentMethodId: selectedMethod.id,
+                amount: amount,
+                recipient: rekeningPengirim,
+              }).then((result) => {
+                console.log(result.data.data);
+                navigation.navigate("SavingDetail", { id: parameter.norek });
+                Alert.alert("Sukses", "Berhasil Mengajukan Setoran. Silahkan cek notifikasi secara berkala"
+                )
+              });
+            } catch (error) {
+              console.error("API Error:", error);
+            }
+          },
+        },
+      ]);
     }
   };
+
+  const { token } = useContext(AuthContext);
 
   const handleSelectPaymentMethod = () => {
     navigation.navigate("PaymentMethodSelection");
@@ -134,6 +128,24 @@ const SavingDepositRequestScreen = ({ navigation }) => {
 
       <ScrollView>
         <View style={styles.box}>
+          <Caption style={styles.text}>Metode Pembayaran</Caption>
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={styles.input}
+              placeholder="Pilih Metode Pembayaran"
+              editable={false}
+              value={selectedMethod.title}
+              disabled
+            />
+          </View>
+          <Caption style={styles.text}>Nama Rekening Pengirim</Caption>
+          <TextInput
+            style={styles.input}
+            underlineColor="transparent"
+            placeholderTextColor="#999999"
+            onChangeText={handleRekeningPengirimChange}
+            value={rekeningPengirim}
+          />
           <Caption style={styles.text}>Jumlah</Caption>
           <TextInput
             style={styles.input}
@@ -146,30 +158,11 @@ const SavingDepositRequestScreen = ({ navigation }) => {
             value={amount}
             onChangeText={handleInputChange}
           />
-          <Caption style={styles.text}>Metode Pembayaran</Caption>
-          <TouchableOpacity onPress={handleSelectPaymentMethod}>
-            <View style={styles.inputContainer}>
-              <TextInput
-                style={styles.input}
-                placeholder="Pilih Metode Pembayaran"
-                editable={false}
-                value={selectedMethod} 
-              />
-            </View>
-          </TouchableOpacity>
-          <View style={styles.pickerContainer}>
-            <Caption style={styles.text}>Nama Rekening Pengirim</Caption>
-            <TextInput
-              style={styles.input}
-              underlineColor="transparent"
-              placeholderTextColor="#999999"
-              onChangeText={handleRekeningPengirimChange}
-            />
-          </View>
+
           {showTabunganContainer && (
             <View style={styles.tabunganContainer}>
               <Text style={styles.tabunganText}>Tata Cara Setoran</Text>
-              {array.map((item, index) => (
+              {method.map((item, index) => (
                 <Text key={index} style={styles.txt}>
                   {index + 1}. {item}
                 </Text>
@@ -182,12 +175,6 @@ const SavingDepositRequestScreen = ({ navigation }) => {
               </TouchableOpacity>
             </View>
           )}
-
-          {/* <TouchableOpacity>
-          <Button style={styles.btn}>
-          <Text style={styles.btnSubmit}>SUBMIT</Text>
-          </Button>
-        </TouchableOpacity> */}
         </View>
       </ScrollView>
     </>
@@ -219,9 +206,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     fontSize: 18,
   },
-  DropDown: {
-    textAlign: "auto",
-  },
   btn: {
     backgroundColor: Color.primaryBackgroundColor.backgroundColor,
     marginTop: 20,
@@ -252,6 +236,8 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: "gray",
     padding: 16,
+    marginTop: 30,
+    borderRadius: 5,
   },
   tabunganText: {
     fontSize: 18,

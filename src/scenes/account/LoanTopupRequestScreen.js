@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import {
   View,
   Text,
@@ -7,14 +7,16 @@ import {
   Platform,
   SafeAreaView,
   Modal,
+  Alert,
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
-import { Headline, Appbar, Subheading } from "react-native-paper";
+import { Headline, Appbar, Subheading, Caption } from "react-native-paper";
 import { useNavigation, useRoute } from "@react-navigation/native";
 import { Button, TextInput } from "react-native-paper";
 import Color from "../../common/Color";
 import DropDown from "react-native-paper-dropdown";
 import { createLoanTopup } from "../../api/LoanApi";
+import { AuthContext } from "../../providers/AuthenticationProvider";
 
 const LoanTopupRequest = ({ navigation }) => {
   const [data, setData] = useState([]);
@@ -45,10 +47,6 @@ const LoanTopupRequest = ({ navigation }) => {
     }
   };
 
-  const [amount, setAmount] = useState("Rp. 0");
-  const [tenor, setTenor] = useState("");
-  const [reason, setReason] = useState("");
-
   const [showDropDown, setShowDropDown] = useState(false);
   const [JangkaDropdown, setJangkaDropdown] = useState("");
   const Jangka = [
@@ -63,22 +61,55 @@ const LoanTopupRequest = ({ navigation }) => {
   ];
 
   const route = useRoute();
-//   const { id } = route.params;
-//   const handleSubmit = async () => {
-//     try {
-//       const token = await AsyncStorage.getItem("AccessToken");
-//       createLoanTopup(token, id, {
-//         amount: parseInt(amount.replace(/[^0-9]/g, "")),
-//         tenor: parseInt(JangkaDropdown),
-//         reason: reason,
-//       }).then((result) => {
-//         setData(result.data);
-//         navigation.navigate("DetailCredit", { id });
-//       });
-//     } catch (error) {
-//       console.log(error);
-//     }
-//   };
+  const { id } = route.params;
+  const { token } = useContext(AuthContext);
+
+  //  const [loanId,setLoanId]=useState(null)
+  const [amount, setAmount] = useState(null);
+  const [reason, setReason] = useState(null);
+
+  const handleSubmit = () => {
+    if (!amount) {
+      Alert.alert("Error", "Kolom Jumlah Belum Di isi.");
+    } else if (!reason) {
+      Alert.alert("Error", "Kolom Alasan Belum Di isi.");
+    } else {
+      try {
+        createLoanTopup(token, {
+          loanId: id,
+          amount: amount,
+          reason: reason,
+        }).then((result) => {
+          navigation.goBack();
+          Alert.alert(
+            "Sukses",
+            "Berhasil Mengajukan TopUp. Silahkan cek notifikasi secara berkala"
+          );
+          console.log(result.data.data);
+        });
+      } catch (error) {
+        console.error("API Error:", error);
+      }
+    }
+  };
+
+  console.log(id);
+  //   const { id } = route.params;
+  //   const handleSubmit = async () => {
+  //     try {
+  //       const token = await AsyncStorage.getItem("AccessToken");
+  //       createLoanTopup(token, id, {
+  //         amount: parseInt(amount.replace(/[^0-9]/g, "")),
+  //         tenor: parseInt(JangkaDropdown),
+  //         reason: reason,
+  //       }).then((result) => {
+  //         setData(result.data);
+  //         navigation.navigate("DetailCredit", { id });
+  //       });
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   };
 
   return (
     <View style={styles.container}>
@@ -86,7 +117,18 @@ const LoanTopupRequest = ({ navigation }) => {
         <Appbar.BackAction onPress={() => navigation.goBack()} />
         <Appbar.Content title="Pengajuan Topup" />
       </Appbar.Header>
+
       <View style={styles.box}>
+        <Text>Nomor Rekening</Text>
+        <TextInput
+          style={styles.input}
+          underlineColor=""
+          onFocus={handleTextInputFocus}
+          onBlur={handleTextInputBlur}
+          placeholder={id}
+          disabled
+        />
+
         <Text>Jumlah</Text>
         <TextInput
           style={styles.input}
@@ -99,7 +141,7 @@ const LoanTopupRequest = ({ navigation }) => {
           value={amount}
           onChangeText={handleInputChange}
         />
-        <Text style={styles.text}>Tenor / Jangka Waktu</Text>
+        {/* <Text style={styles.text}>Tenor / Jangka Waktu</Text>
         <DropDown
           mode={"outlined"}
           visible={showDropDown}
@@ -108,11 +150,11 @@ const LoanTopupRequest = ({ navigation }) => {
           value={JangkaDropdown}
           setValue={setJangkaDropdown}
           list={Jangka}
-        />
+        /> */}
 
         <Text style={styles.text}>Alasan</Text>
         <TextInput
-          style={styles.input}   
+          style={styles.input}
           underlineColor="transparent"
           placeholderTextColor="#999999"
           value={reason}
@@ -138,7 +180,9 @@ const LoanTopupRequest = ({ navigation }) => {
               <Text style={styles.cancelButton}>Batal</Text>
             </TouchableOpacity>
             <TouchableOpacity>
-              <Text style={styles.confirmButton}>Konfirmasi</Text>
+              <Text style={styles.confirmButton} onPress={handleSubmit}>
+                Konfirmasi
+              </Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -199,6 +243,7 @@ const styles = StyleSheet.create({
     marginTop: 10,
     fontSize: 18,
   },
+
   confirmModalContainer: {
     flex: 1,
     justifyContent: "center",

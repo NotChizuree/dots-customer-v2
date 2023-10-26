@@ -15,7 +15,10 @@ const LoanAccountDetailScreen = ({ navigation, route }) => {
   const { user, exp } = useContext(AuthContext);
   const { token } = useContext(AuthContext);
   const { id } = route.params;
-  console.log(id);
+  const parameter = {
+    route: "LoanPayment",
+    norek: id
+  }
   const [data, setData] = useState({});
   const [skeletonLoading, setSkeletonLoading] = useState(true);
 
@@ -74,20 +77,20 @@ const LoanAccountDetailScreen = ({ navigation, route }) => {
       id: 2,
       title: "Ajukan Top-up Kredit",
       icon: "journal-outline",
-      onPress: () => navigation.navigate("LoanTopupRequest"),
+      onPress: () => navigation.navigate("LoanTopupRequest",{id : data.id}),
     },
     {
       id: 2,
       title: "Bayar Tagihan",
       icon: "cash-outline",
-      onPress: () => navigation.navigate("LoanPayment"),
+      onPress: () => navigation.navigate("PaymentMethodSelection",{parameter}),
     },
     {
       id: 4,
       title: "Lihat Jadwal Tagihan",
       icon: "list-outline",
       onPress: () =>
-        navigation.navigate("LoanRepaymentScheduleScreen"),
+        navigation.navigate("LoanRepaymentScheduleScreen",{id : data.id}),
     },
   ];
 

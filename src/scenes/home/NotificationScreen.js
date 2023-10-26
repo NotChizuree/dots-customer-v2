@@ -18,11 +18,10 @@ import {
 import LoadingOverlay from "../../components/common/LoadingOverlay";
 import axios from "axios";
 
-const NotificationScreen = () => {
+const NotificationScreen = ({ navigation }) => {
   const { logout } = useContext(AuthContext);
   const [pressedNotifications, setPressedNotifications] = useState([]);
-  const [isModalVisible1, setIsModalVisible1] = useState(false);
-  const [isModalVisible2, setIsModalVisible2] = useState(false);
+  const [isModalVisible, setIsModalVisible] = useState(false);
   const modalRef = useRef(null);
 
   const { token } = useContext(AuthContext);
@@ -30,14 +29,14 @@ const NotificationScreen = () => {
   const [refreshing, setRefreshing] = useState(false);
   const [selectedNotification, setSelectedNotification] = useState(null);
   const [parsedDescription, setParsedDescription] = useState(null);
-   
+
   const fetchData = async () => {
     try {
       findAllNotificationByToken(token).then((result) => {
         const apiData = JSON.parse(result.data.data);
         setData(apiData);
         setRefreshing(false);
-        console.log(apiData)
+        console.log(apiData);
       });
     } catch (error) {
       console.error("Error fetching data:", error);
@@ -47,7 +46,7 @@ const NotificationScreen = () => {
 
   const onRefresh = () => {
     setRefreshing(true);
-    fetchData();  
+    fetchData();
   };
 
   useEffect(() => {
@@ -55,8 +54,7 @@ const NotificationScreen = () => {
   }, []);
 
   const toggleModal = () => {
-    setIsModalVisible1(false);
-    setIsModalVisible2(false);
+    setIsModalVisible(false);
   };
 
   const isNotificationPressed = (notificationId) => {
@@ -65,24 +63,14 @@ const NotificationScreen = () => {
 
   const toggleNotificationPress = (notification) => {
     setSelectedNotification(notification);
-    // NotificationStatus(token, notification.id).then((result) => {
-    //   console.log(result)
-    // })
-
-    if (
-      notification.type === 1 ||
-      notification.type === 2 ||
-      notification.type === 3
-    ) {
-      setIsModalVisible1(true);
-    } else if (
-      notification.type === 4 ||
-      notification.type === 5 ||
-      notification.type === 6
-    ) {
-      setIsModalVisible2(true);
+    NotificationStatus(token,notification.id)
+    console.log(notification.type);
+    if (notification.type !== 9) {
+      setIsModalVisible(true);
     } else {
-      return null;
+      navigation.navigate("Blog", {
+        item: notification.description,
+      });
     }
 
     setPressedNotifications((prevState) => [...prevState, notification.id]);
@@ -140,7 +128,16 @@ const NotificationScreen = () => {
                     }}
                   >
                     <View style={styles.titleContainer}>
-                      <Text style={styles.notificationTitle}>
+                      <Text
+                        style={[
+                          styles.notificationTitle,
+                          notification.type === 1
+                            ? { color: "green" }
+                            : notification.type === 2
+                            ? { color: "red" }
+                            : { color: "black" },
+                        ]}
+                      >
                         {notification.title}
                       </Text>
                     </View>
@@ -175,17 +172,16 @@ const NotificationScreen = () => {
           )}
         </Card>
 
-        
         <Modal
           animationType="fade"
           transparent={true}
-          visible={isModalVisible1}
+          visible={isModalVisible}
           onRequestClose={() => {
             toggleModal();
           }}
         >
           <View
-            style={isModalVisible1 ? styles.centeredView : styles.modalHidden}
+            style={isModalVisible ? styles.centeredView : styles.modalHidden}
           >
             <View style={styles.modalView}>
               <Text style={styles.modalTitle}>
@@ -195,22 +191,14 @@ const NotificationScreen = () => {
 
               {parsedDescription ? (
                 <>
-                  <Text style={styles.modalTextTitle}>Tempat Tujuan:</Text>
-                  <Text style={styles.modalText}>
-                    {parsedDescription.destinantion}
-                  </Text>
-                  <Text style={styles.modalTextTitle}>Alasan :</Text>
-                  <Text style={styles.modalText}>
-                    {parsedDescription.reason}
-                  </Text>
-                  <Text style={styles.modalTextTitle}>Tanggal :</Text>
-                  <Text style={styles.modalText}>
-                    {parsedDescription.attend_start}
-                  </Text>
-                  <Text style={styles.modalTextTitle}>Waktu :</Text>
-                  <Text style={styles.modalText}>
-                    {parsedDescription.attend_end}
-                  </Text>
+                  {Object.keys(parsedDescription).map((key) => (
+                    <React.Fragment key={key}>
+                      <Text style={styles.modalTextTitle}>{key}:</Text>
+                      <Text style={styles.modalText}>
+                        {parsedDescription[key]}
+                      </Text>
+                    </React.Fragment>
+                  ))}
                 </>
               ) : (
                 <Text style={styles.modalText}>No description available</Text>
@@ -218,50 +206,6 @@ const NotificationScreen = () => {
               <Button
                 mode="contained"
                 style={{ marginTop: 20, ...Color.primaryBackgroundColor }}
-                onPress={toggleModal}
-              >
-                Tutup
-              </Button>
-            </View>
-          </View>
-        </Modal>
-
-        <Modal
-          animationType="fade"
-          transparent={true}
-          visible={isModalVisible2}
-          onRequestClose={() => {
-            toggleModal();
-          }}
-        >
-          <View
-            style={isModalVisible2 ? styles.centeredView : styles.modalHidden}
-          >
-            <View style={styles.modalView}>
-              <Text style={styles.modalTitle}>
-                {selectedNotification ? selectedNotification.title : ""}
-              </Text>
-              <View style={styles.horizontalLine} />
-
-              {parsedDescription ? (
-                <>
-                  <Text style={styles.modalTextTitle}>Tipe Produk :</Text>
-                  <Text style={styles.modalText}>
-                    {parsedDescription.productType}
-                  </Text>
-                  <Text style={styles.modalTextTitle}>
-                    Jumlah :
-                  </Text>
-                  <Text style={styles.modalText}>
-                    {parsedDescription.currentBalance}
-                  </Text>
-                </>
-              ) : (
-                <Text style={styles.modalText}>No description available</Text>
-              )}
-              <Button
-                mode="contained"
-                style={{ marginTop: 5, ...Color.primaryBackgroundColor }}
                 onPress={toggleModal}
               >
                 Tutup

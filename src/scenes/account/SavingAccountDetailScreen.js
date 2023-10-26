@@ -19,12 +19,17 @@ import MenuButton from "../../components/common/MenuButton";
 import { ScrollView } from "react-native-gesture-handler";
 
 const SavingAccountDetailScreen = ({ navigation, route }) => {
+  const { id } = route.params;
+  const parameter = {
+    route: "SavingDepositRequest",
+    norek: id
+  }
   const menus = [
     {
       id: 1,
       title: "Setoran Tabungan",
       icon: "wallet-outline",
-      onPress: () => navigation.navigate("SavingDepositRequest"),
+      onPress: () => navigation.navigate("PaymentMethodSelection", { parameter }),
     },
   ];
 
@@ -36,7 +41,6 @@ const SavingAccountDetailScreen = ({ navigation, route }) => {
   const [accountNumber, setAccountNumber] = useState("");
   const [availableBalance, setAvailableBalance] = useState("");
 
-  const { id } = route.params;
   const { token } = useContext(AuthContext);
   const [amout, setAmout] = useState([]);
 

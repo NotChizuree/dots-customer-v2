@@ -1,85 +1,121 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
-  Button,
-  Caption,
-  TextInput,
-  Text, // Import Text from react-native
   View,
   TouchableOpacity,
   StyleSheet,
+  ActivityIndicator,
 } from "react-native";
-import { Headline, Appbar, Subheading } from "react-native-paper";
+import { Appbar } from "react-native-paper";
 import Color from "../common/Color";
+import { AuthContext } from "../providers/AuthenticationProvider";
+import { Text } from "react-native";
+import { FindPaymentMethod } from "../api/PaymentMethod";
+import { useRoute } from "@react-navigation/native";
 
-const PaymentMethodSelectionScreen = ({ navigation }) => {
+const PaymentMethodSelectionScreen = ({ navigation, route }) => {
+  const [selectedMethodId, setSelectedMethodId] = useState(null);
   const [selectedMethod, setSelectedMethod] = useState(null);
+  const [paymentMethods, setPaymentMethods] = useState([]);
+  const [loading, setLoading] = useState(true); 
 
   const handleMethodSelection = (method) => {
-    setSelectedMethod(method);
+    setSelectedMethodId(method.title);
+    console.log(method.description)
+    
+    setSelectedMethod(method)
   };
+
+  const { parameter } = route.params
+  console.log(parameter)
 
   const handleContinue = () => {
     if (selectedMethod) {
-      navigation.navigate("SavingDepositRequest", { selectedMethod });
+      navigation.navigate(parameter.route, { selectedMethod, parameter });
     } else {
       alert("Pilih metode pembayaran terlebih dahulu.");
     }
   };
 
+  const { token } = useContext(AuthContext);
+
+  useEffect(() => {
+    FindPaymentMethod(token)
+      .then((result) => {
+        setPaymentMethods(result.data.data);
+        setLoading(false); 
+      })
+      .catch((error) => {
+        console.error("Error fetching payment methods:", error);
+        setLoading(false); 
+      });
+  }, [token]);
+
   return (
     <>
       <Appbar.Header style={styles.appbarHeader}>
         <Appbar.BackAction onPress={() => navigation.goBack()} />
-        <Appbar.Content title="Pilih Metde Pembayaran" />
+        <Appbar.Content
+          title="Pilih Metode Pembayaran"
+          style={styles.appbarTitle}
+        />
       </Appbar.Header>
-      <View style={styles.box}>
-        <TouchableOpacity
-          style={{
-            ...(
-              selectedMethod === "Transfer BCA" ? styles.selectedMethod : styles.method
-            ),
-            borderWidth: 1, 
-            borderColor: 'black',
-            backgroundColor: selectedMethod === "Transfer BCA" ? Color.primaryBackgroundColor.backgroundColor : 'white', // Ganti warna latar belakang saat diklik
-          }}
-          onPress={() => handleMethodSelection("Transfer BCA")}
-        >
-          <Text>Transfer Bank BCA (Dicek Manual)</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={{
-            ...(
-              selectedMethod === "Transfer Permata" ? styles.selectedMethod : styles.method
-            ),
-            borderWidth: 1, 
-            borderColor: 'black',
-            backgroundColor: selectedMethod === "Transfer Permata" ? Color.primaryBackgroundColor.backgroundColor : 'white',
-          }}
-          onPress={() => handleMethodSelection("Transfer Permata")}
-        >
-          <Text>Transfer Bank Permata (Dicek Manual)</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.continueButton} onPress={handleContinue}>
-          <Text style={styles.buttonText}>LANJUT</Text>
-        </TouchableOpacity>
-      </View>
+      {loading ? ( 
+        <View style={styles.loadingContainer}>
+          <ActivityIndicator
+            size="large"
+            color={Color.primaryBackgroundColor.backgroundColor}
+          />
+        </View>
+      ) : (
+        <View style={styles.box}>
+          {paymentMethods.map((method) => (
+            <TouchableOpacity
+              key={method.id}
+              style={{
+                ...(selectedMethodId === method.title
+                  ? styles.selectedMethod
+                  : styles.method),
+                borderWidth: 1,
+                borderColor: "black",
+              }}
+              onPress={() => handleMethodSelection(method)}
+            >
+              <Text
+                style={
+                  selectedMethodId === method.title
+                    ? styles.selectedText
+                    : styles.text
+                }
+              >
+                {method.title}
+              </Text>
+            </TouchableOpacity>
+          ))}
+          <TouchableOpacity
+            style={styles.continueButton}
+            onPress={handleContinue}
+          >
+            <Text style={styles.buttonText}>LANJUT</Text>
+          </TouchableOpacity>
+        </View>
+      )}
     </>
   );
 };
 
 const styles = StyleSheet.create({
-    box: {
-      backgroundColor: "#ffffff",
-      padding: 30,
-      margin: 20,
-      borderRadius: 10,
-      marginTop: 20,
-    },
-
-  heading: {
-    fontSize: 20,
-    fontWeight: "bold",
-    marginBottom: 20,
+  box: {
+    backgroundColor: "#ffffff",
+    padding: 30,
+    margin: 20,
+    borderRadius: 10,
+    marginTop: 20,
+  },
+  appbarHeader: {
+    backgroundColor: "white",
+  },
+  appbarTitle: {
+    color: "black",
   },
   method: {
     backgroundColor: "white",
@@ -88,7 +124,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   selectedMethod: {
-    backgroundColor: "lightblue",
+    backgroundColor: Color.primaryBackgroundColor.backgroundColor,
     padding: 10,
     marginVertical: 5,
     borderRadius: 5,
@@ -102,6 +138,17 @@ const styles = StyleSheet.create({
   buttonText: {
     color: "white",
     textAlign: "center",
+  },
+  text: {
+    color: "black",
+  },
+  selectedText: {
+    color: "white",
+  },
+  loadingContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -8,104 +8,41 @@ import {
   SafeAreaView,
 } from "react-native";
 import { Headline, Appbar, Subheading } from "react-native-paper";
-// import { Table, Row } from "react-native-table-component";
+import { Table, Row } from "react-native-table-component";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { Button } from "react-native-paper";
+import { findLoanBillById } from "../../api/LoanApi";
+import { AuthContext } from "../../providers/AuthenticationProvider";
 
-const LoanRepaymentScheduleScreen = ({ navigation }) => {
-  const [data, setData] = useState([
-    // Data dummy untuk contoh
-    {
-      paymentDate: "2023-10-24",
-      amount: 1000,
-      interest: 200,
-      totalAmount: 1200,
-    },
-    {
-      paymentDate: "2023-10-31",
-      amount: 1000,
-      interest: 200,
-      totalAmount: 1200,
-    },
-    {
-      paymentDate: "2023-10-31",
-      amount: 1000,
-      interest: 200,
-      totalAmount: 1200,
-    },
-    {
-      paymentDate: "2023-10-31",
-      amount: 1000,
-      interest: 200,
-      totalAmount: 1200,
-    },
-    {
-      paymentDate: "2023-10-31",
-      amount: 1000,
-      interest: 200,
-      totalAmount: 1200,
-    },
-    {
-      paymentDate: "2023-10-31",
-      amount: 1000,
-      interest: 200,
-      totalAmount: 1200,
-    },
-    {
-      paymentDate: "2023-10-31",
-      amount: 1000,
-      interest: 200,
-      totalAmount: 1200,
-    },
-    {
-      paymentDate: "2023-10-31",
-      amount: 1000,
-      interest: 200,
-      totalAmount: 1200,
-    },
-    {
-      paymentDate: "2023-10-31",
-      amount: 1000,
-      interest: 200,
-      totalAmount: 1200,
-    },
-    {
-      paymentDate: "2023-10-31",
-      amount: 1000,
-      interest: 200,
-      totalAmount: 1200,
-    },
-    {
-      paymentDate: "2023-10-31",
-      amount: 1000,
-      interest: 200,
-      totalAmount: 1200,
-    },
-    {
-      paymentDate: "2023-10-31",
-      amount: 1000,
-      interest: 200,
-      totalAmount: 1200,
-    },
-    {
-      paymentDate: "2023-10-31",
-      amount: 1000,
-      interest: 200,
-      totalAmount: 1200,
-    },
-    {
-      paymentDate: "2023-10-31",
-      amount: 1000,
-      interest: 200,
-      totalAmount: 1200,
-    },
-  ]);
-
+const LoanRepaymentScheduleScreen = ({ navigation, route }) => {
   const itemsPerPage = 10;
   const [currentPage, setCurrentPage] = useState(1);
-  const totalPages = Math.ceil(data.length / itemsPerPage);
+  const [totalPages, setTotalPages] = useState(1); // Initialize totalPages with a default value
 
-  // getCurrentPageData akan mengembalikan data untuk halaman saat ini
+  const [data, setData] = useState([]); // Initialize data as an empty array
+
+  const { token } = useContext(AuthContext);
+
+  const { id } = route.params;
+
+  const fetchDataBill = async () => {
+    try {
+      const result = await findLoanBillById(token, id);
+      console.log("Bill Data from API:", result.data);
+      setData(result.data.data);
+
+      // Calculate totalPages after data is fetched
+      const totalPages = Math.ceil(result.data.data.length / itemsPerPage);
+      setTotalPages(totalPages); // Update the totalPages state
+    } catch (error) {
+      console.error("Error API:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchDataBill();
+  }, []);
+
   const getCurrentPageData = () => {
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
@@ -116,6 +53,15 @@ const LoanRepaymentScheduleScreen = ({ navigation }) => {
     if (page >= 1 && page <= totalPages) {
       setCurrentPage(page);
     }
+  };
+
+  // Function to format repaymentDate to day-month-year
+  const formatRepaymentDate = (repaymentDate) => {
+    const date = new Date(repaymentDate);
+    const day = date.getDate();
+    const month = date.toLocaleString('default', { month: 'long' });
+    const year = date.getFullYear();
+    return `${day} ${month} ${year}`;
   };
 
   return (
@@ -138,10 +84,10 @@ const LoanRepaymentScheduleScreen = ({ navigation }) => {
                 key={index}
                 data={[
                   index + 1 + (currentPage - 1) * itemsPerPage,
-                  item.paymentDate,
+                  formatRepaymentDate(item.repaymentDate), // Format the date
                   item.amount.toLocaleString("en-US") + ".00",
-                  item.interest.toLocaleString("en-US") + ".00",
-                  item.totalAmount.toLocaleString("en-US") + ".00",
+                  item.interestAmount.toLocaleString("en-US") + ".00",
+                  item.principalAmount.toLocaleString("en-US") + ".00",
                 ]}
                 textStyle={styles.textData}
               />
