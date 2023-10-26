@@ -185,7 +185,7 @@ const styles = StyleSheet.create({
   screen: {
     backgroundColor: "#F5F8FB",
     flex: 1,
-    padding: 20,
+    padding: 25,
   },
   appbarHeader: {
     elevation: 0,

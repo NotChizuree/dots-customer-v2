@@ -32,12 +32,12 @@ const LoginScreen = ({ navigation }) => {
       });
       return;
     }
-    
+
     setLoading(true);
     login(username, password)
       .then((result) => {
         const msg = result.data.message;
-        console.log('kk',msg)
+        console.log("kk", msg);
         if (msg === "Unauthorized") {
           toaster.show({
             message: "Username atau password tidak ditemukan",
@@ -71,7 +71,7 @@ const LoginScreen = ({ navigation }) => {
       </View>
       <Caption>Username</Caption>
       <TextInput
-        style={styles.textInput}
+        style={[styles.textinput, { backgroundColor: "white" }]}
         value={username}
         mode="outlined"
         placeholder="Masukan Username"
@@ -81,7 +81,7 @@ const LoginScreen = ({ navigation }) => {
       />
       <Caption>Password</Caption>
       <TextInput
-        style={styles.textInput}
+        style={[styles.textinput, { backgroundColor: "white" }]}
         secureTextEntry={!showPassword}
         value={password}
         mode="outlined"

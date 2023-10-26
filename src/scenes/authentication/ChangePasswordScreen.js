@@ -105,13 +105,12 @@ const ChangePasswordScreen = ({ navigation }) => {
         <View style={styles.box}>
           <Caption>Kata sandi lama</Caption>
           <TextInput
-            style={styles.input}
+            style={[styles.input, { backgroundColor: "white" }]}
             mode="outlined"
             secureTextEntry={!passwordVisible}
             value={currentPassword}
             onChangeText={(text) => setCurrentPassword(text)}
             right={
-              // Menambahkan ikon mata di sebelah kanan TextInput
               <TextIconButton
                 icon={passwordVisible ? "eye" : "eye-off"}
                 onPress={() => setPasswordVisible(!passwordVisible)}
@@ -121,7 +120,7 @@ const ChangePasswordScreen = ({ navigation }) => {
 
           <Caption>Kata sandi baru</Caption>
           <TextInput
-            style={styles.input}
+            style={[styles.input, { backgroundColor: "white" }]}
             mode="outlined"
             secureTextEntry
             value={newPassword}
@@ -130,7 +129,7 @@ const ChangePasswordScreen = ({ navigation }) => {
 
           <Caption>Konfirmasi Kata Sandi</Caption>
           <TextInput
-            style={styles.input}
+            style={[styles.input, { backgroundColor: "white" }]}
             mode="outlined"
             secureTextEntry
             value={confirmPassword}
@@ -144,7 +143,7 @@ const ChangePasswordScreen = ({ navigation }) => {
             disabled={mutationLoading}
             loading={mutationLoading}
           >
-            {mutationLoading ? "Mengirim..." : "Submit"}
+            {mutationLoading ? "Mengirim..." : ""}
             Simpan
           </Button>
         </View>

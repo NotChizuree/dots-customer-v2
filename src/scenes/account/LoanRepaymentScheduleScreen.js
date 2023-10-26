@@ -59,7 +59,7 @@ const LoanRepaymentScheduleScreen = ({ navigation, route }) => {
   const formatRepaymentDate = (repaymentDate) => {
     const date = new Date(repaymentDate);
     const day = date.getDate();
-    const month = date.toLocaleString('default', { month: 'long' });
+    const month = date.toLocaleString('default', { month: 'short' });
     const year = date.getFullYear();
     return `${day} ${month} ${year}`;
   };
@@ -77,7 +77,8 @@ const LoanRepaymentScheduleScreen = ({ navigation, route }) => {
             <Row
               data={["Angs", "Tanggal", "Pokok", "Bunga", "Total"]}
               style={styles.head}
-              textStyle={styles.textHead}
+              textStyle={[styles.textHead, { textAlign: 'center' }] } // Tambahkan textAlign untuk mengatur teks di kolom "Angs" dan "Tanggal" menjadi tengah
+              widthArr={[50, 70, 53, 63, 50]} // Menentukan lebar masing-masing kolom
             />
             {getCurrentPageData().map((item, index) => (
               <Row
@@ -85,9 +86,9 @@ const LoanRepaymentScheduleScreen = ({ navigation, route }) => {
                 data={[
                   index + 1 + (currentPage - 1) * itemsPerPage,
                   formatRepaymentDate(item.repaymentDate), // Format the date
-                  item.amount.toLocaleString("en-US") + ".00",
-                  item.interestAmount.toLocaleString("en-US") + ".00",
-                  item.principalAmount.toLocaleString("en-US") + ".00",
+                  item.amount.toLocaleString("en-US"),
+                  item.interestAmount.toLocaleString("en-US"),
+                  item.principalAmount.toLocaleString("en-US"),
                 ]}
                 textStyle={styles.textData}
               />
@@ -155,7 +156,7 @@ const styles = StyleSheet.create({
   },
   head: {
     height: 40,
-    borderBottomWidth: 0.3,
+    borderBottomWidth: 1.0,
     marginBottom: 20,
   },
   textHead: {
@@ -163,9 +164,11 @@ const styles = StyleSheet.create({
     fontSize: 15,
   },
   textData: {
-    margin: 6,
+    margin: 7,
     fontSize: 10,
     width: "100%",
+    marginLeft: -5,
+    textAlign: "center",
   },
   box: {
     backgroundColor: "#ffffff",

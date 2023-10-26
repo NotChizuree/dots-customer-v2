@@ -91,8 +91,8 @@ const CreateLoanAccount = ({ navigation }) => {
             value={Service}
             setValue={setService}
             list={dropdown}
-            style={styles.dropdown}
-          />
+            style={[styles.dropdown, { backgroundColor: "white" }]}
+            />
 
           <Caption>Jumlah Pengajuan</Caption>
           <TextInput

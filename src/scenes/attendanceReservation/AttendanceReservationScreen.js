@@ -117,39 +117,38 @@ const AttendanceReservationScreen = ({ navigation }) => {
   const [attendanceTimeRange, setAttendanceTimeRange] = useState(null);
   const generateTimeList = [
     {
-      label: "14:00 - 15:00",
-      value: "1400-1500",
+      label: "08:00 - 09:00",
+      value: "0800-0900",
     },
     {
-      label: "13:00 - 14:00",
-      value: "1300-1400",
+      label: "09:00 - 10:00",
+      value: "0900-1000",
+    },
+    {
+      label: "10:00 - 11:00",
+      value: "1000-1100",
+    },
+    {
+      label: "11:00 - 12:00",
+      value: "1100-1200",
+    },
+    {
+      label: "12:00 - 01:00",
+      value: "1200-0100",
+    },
+    {
+      label: "01:00 - 02:00",
+      value: "0100-0200",
+    },
+    {
+      label: "02:00 - 03:00",
+      value: "0200-0300",
+    },
+    {
+      label: "03:00 - 04:00",
+      value: "0300-0400",
     },
   ];
-
-  // const generateTimeList = () => {
-  //   let attendanceTimeList = [];
-
-  //   let currentTime;
-  //   if (intTime > operationalHourStartInt && intTime < operationalHourEndInt) {
-  //     if (parseInt(intTime) == intTime) {
-  //       currentTime = intTime;
-  //     } else {
-  //       currentTime = parseInt(intTime) + 0.5;
-  //     }
-  //   } else {
-  //     currentTime = operationalHourStartInt;
-  //   }
-
-  //   while (currentTime !== operationalHourEndInt) {
-  //     attendanceTimeList.push({
-  //       label: intTimeToReadableTime(currentTime),
-  //       value: currentTime.toString(),
-  //     });
-  //     currentTime += 0.5;
-  //   }
-
-  //   return attendanceTimeList;
-  // };
 
   const attendAtStartToStr = (type) => {
     const parsedHour = parseInt(attendanceTimeRange);
@@ -213,7 +212,7 @@ const AttendanceReservationScreen = ({ navigation }) => {
       } else if (!attendanceTimeRange) {
         Alert.alert("Error", "Waktu Kedatangan is required");
       } else {
-        setMutationLoading(true)
+        setMutationLoading(true);
         const clock = attendanceTimeRange.split("-");
         const jam1 = `${Math.floor(clock[0] / 100)}:${clock[0] % 100}`;
         const jam2 = `${Math.floor(clock[1] / 100)}:${clock[1] % 100}`;
@@ -234,6 +233,7 @@ const AttendanceReservationScreen = ({ navigation }) => {
             reason: Service,
             attendAtStart: timestamp1,
             attendAtEnd: timestamp2,
+            time: clock,
           },
           setMutationLoading,
           setMutationError
@@ -272,6 +272,7 @@ const AttendanceReservationScreen = ({ navigation }) => {
         >
           <Caption>Kantor Tujuan</Caption>
           <DropDown
+            style={{ backgroundColor: 'white' }}
             placeholder={!officesData.length ? "Loading..." : null}
             mode={"outlined"}
             value={office}
@@ -293,6 +294,7 @@ const AttendanceReservationScreen = ({ navigation }) => {
           />
           <Caption>Layanan Tujuan</Caption>
           <DropDown
+            style={{ backgroundColor: "white" }}
             mode={"outlined"}
             value={destinationService}
             setValue={setDestinationService}
@@ -306,6 +308,7 @@ const AttendanceReservationScreen = ({ navigation }) => {
           />
           <Caption>Tujuan Kedatangan</Caption>
           <DropDown
+            style={{ backgroundColor: 'white' }}
             mode={"outlined"}
             visible={showDropDownService}
             showDropDown={() => setshowDropDownService(true)}
@@ -313,7 +316,6 @@ const AttendanceReservationScreen = ({ navigation }) => {
             value={Service}
             setValue={setService}
             list={dataService}
-            style={styles.dropdown}
           />
           <Caption>Tanggal Kedatangan</Caption>
           <TouchableWithoutFeedback onPress={() => setShowDatepicker(true)}>
@@ -348,6 +350,7 @@ const AttendanceReservationScreen = ({ navigation }) => {
           )}
           <Caption>Waktu Kedatangan</Caption>
           <DropDown
+            style={{ backgroundColor: 'white' }}
             mode={"outlined"}
             value={attendanceTimeRange}
             setValue={setAttendanceTimeRange}
