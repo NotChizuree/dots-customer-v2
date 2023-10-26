@@ -20,11 +20,8 @@ const PaymentMethodSelectionScreen = ({ navigation }) => {
 
   const handleContinue = () => {
     if (selectedMethod) {
-      // Do what you need to do after selecting the payment method
-      // For example, you can navigate back to the previous page with the selected payment method.
-      navigation.goBack();
+      navigation.navigate("SavingDepositRequest", { selectedMethod });
     } else {
-      // Show an error message if a payment method hasn't been selected.
       alert("Pilih metode pembayaran terlebih dahulu.");
     }
   };

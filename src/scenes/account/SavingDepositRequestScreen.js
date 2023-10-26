@@ -15,6 +15,7 @@ import {
   Subheading,
   TextInput,
 } from "react-native-paper";
+import { useRoute } from "@react-navigation/native";
 import { useToast } from "react-native-paper-toast";
 import LoadingOverlay from "../../components/common/LoadingOverlay";
 import RNSInfo from "react-native-sensitive-info";
@@ -33,7 +34,6 @@ const SavingDepositRequestScreen = ({ navigation }) => {
   const { currentTenant } = useContext(AuthContext);
   const [isFocused, setIsFocused] = useState(false);
   const [inputValue, setInputValue] = useState("");
-  const [selectedMethod, setSelectedMethod] = useState(null);
   const [rekeningPengirim, setRekeningPengirim] = useState("");
   const [showTabunganContainer, setShowTabunganContainer] = useState(false);
   const [showDropDown, setShowDropDown] = useState(false);
@@ -42,6 +42,10 @@ const SavingDepositRequestScreen = ({ navigation }) => {
     { label: "Transfer Bank BCA (Dicek Manual)", value: "01" },
     { label: "Transfer Bank Permata (Dicek Manual)", value: "02" },
   ]);
+
+  const route = useRoute();
+  const { selectedMethod = "Pilih Metode Pembayaran" } = route.params || {};
+  const selectedPaymentMethod = selectedMethod || "Pilih Metode Pembayaran";
 
   const [amount, setAmount] = useState("Rp. 0");
 
@@ -78,7 +82,7 @@ const SavingDepositRequestScreen = ({ navigation }) => {
   };
 
   const handlePaymentChange = (itemValue) => {
-    setPaymentDropdown(itemValue);
+    setSelectedMethod(itemValue);
     checkTabunganContainerVisibility(inputValue, rekeningPengirim, itemValue);
   };
 
@@ -149,6 +153,7 @@ const SavingDepositRequestScreen = ({ navigation }) => {
                 style={styles.input}
                 placeholder="Pilih Metode Pembayaran"
                 editable={false}
+                value={selectedMethod} 
               />
             </View>
           </TouchableOpacity>
