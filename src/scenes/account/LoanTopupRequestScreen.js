@@ -44,6 +44,8 @@ const LoanTopupRequest = ({ navigation }) => {
     if (!isNaN(numericValue)) {
       const formattedValue = "Rp. " + numericValue.toLocaleString();
       setAmount(formattedValue);
+    } else {
+      setAmount("Rp. ");
     }
   };
 
@@ -65,7 +67,7 @@ const LoanTopupRequest = ({ navigation }) => {
   const { token } = useContext(AuthContext);
 
   //  const [loanId,setLoanId]=useState(null)
-  const [amount, setAmount] = useState(null);
+  const [amount, setAmount] = useState("Rp. ");
   const [reason, setReason] = useState(null);
 
   const handleSubmit = () => {
@@ -74,22 +76,39 @@ const LoanTopupRequest = ({ navigation }) => {
     } else if (!reason) {
       Alert.alert("Error", "Kolom Alasan Belum Di isi.");
     } else {
-      try {
-        createLoanTopup(token, {
-          loanId: id,
-          amount: amount,
-          reason: reason,
-        }).then((result) => {
-          navigation.goBack();
-          Alert.alert(
-            "Sukses",
-            "Berhasil Mengajukan TopUp. Silahkan cek notifikasi secara berkala"
-          );
-          console.log(result.data.data);
-        });
-      } catch (error) {
-        console.error("API Error:", error);
-      }
+      Alert.alert(
+        "Konfirmasi",
+        "Pastikan data yang anda masukan sudah benar",
+        [
+          {
+            text: "Batal",
+            onPress: () => console.log("Transaksi dibatalkan"),
+            style: "cancel",
+          },
+          {
+            text: "Ya",
+            onPress: async () => {
+              try {
+                createLoanTopup(token, {
+                  loanId: id,
+                  amount: amount,
+                  reason: reason,
+                }).then((result) => {
+                  navigation.goBack();
+                  Alert.alert(
+                    "Sukses",
+                    "Berhasil Mengajukan TopUp. Silahkan cek notifikasi secara berkala"
+                  );
+                  console.log(result.data.data);
+                });
+              } catch (error) {
+                console.error("API Error:", error);
+              }
+            },
+          },
+        ],
+        { cancelable: false }
+      );
     }
   };
 
@@ -129,7 +148,7 @@ const LoanTopupRequest = ({ navigation }) => {
           disabled
         />
 
-        <Text>Jumlah</Text>
+        <Text style={styles.text}>Jumlah</Text>
         <TextInput
           style={styles.input}
           underlineColor=""
@@ -141,16 +160,6 @@ const LoanTopupRequest = ({ navigation }) => {
           value={amount}
           onChangeText={handleInputChange}
         />
-        {/* <Text style={styles.text}>Tenor / Jangka Waktu</Text>
-        <DropDown
-          mode={"outlined"}
-          visible={showDropDown}
-          showDropDown={() => setShowDropDown(true)}
-          onDismiss={() => setShowDropDown(false)}
-          value={JangkaDropdown}
-          setValue={setJangkaDropdown}
-          list={Jangka}
-        /> */}
 
         <Text style={styles.text}>Alasan</Text>
         <TextInput
@@ -160,33 +169,48 @@ const LoanTopupRequest = ({ navigation }) => {
           value={reason}
           onChangeText={(text) => setReason(text)}
         />
-        <TouchableOpacity onPress={showConfirmModal}>
+        <TouchableOpacity
+          onPress={() => {
+            Alert.alert(
+              "Konfirmasi",
+              "Pastikan data yang anda masukan sudah benar",
+              [
+                {
+                  text: "Batal",
+                  onPress: () => console.log("Transaksi dibatalkan"),
+                  style: "cancel",
+                },
+                {
+                  text: "Ya",
+                  onPress: async () => {
+                    try {
+                      createLoanTopup(token, {
+                        loanId: id,
+                        amount: amount,
+                        reason: reason,
+                      }).then((result) => {
+                        navigation.goBack();
+                        Alert.alert(
+                          "Sukses",
+                          "Berhasil Mengajukan TopUp. Silahkan cek notifikasi secara berkala"
+                        );
+                        console.log(result.data.data);
+                      });
+                    } catch (error) {
+                      console.error("API Error:", error);
+                    }
+                  },
+                },
+              ],
+              { cancelable: false }
+            );
+          }}
+        >
           <Button style={styles.btn}>
             <Text style={styles.btnSubmit}>SUBMIT</Text>
           </Button>
         </TouchableOpacity>
       </View>
-      <Modal
-        visible={isConfirmModalVisible}
-        transparent={true}
-        animationType="slide"
-      >
-        <View style={styles.confirmModalContainer}>
-          <View style={styles.confirmModal}>
-            <Text style={styles.confirmModalText}>
-              Apakah Anda yakin ingin melakukan Top-Up Pinjaman
-            </Text>
-            <TouchableOpacity onPress={hideConfirmModal}>
-              <Text style={styles.cancelButton}>Batal</Text>
-            </TouchableOpacity>
-            <TouchableOpacity>
-              <Text style={styles.confirmButton} onPress={handleSubmit}>
-                Konfirmasi
-              </Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
     </View>
   );
 };

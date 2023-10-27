@@ -78,7 +78,7 @@ const AccountsScreen = ({ navigation }) => {
 
     const renderSavingItem = (data) => {
       return (
-        <View>
+        <View style={styles.box}>
           <List.Item
             onPress={() => navigation.navigate("SavingDetail", { id: data.id })}
             titleStyle={{ marginBottom: 8 }}
@@ -107,7 +107,7 @@ const AccountsScreen = ({ navigation }) => {
     const { height } = Dimensions.get("window");
 
     return (
-      <SafeAreaView style={{marginTop: "-10%"}}>
+      <SafeAreaView style={{ marginTop: "-10%" }}>
         <View style={styles.listItem}>
           <FlatList
             data={data}
@@ -184,7 +184,7 @@ const AccountsScreen = ({ navigation }) => {
 
     const renderLoanItem = (data) => {
       return (
-        <View>
+        <View style={styles.box}>
           <List.Item
             onPress={() => navigation.navigate("LoanDetail", { id: data.id })}
             titleStyle={{ marginBottom: 8 }}
@@ -211,7 +211,7 @@ const AccountsScreen = ({ navigation }) => {
     };
 
     return (
-      <SafeAreaView style={{marginTop: "-10%"}}>
+      <SafeAreaView style={{ marginTop: "-10%" }}>
         <View style={styles.listItem}>
           <FlatList
             data={data}
@@ -286,32 +286,36 @@ const AccountsScreen = ({ navigation }) => {
 
     const renderDepositItem = (data) => {
       return (
-        <List.Item
-          onPress={() => navigation.navigate("DepositDetail", { id: data.id })}
-          titleStyle={{ marginBottom: 8 }}
-          title={<Text>{data.productType.name}</Text>}
-          description={<Text>{data.id}</Text>}
-          left={(props) => (
-            <List.Icon
-              color={Colors.white}
-              style={{
-                backgroundColor: Color.primaryBackgroundColor.backgroundColor,
-                borderRadius: 10,
-                width: 50,
-                height: 50,
-                justifyContent: "center",
-                alignItems: "center",
-                marginLeft: "3%",
-              }}
-              icon="wallet"
-            />
-          )}
-        />
+        <View style={styles.box}>
+          <List.Item
+            onPress={() =>
+              navigation.navigate("DepositDetail", { id: data.id })
+            }
+            titleStyle={{ marginBottom: 8 }}
+            title={<Text>{data.productType.name}</Text>}
+            description={<Text>{data.id}</Text>}
+            left={(props) => (
+              <List.Icon
+                color={Colors.white}
+                style={{
+                  backgroundColor: Color.primaryBackgroundColor.backgroundColor,
+                  borderRadius: 10,
+                  width: 50,
+                  height: 50,
+                  justifyContent: "center",
+                  alignItems: "center",
+                  marginLeft: "3%",
+                }}
+                icon="wallet"
+              />
+            )}
+          />
+        </View>
       );
     };
 
     return (
-      <SafeAreaView style={{marginTop: "-10%"}}>
+      <SafeAreaView style={{ marginTop: "-10%" }}>
         <View style={styles.listItem}>
           <FlatList
             data={data}
@@ -422,6 +426,9 @@ const styles = StyleSheet.create({
     paddingTop: "3%",
     paddingBottom: "3%",
     // backgroundColor: "#F5F8FB",
+  },
+  box: {
+    padding: 10,
   },
   listItem: {
     marginTop: 50,

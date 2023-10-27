@@ -59,22 +59,6 @@ const LoanAccountDetailScreen = ({ navigation, route }) => {
   const menus = [
     {
       id: 1,
-      title: "Ajukan Restrukturisasi",
-      icon: "clipboard-outline",
-      onPress: () => {
-        // Cek akses di sini jika diperlukan
-        if (user.hasRestructureAccess) {
-          navigation.navigate("");
-        } else {
-          Alert.alert(
-            "Akses Ditolak",
-            "Anda tidak memiliki akses untuk Ajukan Restrukturisasi."
-          );
-        }
-      },
-    },
-    {
-      id: 2,
       title: "Ajukan Top-up Kredit",
       icon: "journal-outline",
       onPress: () => navigation.navigate("LoanTopupRequest",{id : data.id}),
@@ -86,7 +70,7 @@ const LoanAccountDetailScreen = ({ navigation, route }) => {
       onPress: () => navigation.navigate("PaymentMethodSelection",{parameter}),
     },
     {
-      id: 4,
+      id: 3,
       title: "Lihat Jadwal Tagihan",
       icon: "list-outline",
       onPress: () =>
@@ -330,8 +314,11 @@ const styles = StyleSheet.create({
   buttonRow: {
     flex: 1,
     flexDirection: "column",
+    justifyContent: "center", // Memusatkan vertikal
+    alignItems: "center", // Memusatkan horizontal
     margin: 4,
-  },
+  }
+  ,
   billItem: {
     borderBottomWidth: 1,
     borderBottomColor: "#ddd",

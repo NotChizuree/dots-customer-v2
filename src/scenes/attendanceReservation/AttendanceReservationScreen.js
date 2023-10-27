@@ -273,6 +273,7 @@ const AttendanceReservationScreen = ({ navigation }) => {
           <Caption>Kantor Tujuan</Caption>
           <DropDown
             style={{ backgroundColor: 'white' }}
+            dropDownContainerHeight={50}
             placeholder={!officesData.length ? "Loading..." : null}
             mode={"outlined"}
             value={office}
@@ -294,7 +295,7 @@ const AttendanceReservationScreen = ({ navigation }) => {
           />
           <Caption>Layanan Tujuan</Caption>
           <DropDown
-            style={{ backgroundColor: "white" }}
+            style={{ backgroundColor: "white", }}
             mode={"outlined"}
             value={destinationService}
             setValue={setDestinationService}
@@ -383,7 +384,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   heading: {
-    marginTop: "7%",
+    marginTop: "10%",
     marginBottom: "4%",
     fontSize: 30,
     marginLeft: "5%",

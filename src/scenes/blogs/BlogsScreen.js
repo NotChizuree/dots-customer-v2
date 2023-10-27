@@ -13,10 +13,9 @@ function BlogScreen({ route, navigation, navigator }) {
     <ScrollView contentContainerStyle={styles.scrollViewContent}>
       <Appbar.Header style={styles.appbarHeader}>
         <Appbar.BackAction onPress={() => navigation.goBack()} />
-        <Appbar.Content title="Blogs" />
+        <Text style={{ fontSize: 20, marginLeft: "20%", }}>{item.title}</Text>
       </Appbar.Header>
       <View style={styles.content}>
-        <Text style={{ fontSize: 30, alignSelf: "center" }}>{item.title}</Text>
         <Lightbox navigator={navigator}>
           <Image
             style={{ width: "100%", height: 140, marginVertical: 10 }}

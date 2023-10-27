@@ -35,7 +35,7 @@ const CreateLoanAccount = ({ navigation }) => {
   };
 
   const formatToRupiah = (angka) => {
-    return `Rp ${angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`;
+    return `Rp. ${angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`;
   };
   const [mutationLoading, setMutationLoading] = useState(false);
 

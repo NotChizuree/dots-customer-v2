@@ -29,7 +29,7 @@ const LoanPayment = ({ navigation }) => {
     }
   }
 
-  const [amount, setAmount] = useState("Rp. 0");
+  const [amount, setAmount] = useState("Rp. ");
   const { login } = useContext(AuthContext);
 
   const handleCreateSavingAccount = () => {
@@ -58,14 +58,19 @@ const LoanPayment = ({ navigation }) => {
 
   const handleInputChange = (text) => {
     const cleanedText = text.replace(/[^\d]/g, "");
-    const numericValue = Number.parseInt(cleanedText, 10);
-    if (!isNaN(numericValue)) {
-      const formattedValue = "Rp. " + numericValue.toLocaleString();
-      setAmount(formattedValue);
-      setInputValue(text);
-      checkTabunganContainerVisibility(rekeningPengirim, text);
+        if (cleanedText) {
+      const numericValue = Number.parseInt(cleanedText, 10);
+      if (!isNaN(numericValue)) {
+        const formattedValue = "Rp. " + numericValue.toLocaleString();
+        setAmount(formattedValue);
+        setInputValue(formattedValue);
+        checkTabunganContainerVisibility(rekeningPengirim, numericValue); 
+      } else {
+        setShowTabunganContainer(false);
+      }
     } else {
-      // Jika "Jumlah" kosong atau tidak valid, sembunyikan tabunganContainer
+      setAmount("Rp. ");
+      setInputValue(""); 
       setShowTabunganContainer(false);
     }
   };

@@ -268,12 +268,12 @@ const styles = StyleSheet.create({
   },
   contentBlock: {
     // height: "50%",
-    padding: 15,
   },
   detailHeading: {
     marginTop: 10,
     fontSize: 22,
     fontWeight: "bold",
+    padding: 20,
   },
   transactionList: {
     marginTop: 10,
