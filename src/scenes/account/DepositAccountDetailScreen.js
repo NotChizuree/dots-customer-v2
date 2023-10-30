@@ -1,16 +1,28 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { View, StyleSheet, Text } from 'react-native';
-import { Appbar, Headline, List, Caption, IconButton, Divider } from 'react-native-paper';
-import { LinearGradient } from 'expo-linear-gradient';
-import { ScrollView } from 'react-native-gesture-handler';
-import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
-import { useToast } from 'react-native-paper-toast';
-import MenuButton from '../../components/common/MenuButton';
-import Color from '../../common/Color';
-import { findDepositById } from '../../api/DepositApi';
-import { AuthContext } from '../../providers/AuthenticationProvider';
+import React, { useContext, useEffect, useState } from "react";
+import { View, StyleSheet, Text } from "react-native";
+import {
+  Appbar,
+  Headline,
+  List,
+  Caption,
+  IconButton,
+  Divider,
+} from "react-native-paper";
+import { LinearGradient } from "expo-linear-gradient";
+import { ScrollView } from "react-native-gesture-handler";
+import ShimmerPlaceholder from "react-native-shimmer-placeholder";
+import { useToast } from "react-native-paper-toast";
+import MenuButton from "../../components/common/MenuButton";
+import Color from "../../common/Color";
+import { findDepositById } from "../../api/DepositApi";
+import { AuthContext } from "../../providers/AuthenticationProvider";
+import { useFonts } from "expo-font";
 
 const DepositAccountDetailScreen = ({ navigation, route }) => {
+  let [fontLoaded] = useFonts({
+    "SomeTypeMono-Bold": require("../../../assets/fonts/SometypeMono-Bold.ttf"),
+  });
+
   const menus = [
     // {
     //   id: 1,
@@ -47,10 +59,10 @@ const DepositAccountDetailScreen = ({ navigation, route }) => {
       setName(data.productType.name);
       setAccountNumber(data.id);
       setAvailableBalance(data.currentBalance);
-      setJangkaWaktu(data.jangkawaktu)
+      setJangkaWaktu(data.jangkawaktu);
       setLoading(false);
     } catch (error) {
-      console.error('Error API:', error);
+      console.error("Error API:", error);
       setLoading(false);
     }
   };
@@ -64,34 +76,34 @@ const DepositAccountDetailScreen = ({ navigation, route }) => {
       <View>
         <ShimmerPlaceholder
           style={{
-            width: '80%',
+            width: "80%",
             height: 25,
-            marginTop: '7.5%',
-            marginBottom: '13%',
+            marginTop: "7.5%",
+            marginBottom: "13%",
           }}
           autoRun={true}
         />
         <ShimmerPlaceholder
           style={{
-            width: '50%',
+            width: "50%",
             height: 20,
-            marginBottom: '13%',
+            marginBottom: "13%",
           }}
           autoRun={true}
         />
         <ShimmerPlaceholder
           style={{
-            width: '30%',
+            width: "30%",
             height: 15,
-            marginBottom: '5%',
+            marginBottom: "5%",
           }}
           autoRun={true}
         />
         <ShimmerPlaceholder
           style={{
-            width: '46%',
+            width: "46%",
             height: 20,
-            marginBottom: '7.5%',
+            marginBottom: "7.5%",
           }}
           autoRun={true}
         />
@@ -105,23 +117,34 @@ const DepositAccountDetailScreen = ({ navigation, route }) => {
         <Text adjustFontSizeToFit style={styles.bankName}>
           {Name}
         </Text>
-        <Text style={styles.accountNumber}>{accountNumber}</Text>
+        <Text
+          style={{
+            fontFamily: "SomeTypeMono-Bold",
+            color: "white",
+            fontSize: 25,
+            // marginBottom: 16,
+          }}
+        >
+          {accountNumber}
+        </Text>
         <Text style={styles.balanceTitle}>Saldo Aktif</Text>
-        <View style={{ flexDirection: 'row' }}>
+        <View style={{ flexDirection: "row" }}>
           <Headline adjustFontSizeToFit style={styles.balance}>
-            Rp{' '}
+            Rp{" "}
             {isBalanceShown
-              ? parseFloat(availableBalance).toLocaleString('en')
-              : '******'}
+              ? parseFloat(availableBalance).toLocaleString("en")
+              : "******"}
           </Headline>
           <IconButton
             onPress={() => setIsBalanceShown(!isBalanceShown)}
-            icon={isBalanceShown ? 'eye-off' : 'eye'}
+            icon={isBalanceShown ? "eye-off" : "eye"}
             size={25}
             style={{ bottom: 5 }}
           />
         </View>
-        <Text style={styles.timePeriod}>Jangka Waktu :  {jangkaWaktu} Bulan</Text>
+        <Text style={styles.timePeriod}>
+          Jangka Waktu : {jangkaWaktu} Bulan
+        </Text>
       </View>
     );
   };
@@ -138,7 +161,7 @@ const DepositAccountDetailScreen = ({ navigation, route }) => {
             style={styles.headingGradient}
             colors={Color.primaryGradientColor}
           >
-          {loading ? renderAccountInfoPlaceholder() : renderAccountInfo()}
+            {loading ? renderAccountInfoPlaceholder() : renderAccountInfo()}
           </LinearGradient>
         </View>
       </ScrollView>
@@ -148,22 +171,25 @@ const DepositAccountDetailScreen = ({ navigation, route }) => {
 
 const styles = StyleSheet.create({
   screen: {
-    backgroundColor: '#F5F8FB',
+    backgroundColor: "#F5F8FB",
     flexGrow: 1,
   },
   appbarHeader: {
     elevation: 0,
-    backgroundColor: '#F5F8FB',
+    backgroundColor: "#F5F8FB",
   },
   headingBlock: {
-    marginTop: '3%',
-    width: '95%',
+    marginTop: "3%",
+    width: "95%",
     borderRadius: 10,
-    alignSelf: 'center',
+    alignSelf: "center",
   },
   headingGradient: {
     borderRadius: 10,
-    paddingLeft: '7%',
+    paddingTop: 30,
+    paddingLeft: 30,
+    paddingRight: 30,
+    paddingBottom: 10,
   },
   timePeriod: {
     fontSize: 15,
@@ -172,40 +198,39 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   balanceTitle: {
-    marginTop: '7%',
-    color: 'white',
+    marginTop: "7%",
+    color: "white",
   },
   balance: {
-    marginBottom: '6%',
+    marginBottom: "6%",
     fontSize: 21,
-    fontWeight: 'bold',
-    color: 'white',
+    fontWeight: "bold",
+    color: "white",
   },
   accountNumber: {
     fontSize: 18,
-    color: 'white',
-    fontFamily: 'Credit-Regular',
+    color: "white",
+    fontFamily: "Credit-Regular",
   },
   bankName: {
-    marginTop: '7.5%',
-    marginBottom: '13%',
-    fontSize: 18,
-    color: 'white',
+    marginBottom: 20,
+    fontSize: 20,
+    color: "white",
   },
   contentBlock: {
-    paddingTop: '5%',
+    paddingTop: "5%",
     flex: 1,
-    height: '100%',
+    height: "100%",
   },
   menuButton: {
     marginLeft: 12,
     marginRight: 10,
     marginBottom: 5,
-    backgroundColor: '#EAEBF8',
+    backgroundColor: "#EAEBF8",
   },
   buttonRow: {
     flex: 1,
-    flexDirection: 'column',
+    flexDirection: "column",
     margin: 5,
   },
 });

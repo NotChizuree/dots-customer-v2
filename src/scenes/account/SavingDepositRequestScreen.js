@@ -85,6 +85,11 @@ const SavingDepositRequestScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(true);
 
   const handleSubmit = async () => {
+    console.log("Saving id :", parameter.norek);
+    console.log("Metode Pembayaran:", selectedMethod.id);
+    console.log("Nama Rekening Pengirim:", rekeningPengirim);
+    console.log("Jumlah:", amount);
+
     if (!amount) {
       Alert.alert("Error", "Kolom Jumlah Belum Di isi.");
     } else if (!rekeningPengirim) {
@@ -103,7 +108,7 @@ const SavingDepositRequestScreen = ({ navigation }) => {
               createSavingDeposit(token, {
                 savingId: parameter.norek,
                 paymentMethodId: selectedMethod.id,
-                amount: amount,
+                amount: parseInt(amount.replace(/[^0-9]/g, "")),
                 recipient: rekeningPengirim,
               }).then((result) => {
                 console.log(result.data.data);

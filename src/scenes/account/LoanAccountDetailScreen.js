@@ -1,5 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
-import { View, StyleSheet, Text, ScrollView, FlatList, Alert } from "react-native";
+import {
+  View,
+  StyleSheet,
+  Text,
+  ScrollView,
+  FlatList,
+  Alert,
+} from "react-native";
 import { Appbar, IconButton } from "react-native-paper";
 import { LinearGradient } from "expo-linear-gradient";
 import ShimmerPlaceholder from "react-native-shimmer-placeholder";
@@ -8,8 +15,13 @@ import { AuthContext } from "../../providers/AuthenticationProvider";
 import { findLoanBillById, findLoanById } from "../../api/LoanApi";
 import { FlatGrid } from "react-native-super-grid";
 import { Card, Paragraph, Title } from "react-native-paper";
+import { useFonts } from "expo-font";
 
 const LoanAccountDetailScreen = ({ navigation, route }) => {
+  let [fontLoaded] = useFonts({
+    "SomeTypeMono-Bold": require("../../../assets/fonts/SometypeMono-Bold.ttf"),
+  });
+
   const [isBalanceShown, setIsBalanceShown] = useState(false);
   const [loanLoading, setLoanLoading] = useState(true);
   const { user, exp } = useContext(AuthContext);
@@ -17,8 +29,8 @@ const LoanAccountDetailScreen = ({ navigation, route }) => {
   const { id } = route.params;
   const parameter = {
     route: "LoanPayment",
-    norek: id
-  }
+    norek: id,
+  };
   const [data, setData] = useState({});
   const [skeletonLoading, setSkeletonLoading] = useState(true);
 
@@ -61,20 +73,21 @@ const LoanAccountDetailScreen = ({ navigation, route }) => {
       id: 1,
       title: "Ajukan Top-up Kredit",
       icon: "journal-outline",
-      onPress: () => navigation.navigate("LoanTopupRequest",{id : data.id}),
+      onPress: () => navigation.navigate("LoanTopupRequest", { id: data.id }),
     },
     {
       id: 2,
       title: "Bayar Tagihan",
       icon: "cash-outline",
-      onPress: () => navigation.navigate("PaymentMethodSelection",{parameter}),
+      onPress: () =>
+        navigation.navigate("PaymentMethodSelection", { parameter }),
     },
     {
       id: 3,
       title: "Lihat Jadwal Tagihan",
       icon: "list-outline",
       onPress: () =>
-        navigation.navigate("LoanRepaymentScheduleScreen",{id : data.id}),
+        navigation.navigate("LoanRepaymentScheduleScreen", { id: data.id }),
     },
   ];
 
@@ -129,13 +142,19 @@ const LoanAccountDetailScreen = ({ navigation, route }) => {
             ? data.productType.name
             : "Product Name Not Available"}
         </Text>
-        <Text style={styles.accountNumber}>
-          {data.id ? data.id : "Account Number Not Available"}
+        <Text
+          style={{
+            fontFamily: "SomeTypeMono-Bold",
+            color: "white",
+            fontSize: 25,
+          }}
+        >
+          {data.id ? data.id : "Account Number Not Available"}{" "}
         </Text>
         <Text style={styles.balanceTitle}>Sisa Pinjaman</Text>
         <View style={{ flexDirection: "row" }}>
           <Text style={styles.balance}>
-          Rp{" "}
+            Rp{" "}
             {isBalanceShown
               ? data.outstandingBalance
                 ? ` ${parseFloat(data.outstandingBalance).toLocaleString(
@@ -148,7 +167,6 @@ const LoanAccountDetailScreen = ({ navigation, route }) => {
             onPress={() => setIsBalanceShown(!isBalanceShown)}
             icon={isBalanceShown ? "eye-off" : "eye"}
             size={25}
-            style={{ bottom: 5 }}
           />
         </View>
       </View>
@@ -161,7 +179,7 @@ const LoanAccountDetailScreen = ({ navigation, route }) => {
       totalRepayment += Number(bill[i].amount);
     }
     return (
-      <Card style={{ ...styles.card, backgroundColor: 'white' }}>
+      <Card style={{ ...styles.card, backgroundColor: "white" }}>
         <Card.Content>
           <Title style={styles.detailHeading}>
             Total Tagihan s.d. Bulan Ini
@@ -173,7 +191,7 @@ const LoanAccountDetailScreen = ({ navigation, route }) => {
             data={bill}
             keyExtractor={(item, index) => index.toString()}
             renderItem={({ item }) => (
-              <View style={styles.billItem}>  
+              <View style={styles.billItem}>
                 <Text style={styles.billInfo}>Tagihan ke - {item.term}</Text>
                 <Text style={styles.paragraph}>Pokok :</Text>
                 <Paragraph>
@@ -250,8 +268,10 @@ const styles = StyleSheet.create({
   },
   headingGradient: {
     borderRadius: 10,
-    paddingLeft: "7%",
-    padding: 30,
+    paddingTop: 30,
+    paddingLeft: 30,
+    paddingRight: 30,
+    paddingBottom: 5,
   },
   balanceTitle: {
     marginTop: "7%",
@@ -265,13 +285,14 @@ const styles = StyleSheet.create({
     color: "white",
   },
   accountNumber: {
-    fontSize: 18,
+    fontSize: 25,
     color: "white",
     fontFamily: "Credit-Regular",
+    fontWeight: "bold",
   },
   bankName: {
-    marginBottom: "13%",
-    fontSize: 18,
+    marginBottom: 20,
+    fontSize: 20,
     color: "white",
   },
   contentBlock: {
@@ -316,9 +337,7 @@ const styles = StyleSheet.create({
     flexDirection: "column",
     justifyContent: "center", // Memusatkan vertikal
     alignItems: "center", // Memusatkan horizontal
-    margin: 4,
-  }
-  ,
+  },
   billItem: {
     borderBottomWidth: 1,
     borderBottomColor: "#ddd",

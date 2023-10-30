@@ -17,20 +17,25 @@ import Color from "../../common/Color";
 import LoadingOverlay from "../../components/common/LoadingOverlay";
 import MenuButton from "../../components/common/MenuButton";
 import { ScrollView } from "react-native-gesture-handler";
-import * as Font from 'expo-font';
+import { useFonts } from "expo-font";
 
 const SavingAccountDetailScreen = ({ navigation, route }) => {
+  let [fontLoaded] = useFonts({
+    "SomeTypeMono-Bold": require("../../../assets/fonts/SometypeMono-Bold.ttf"),
+  });
+
   const { id } = route.params;
   const parameter = {
     route: "SavingDepositRequest",
-    norek: id
-  }
+    norek: id,
+  };
   const menus = [
     {
       id: 1,
       title: "Setoran Tabungan",
       icon: "wallet-outline",
-      onPress: () => navigation.navigate("PaymentMethodSelection", { parameter }),
+      onPress: () =>
+        navigation.navigate("PaymentMethodSelection", { parameter }),
     },
   ];
 
@@ -44,8 +49,6 @@ const SavingAccountDetailScreen = ({ navigation, route }) => {
 
   const { token } = useContext(AuthContext);
   const [amout, setAmout] = useState([]);
-
-
 
   const fetchData = async () => {
     setLoading(true);
@@ -64,7 +67,7 @@ const SavingAccountDetailScreen = ({ navigation, route }) => {
         });
     } catch (error) {
       console.error("Error fetching data:", error);
-      setLoading(false);
+      setLoading (false);
     }
   };
 
@@ -132,7 +135,18 @@ const SavingAccountDetailScreen = ({ navigation, route }) => {
         <Text adjustFontSizeToFit style={styles.bankName}>
           {Name}
         </Text>
-        <Text style={styles.accountNumber}>{accountNumber}</Text>
+        <Text
+          style={{
+            fontFamily: "SomeTypeMono-Bold",
+            color: "white",
+            fontSize: 25,
+            marginBottom: 16,
+          }}
+        >
+          {accountNumber}
+        </Text>
+
+        
         <Text style={styles.balanceTitle}>Saldo Tabungan</Text>
         <View style={{ flexDirection: "row" }}>
           <Headline adjustFontSizeToFit style={styles.balance}>
@@ -145,7 +159,8 @@ const SavingAccountDetailScreen = ({ navigation, route }) => {
             onPress={() => setIsBalanceShown(!isBalanceShown)}
             icon={isBalanceShown ? "eye-off" : "eye"}
             size={20}
-            style={{ bottom: 5 }}
+            color="white" 
+            // style={{ bottom: 5 }}
           />
         </View>
       </>
@@ -244,7 +259,10 @@ const styles = StyleSheet.create({
   },
   headingGradient: {
     borderRadius: 10,
-    padding: 30,
+    paddingTop: 30,
+    paddingLeft: 30,
+    paddingRight: 30,
+    paddingBottom: 10,
   },
   balanceTitle: {
     marginTop: 10,
@@ -252,7 +270,6 @@ const styles = StyleSheet.create({
     color: "white",
   },
   balance: {
-    marginBottom: 10,
     fontSize: 21,
     fontWeight: "bold",
     color: "white",
@@ -263,7 +280,7 @@ const styles = StyleSheet.create({
     marginTop: 25,
     fontWeight: "bold",
     color: "white",
-    fontFamily: 'comic-sans-ms', // Gunakan nama font yang sudah dimuat
+    fontFamily: "SomeTypeMono-Bold",
   },
   bankName: {
     marginBottom: 20,
@@ -271,7 +288,7 @@ const styles = StyleSheet.create({
     color: "white",
   },
   contentBlock: {
-    // height: "50%",
+    height: "50%",
   },
   detailHeading: {
     marginTop: 10,
