@@ -17,6 +17,7 @@ import Color from "../../common/Color";
 import LoadingOverlay from "../../components/common/LoadingOverlay";
 import MenuButton from "../../components/common/MenuButton";
 import { ScrollView } from "react-native-gesture-handler";
+import * as Font from 'expo-font';
 
 const SavingAccountDetailScreen = ({ navigation, route }) => {
   const { id } = route.params;
@@ -43,6 +44,8 @@ const SavingAccountDetailScreen = ({ navigation, route }) => {
 
   const { token } = useContext(AuthContext);
   const [amout, setAmout] = useState([]);
+
+
 
   const fetchData = async () => {
     setLoading(true);
@@ -255,11 +258,12 @@ const styles = StyleSheet.create({
     color: "white",
   },
   accountNumber: {
-    fontSize: 20,
+    fontSize: 25,
     marginBottom: 16,
     marginTop: 25,
+    fontWeight: "bold",
     color: "white",
-    fontFamily: "Credit-Regular",
+    fontFamily: 'comic-sans-ms', // Gunakan nama font yang sudah dimuat
   },
   bankName: {
     marginBottom: 20,
