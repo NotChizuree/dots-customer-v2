@@ -96,19 +96,19 @@ const LoanAccountDetailScreen = ({ navigation, route }) => {
       <>
         <ShimmerPlaceholder
           style={{
-            width: "80%",
+            width: "40%",
             height: 25,
-            marginTop: 10,
-            marginBottom: 20,
+            // marginTop: 10,
+            marginBottom: 15,
           }}
           autoRun={true}
         />
         <ShimmerPlaceholder
           style={{
-            width: "45%",
+            width: "80%",
             height: 20,
-            marginTop: 16,
-            marginBottom: 20,
+            // marginTop: 16,
+            marginBottom: 15,
           }}
           autoRun={true}
         />
@@ -116,8 +116,8 @@ const LoanAccountDetailScreen = ({ navigation, route }) => {
           style={{
             width: "20%",
             height: 15,
-            marginTop: 10,
-            marginBottom: 10,
+            // marginTop: 10,
+            marginBottom: 15,
           }}
           autoRun={true}
         />
@@ -125,8 +125,8 @@ const LoanAccountDetailScreen = ({ navigation, route }) => {
           style={{
             width: "50%",
             height: 17,
-            marginTop: 10,
-            marginBottom: 20,
+            // marginTop: 10,
+            marginBottom: 18,
           }}
           autoRun={true}
         />

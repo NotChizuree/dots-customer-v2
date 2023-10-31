@@ -76,18 +76,17 @@ const DepositAccountDetailScreen = ({ navigation, route }) => {
       <View>
         <ShimmerPlaceholder
           style={{
-            width: "80%",
+            width: "70%",
             height: 25,
-            marginTop: "7.5%",
-            marginBottom: "13%",
+            marginBottom: "7%",
           }}
           autoRun={true}
         />
         <ShimmerPlaceholder
           style={{
-            width: "50%",
+            width: "80%",
             height: 20,
-            marginBottom: "13%",
+            marginBottom: "10%",
           }}
           autoRun={true}
         />
@@ -102,6 +101,14 @@ const DepositAccountDetailScreen = ({ navigation, route }) => {
         <ShimmerPlaceholder
           style={{
             width: "46%",
+            height: 20,
+            marginBottom: "7.5%",
+          }}
+          autoRun={true}
+        />
+        <ShimmerPlaceholder
+          style={{
+            width: "60%",
             height: 20,
             marginBottom: "7.5%",
           }}

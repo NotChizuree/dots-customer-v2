@@ -10,6 +10,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { Headline, Appbar, Subheading } from "react-native-paper";
+import * as SecureStore from "expo-secure-store";
 import MenuButton from "../../components/common/MenuButton";
 import { AuthContext } from "../../providers/AuthenticationProvider";
 import { FlatGrid } from "react-native-super-grid";
@@ -27,7 +28,7 @@ const HomeScreen = ({ navigation }) => {
       id: 1,
       title: "Top-up",
       icon: "wallet-outline",
-      onPress: () => {
+      onPress: () => {  
         // Cek akses di sini jika diperlukan
         if (user.hasTopUpAccess) {
           navigation.navigate("CustomerList");
@@ -113,8 +114,11 @@ const HomeScreen = ({ navigation }) => {
     } catch (error) {}
   };
 
+
+  
   useEffect(() => {
     fetchdata();
+    console.log("infooooooooooooooooooo masehhhhhhhhhhhhhhhhhhh",SecureStore.getItemAsync("authInfo"));
   }, []);
 
   const SLIDER_WIDTH = Dimensions.get("window").width;
@@ -133,7 +137,7 @@ const HomeScreen = ({ navigation }) => {
       <TouchableOpacity onPress={() => onCarouselItemPress(item)}>
         <View style={{ alignSelf: "center" }}>
           <Image
-            style={{ width: ITEM_WIDTH, height: 140 }}
+            style={{ width: 390, height: 170 }}
             source={{ uri: item.imageUrl }}
           />
         </View>
@@ -163,7 +167,7 @@ const HomeScreen = ({ navigation }) => {
               {user.firstName} {user.lastName}
             </Subheading>
           </View>
-          <View style={{ marginTop: 15 }}>
+          <View>
             <Carousel
               layout="default"
               data={image}

@@ -202,7 +202,7 @@ const AccountsScreen = ({ navigation }) => {
                   alignItems: "center",
                   marginLeft: "3%",
                 }}
-                icon="wallet"
+                icon="credit-card"
               />
             )}
           />
@@ -306,7 +306,7 @@ const AccountsScreen = ({ navigation }) => {
                   alignItems: "center",
                   marginLeft: "3%",
                 }}
-                icon="wallet"
+                icon="cash"
               />
             )}
           />
