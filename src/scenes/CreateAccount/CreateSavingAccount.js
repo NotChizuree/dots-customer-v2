@@ -56,7 +56,6 @@ const CreateSavingAccount = ({ navigation }) => {
             "Sukses",
             "Berhasil Mengajukan Tabungan Baru. Silahkan cek notifikasi secara berkala"
           );
-          console.log(result.data.data);
         });
       } catch (error) {
         console.log(error);

@@ -82,7 +82,7 @@ const LoanTopupRequest = ({ navigation }) => {
         [
           {
             text: "Batal",
-            onPress: () => console.log("Transaksi dibatalkan"),
+            onPress: () => ("Transaksi dibatalkan"),
             style: "cancel",
           },
           {
@@ -99,7 +99,6 @@ const LoanTopupRequest = ({ navigation }) => {
                     "Sukses",
                     "Berhasil Mengajukan TopUp. Silahkan cek notifikasi secara berkala"
                   );
-                  console.log(result.data.data);
                 });
               } catch (error) {
                 console.error("API Error:", error);
@@ -111,24 +110,6 @@ const LoanTopupRequest = ({ navigation }) => {
       );
     }
   };
-
-  console.log(id);
-  //   const { id } = route.params;
-  //   const handleSubmit = async () => {
-  //     try {
-  //       const token = await AsyncStorage.getItem("AccessToken");
-  //       createLoanTopup(token, id, {
-  //         amount: parseInt(amount.replace(/[^0-9]/g, "")),
-  //         tenor: parseInt(JangkaDropdown),
-  //         reason: reason,
-  //       }).then((result) => {
-  //         setData(result.data);
-  //         navigation.navigate("DetailCredit", { id });
-  //       });
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
 
   return (
     <View style={styles.container}>
@@ -177,7 +158,7 @@ const LoanTopupRequest = ({ navigation }) => {
               [
                 {
                   text: "Batal",
-                  onPress: () => console.log("Transaksi dibatalkan"),
+                  onPress: () => ("Transaksi dibatalkan"),
                   style: "cancel",
                 },
                 {
@@ -194,7 +175,6 @@ const LoanTopupRequest = ({ navigation }) => {
                           "Sukses",
                           "Berhasil Mengajukan TopUp. Silahkan cek notifikasi secara berkala"
                         );
-                        console.log(result.data.data);
                       });
                     } catch (error) {
                       console.error("API Error:", error);

@@ -35,8 +35,6 @@ const AuthProvider = ({ children }) => {
     } catch (error) {
       console.error("Error deleting authInfo:", error);
     }
-    console.log("RNSInfo:", RNSInfo); // Pastikan ini bukan undefined
-    console.log("deleteItem:", RNSInfo.deleteItem); // Pastikan ini bukan undefined
   };
 
   const login = async (username, password) => {
@@ -47,7 +45,6 @@ const AuthProvider = ({ children }) => {
         clientType: "CUSTOMER",
         tenantID: "bpr_kn_dev",
       });
-      // console.log("loginnnnnnnnnnnnnnnnnnnnn",data);
 
       await SecureStore.setItemAsync("authInfo", JSON.stringify(data));
       setUser(data.data.user, data.data.accessToken, data.exp);

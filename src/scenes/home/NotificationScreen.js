@@ -36,10 +36,8 @@ const NotificationScreen = ({ navigation }) => {
         const apiData = JSON.parse(result.data.data);
         setData(apiData);
         setRefreshing(false);
-        console.log(apiData);
       });
     } catch (error) {
-      console.error("Error fetching data:", error);
       setRefreshing(false);
     }
   };
@@ -64,7 +62,6 @@ const NotificationScreen = ({ navigation }) => {
   const toggleNotificationPress = (notification) => {
     setSelectedNotification(notification);
     NotificationStatus(token,notification.id)
-    console.log(notification.type);
     if (notification.type !== 9) {
       setIsModalVisible(true);
     } else {
@@ -103,7 +100,6 @@ const NotificationScreen = ({ navigation }) => {
               <React.Fragment key={notification.id}>
                 <TouchableOpacity
                   onPress={() => {
-                    console.log("Notifikasi diklik:", notification.title);
                     toggleNotificationPress(notification);
                   }}
                 >

@@ -61,37 +61,6 @@ const ChangePasswordScreen = ({ navigation }) => {
     }
   };
 
-  const handleCheckOldPassword = () => {
-    // console.log('Running handleCheckOldPassword');
-    console.log("currentPassword:", currentPassword);
-    console.log("newpassword:", newPassword);
-    // console.log('dummyPassword:', dummyPassword);
-
-    // const isCorrect = currentPassword === dummyPassword;
-    // setIsOldPasswordCorrect(isCorrect);
-
-    // if (!isCorrect) {
-    //   console.log('Kata sandi lama salah');
-    //   Alert.alert('Kesalahan', 'Kata sandi lama salah');
-    // } else {
-    //   Alert.alert(
-    //     'Konfirmasi Perubahan Kata Sandi',
-    //     'Apakah Anda yakin ingin mengubah kata sandi Anda ?',
-    //     [
-    //       {
-    //         text: 'Batal',
-    //         style: 'batal',
-    //       },
-    //       {
-    //         text: 'Simpan',
-    //         onPress: () => handlePasswordChangeConfirmation(),
-    //       },
-    //     ],
-    //     { cancelable: false }
-    //   );
-    // }
-  };
-
   const [passwordVisible, setPasswordVisible] = useState(false);
 
   return (

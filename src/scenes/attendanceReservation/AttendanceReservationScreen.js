@@ -74,9 +74,6 @@ const AttendanceReservationScreen = ({ navigation }) => {
       setLoading(true);
       findAllOffices(token).then((result) => {
         setOfficeData(result.data.data);
-        console.log(officesData);
-        console.log(result.data);
-        console.log(token);
       });
     } catch (error) {
       console.error("Error fetching offices: ", error);
@@ -167,37 +164,6 @@ const AttendanceReservationScreen = ({ navigation }) => {
       return new Date(newDate).toISOString();
     }
   };
-
-  // const [
-  //   createReservation,
-  //   { loading: mutationLoading, error: mutationError },
-  // ] = useMutation(createReservationRest(token, console.log(token),{
-  //     branchID: office,
-  //     destinationService: destinationService,
-  //     reason: reason,
-  //     attendAtStart: attendanceTimeRange ? attendAtStartToStr("START") : null,
-  //     attendAtEnd: attendanceTimeRange ? attendAtStartToStr("END") : null,
-  // }));
-
-  // if (mutationError) {
-  //   toaster.show({
-  //     message: "Gagal melakukan booking " + mutationError.message,
-  //   });
-  // }
-
-  // const onSubmitForm = () => {
-  //   if (!mutationLoading) {
-  //     createReservation()
-  //       .then((res) => {
-  //         navigation.dispatch(
-  //           StackActions.replace("AttendanceReservationSuccess", {
-  //             reservation: res.data.createAttendanceReservation,
-  //           })
-  //         );
-  //       })
-  //       .catch((err) => {});
-  //   }
-  // };
 
   const [mutationLoading, setMutationLoading] = useState(false);
   const [mutationError, setMutationError] = useState(null);

@@ -20,14 +20,12 @@ const PaymentMethodSelectionScreen = ({ navigation, route }) => {
 
   const handleMethodSelection = (method) => {
     setSelectedMethodId(method.title);
-    console.log(method.description)
     
     setSelectedMethod(method)
   };
 
   const { parameter } = route.params
-  console.log(parameter)
-
+  
   const handleContinue = () => {
     if (selectedMethod) {
       navigation.navigate(parameter.route, { selectedMethod, parameter });

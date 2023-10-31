@@ -39,18 +39,12 @@ const AccountsScreen = ({ navigation }) => {
       try {
         setLoading(true);
         setError(null);
-
-        console.log(1);
         const result = await findAllSaving(token);
-
-        console.log(2);
         setLoading(false);
         setData(result.data.data);
-        console.log(result.data.data);
       } catch (error) {
         setLoading(false);
         setError(error);
-        console.log("Error fetching data:", error);
       }
     };
 
@@ -59,22 +53,15 @@ const AccountsScreen = ({ navigation }) => {
     }, []);
 
     if (loading) {
-      console.log("loading hehe");
       return <LoadingOverlay />;
     }
 
     if (error) {
-      console.log("error heheh");
       navigation.goBack();
       toaster.show({
         message: "Terjadi error saat memuat data tabungan: " + error.message,
       });
     }
-
-    console.log(data);
-    console.log(loading);
-    console.log(error);
-    console.log(token);
 
     const renderSavingItem = (data) => {
       return (
@@ -146,17 +133,13 @@ const AccountsScreen = ({ navigation }) => {
         setLoading(true);
         setError(null);
 
-        console.log(1);
         const result = await findAllLoan(token);
 
-        console.log(2);
         setLoading(false);
         setData(result.data.data);
-        console.log(result.data.data);
       } catch (error) {
         setLoading(false);
         setError(error);
-        console.log("Error fetching data:", error);
       }
     };
 
@@ -165,22 +148,15 @@ const AccountsScreen = ({ navigation }) => {
     }, []);
 
     if (loading) {
-      console.log("loading hehe");
       return <LoadingOverlay />;
     }
 
     if (error) {
-      console.log("error heheh");
       navigation.goBack();
       toaster.show({
         message: "Terjadi error saat memuat data tabungan: " + error.message,
       });
     }
-
-    console.log(data);
-    console.log(loading);
-    console.log(error);
-    console.log(token);
 
     const renderLoanItem = (data) => {
       return (
@@ -254,11 +230,9 @@ const AccountsScreen = ({ navigation }) => {
 
         setLoading(false);
         setData(result.data.data);
-        console.log(result.data.data);
       } catch (error) {
         setLoading(false);
         setError(error);
-        console.log("Error fetching data:", error);
       }
     };
 
@@ -267,22 +241,15 @@ const AccountsScreen = ({ navigation }) => {
     }, []);
 
     if (loading) {
-      console.log("loading hehe");
       return <LoadingOverlay />;
     }
 
     if (error) {
-      console.log("error heheh");
       navigation.goBack();
       toaster.show({
         message: "Terjadi error saat memuat data tabungan: " + error.message,
       });
     }
-
-    console.log(data);
-    console.log(loading);
-    console.log(error);
-    console.log(token);
 
     const renderDepositItem = (data) => {
       return (

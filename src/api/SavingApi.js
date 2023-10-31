@@ -32,18 +32,13 @@ export const createSavingDeposit = async (token,data) => {
   }
 };
 export const findAllSaving = async (token)=>{
-  console.log(8);
-
   try {
-    console.log(7);
-
     const result = ApiManager(`/saving`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${token}`,
       },
     });
-    console.log(9);
     return result;
   } catch (error) {
     console.log(error);
@@ -58,7 +53,6 @@ export const findSavingById = async (token, id) => {
         Authorization: `Bearer ${token}`,
       },
     });
-    console.log(result);
     return result;
   } catch (error) {
     console.log(error);
@@ -72,7 +66,6 @@ export const findSavingProdukType= async (token) => {
         Authorization: `Bearer ${token}`,
       },
     });
-    console.log(result);
     return result;
   } catch (error) {
     console.log(error);

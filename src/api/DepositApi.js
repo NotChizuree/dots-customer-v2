@@ -25,7 +25,6 @@ export const findAllDeposit = async (token) => {
                 Authorization: `Bearer ${token}`
             }
         })
-        console.log(result)
         return result
     } catch (error) {
         console.log(error)
@@ -41,7 +40,6 @@ export const findDepositProdukType= async (token) => {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log(result);
       return result;
     } catch (error) {
       console.log(error);

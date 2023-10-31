@@ -59,7 +59,6 @@ const CreateLoanAccount = ({ navigation }) => {
             "Sukses",
             "Berhasil Mengajukan Kredit Baru. Silahkan cek notifikasi secara berkala"
           );
-          console.log(result.data.data);
         });
       } catch (error) {
         console.log(error);

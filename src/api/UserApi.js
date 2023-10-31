@@ -2,7 +2,6 @@ import { ApiManager } from "./ApiManager";
 
 export const userLogin = async data => {
   try {
-    console.log(data)
     const result = await ApiManager("/login", {
       method: "POST",
       headers: {
@@ -35,7 +34,6 @@ export const userRegister = async data => {
 
 export const ChangePassword = async (token,data) => {
   try {
-    console.log(70)
     const result = await ApiManager("/change-password", {
       method: "POST",
       headers: {
@@ -44,8 +42,6 @@ export const ChangePassword = async (token,data) => {
       },
       data: JSON.stringify(data)
     });
-    console.log(67);
-    console.log(result)
     return result;
   } catch (error) {
     console.log(error);

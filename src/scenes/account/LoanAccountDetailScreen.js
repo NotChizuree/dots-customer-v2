@@ -52,7 +52,6 @@ const LoanAccountDetailScreen = ({ navigation, route }) => {
   const fetchDataBill = async () => {
     try {
       const result = await findLoanBillById(token, id);
-      console.log("Bill Data from API:", result.data);
       setBill(result.data.data);
       setSkeletonLoading(false);
       setLoanLoading(false);

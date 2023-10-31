@@ -37,7 +37,6 @@ const LoginScreen = ({ navigation }) => {
     login(username, password)
       .then((result) => {
         const msg = result.data.message;
-        console.log("kk", msg);
         if (msg === "Unauthorized") {
           toaster.show({
             message: "Username atau password tidak ditemukan",
