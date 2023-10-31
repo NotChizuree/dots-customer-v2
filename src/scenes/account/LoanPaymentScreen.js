@@ -91,7 +91,7 @@ const LoanPayment = ({ navigation }) => {
       Alert.alert("Konfirmasi", "Pastikan data yang anda masukan sudah benar", [
         {
           text: "Batal",
-          onPress: () => console.log("Transaksi dibatalkan"),
+          onPress: () => ("Transaksi dibatalkan"),
           style: "cancel",
         },
         {
@@ -104,7 +104,6 @@ const LoanPayment = ({ navigation }) => {
                 amount: amount,
                 recipient: rekeningPengirim,
               }).then((result) => {
-                console.log(result.data.data);
                 navigation.navigate("LoanDetail", { id: parameter.norek });
                 Alert.alert("Sukses", "Berhasil Mengajukan Setoran. Silahkan cek notifikasi secara berkala"
                 )

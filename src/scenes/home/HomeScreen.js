@@ -106,8 +106,7 @@ const HomeScreen = ({ navigation }) => {
   const fetchdata = () => {
     try {
       findAllImage(token).then((result) => {
-        console.log(result.data.data);
-        console.log("expired : ", user.exp);
+
         setImage(result.data.data);
         setIsLoading(false);
       });
@@ -118,7 +117,6 @@ const HomeScreen = ({ navigation }) => {
   
   useEffect(() => {
     fetchdata();
-    console.log("infooooooooooooooooooo masehhhhhhhhhhhhhhhhhhh",SecureStore.getItemAsync("authInfo"));
   }, []);
 
   const SLIDER_WIDTH = Dimensions.get("window").width;

@@ -2,8 +2,6 @@ import { ApiManager } from "./ApiManager";
 
 export const createReservationRest = async (token, data) => {
   try {
-    console.log(JSON.stringify(data))
-    console.log(token)
     const result = await ApiManager("/create-reservation", {
       method: "POST",
       headers: {
@@ -12,7 +10,6 @@ export const createReservationRest = async (token, data) => {
       },
       data: JSON.stringify(data),
     });
-
     return result;
   } catch (error) {
     console.log(error);
@@ -27,7 +24,6 @@ export const findReservationById = async (token, id) => {
         Authorization: `Bearer ${token}`,
       },
     });
-
     return result;
   } catch (error) {
     console.log(error);

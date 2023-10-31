@@ -8,7 +8,6 @@ export const FindPaymentMethod = async (token) => {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log(result);
       return result;
     } catch (error) {
       console.log(error);

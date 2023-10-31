@@ -55,7 +55,6 @@ const DepositAccountDetailScreen = ({ navigation, route }) => {
     try {
       const result = await findDepositById(token, id);
       const data = result.data.data;
-      console.log(data);
       setName(data.productType.name);
       setAccountNumber(data.id);
       setAvailableBalance(data.currentBalance);

@@ -25,7 +25,6 @@ export const findLoanById = async (token,id) => {
         Authorization: `Bearer ${token}`,
       },
     });
-    console.log(result);
     return result;
   } catch (error) {
     console.log(error);
@@ -39,7 +38,6 @@ export const findLoanBillById = async (token,id) => {
         Authorization: `Bearer ${token}`,
       },
     });
-    console.log(result);
     return result;
   } catch (error) {
     console.log(error);
@@ -53,7 +51,6 @@ export const findLoanProdukType= async (token) => {
         Authorization: `Bearer ${token}`,
       },
     });
-    console.log(result);
     return result;
   } catch (error) {
     console.log(error);
@@ -103,9 +100,7 @@ export const createLoanRestructure = async (token,id,data) => {
       },
       data: data,   
     });
-
     return result;
-    console.log(result)
   } catch (error) {
     console.log(error);
   }

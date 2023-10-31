@@ -28,7 +28,6 @@ const LoanRepaymentScheduleScreen = ({ navigation, route }) => {
   const fetchDataBill = async () => {
     try {
       const result = await findLoanBillById(token, id);
-      console.log("Bill Data from API:", result.data);
       setData(result.data.data);
 
       // Calculate totalPages after data is fetched

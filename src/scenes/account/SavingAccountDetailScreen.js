@@ -75,7 +75,6 @@ const SavingAccountDetailScreen = ({ navigation, route }) => {
     try {
       const result = await findSavingHistory(token, id);
       setAmout(result.data.data);
-      console.log(result.data.data);
     } catch (error) {
       console.error("Error API:", error);
     }

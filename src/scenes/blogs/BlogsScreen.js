@@ -7,7 +7,6 @@ import Lightbox from "react-native-lightbox-v2";
 
 function BlogScreen({ route, navigation, navigator }) {
   const { item } = route.params;
-  console.log(item);
 
   return (
     <ScrollView contentContainerStyle={styles.scrollViewContent}>

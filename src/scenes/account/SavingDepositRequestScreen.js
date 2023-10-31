@@ -85,10 +85,6 @@ const SavingDepositRequestScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(true);
 
   const handleSubmit = async () => {
-    console.log("Saving id :", parameter.norek);
-    console.log("Metode Pembayaran:", selectedMethod.id);
-    console.log("Nama Rekening Pengirim:", rekeningPengirim);
-    console.log("Jumlah:", amount);
 
     if (!amount) {
       Alert.alert("Error", "Kolom Jumlah Belum Di isi.");
@@ -98,7 +94,7 @@ const SavingDepositRequestScreen = ({ navigation }) => {
       Alert.alert("Konfirmasi", "Pastikan data yang anda masukan sudah benar", [
         {
           text: "Batal",
-          onPress: () => console.log("Transaksi dibatalkan"),
+          onPress: () => ("Transaksi dibatalkan"),
           style: "cancel",
         },
         {
@@ -111,7 +107,6 @@ const SavingDepositRequestScreen = ({ navigation }) => {
                 amount: parseInt(amount.replace(/[^0-9]/g, "")),
                 recipient: rekeningPengirim,
               }).then((result) => {
-                console.log(result.data.data);
                 navigation.navigate("SavingDetail", { id: parameter.norek });
                 Alert.alert("Sukses", "Berhasil Mengajukan Setoran. Silahkan cek notifikasi secara berkala"
                 )
