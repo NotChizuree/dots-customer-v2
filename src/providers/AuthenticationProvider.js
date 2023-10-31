@@ -1,7 +1,7 @@
 import React, { createContext, useReducer, useEffect } from "react";
-import RNSInfo from "react-native-sensitive-info";
 import * as SecureStore from "expo-secure-store";
 import { ApiManager } from "../api/ApiManager";
+import { Alert } from "react-native";
 
 const AuthReducer = (state, action) => {
   switch (action.type) {
@@ -16,15 +16,20 @@ const AuthReducer = (state, action) => {
       return state;
   }
 };
+  
+export const AuthContext = createContext();
 
-export const AuthContext = createContext({});
 const AuthProvider = ({ children }) => {
-  const [state, dispatch] = useReducer(AuthReducer, {});
+  const [state, dispatch] = useReducer(AuthReducer, {
+    user: null,
+    token: "",
+    exp: null,
+  });
 
   const setUser = (user, token, exp) => {
     dispatch({
       type: "SET_USER",
-      payload: { user: user, token: token, exp: exp },
+      payload: { user, token, exp },
     });
   };
 
@@ -35,8 +40,6 @@ const AuthProvider = ({ children }) => {
     } catch (error) {
       console.error("Error deleting authInfo:", error);
     }
-    console.log("RNSInfo:", RNSInfo); // Pastikan ini bukan undefined
-    console.log("deleteItem:", RNSInfo.deleteItem); // Pastikan ini bukan undefined
   };
 
   const login = async (username, password) => {
@@ -47,10 +50,9 @@ const AuthProvider = ({ children }) => {
         clientType: "CUSTOMER",
         tenantID: "bpr_kn_dev",
       });
-      // console.log("loginnnnnnnnnnnnnnnnnnnnn",data);
 
       await SecureStore.setItemAsync("authInfo", JSON.stringify(data));
-      setUser(data.data.user, data.data.accessToken, data.exp);
+      setUser(data.data.user, data.data.accessToken, data.data.exp);
       return data;
     } catch (error) {
       switch (error.response?.status) {
@@ -63,22 +65,33 @@ const AuthProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    // Lakukan pengecekan waktu ekspirasi (exp) di sini
-    const checkTokenExpiration = () => {
-      const { exp, token } = state;
-      const currentTime = Math.floor(Date.now() / 1000); // Waktu saat ini dalam detik
-      if (exp && exp < currentTime) {
-        logout();
-        navigation.navigate("Login");
+    const handleCheckToken = () => {
+      const expToken = state.exp * 1000;
+      const currentTime = new Date().getTime();
+      console.log("currentTime: ", currentTime);
+      console.log("exp: ", expToken);
+
+      if (expToken && expToken < currentTime) {
+        Alert.alert(
+          "Session Expired",
+          "Your session has expired. Please log in again.",
+          [
+            {
+              text: "OK",
+              onPress: () => {
+                logout();
+              },
+            },
+          ],
+          { cancelable: false }
+        );
       }
     };
 
-    checkTokenExpiration();
-
-    const interval = setInterval(checkTokenExpiration, 24 * 60 * 60);
+    const interval = setInterval(handleCheckToken, 5000);
 
     return () => clearInterval(interval);
-  }, [state, logout]);
+  }, [state.exp]);
 
   return (
     <AuthContext.Provider

@@ -46,7 +46,7 @@ const CreateDepositAccount = ({ navigation }) => {
     } else if (!ProdukNumber) {
       Alert.alert("Error", "Kolom Jumlah Pengajuan Belum Dipilih.");
     } else {
-      setMutationLoading(true)
+      setMutationLoading(true);
       try {
         createDeposit(token, {
           productType: Service,

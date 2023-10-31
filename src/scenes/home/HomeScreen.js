@@ -28,7 +28,7 @@ const HomeScreen = ({ navigation }) => {
       id: 1,
       title: "Top-up",
       icon: "wallet-outline",
-      onPress: () => {  
+      onPress: () => {
         // Cek akses di sini jika diperlukan
         if (user.hasTopUpAccess) {
           navigation.navigate("CustomerList");

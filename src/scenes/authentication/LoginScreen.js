@@ -36,6 +36,7 @@ const LoginScreen = ({ navigation }) => {
     setLoading(true);
     login(username, password)
       .then((result) => {
+        console.log('asdwasdwdadkhaidw muahhaha',result.data)
         const msg = result.data.message;
         console.log("kk", msg);
         if (msg === "Unauthorized") {
