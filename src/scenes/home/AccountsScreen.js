@@ -35,6 +35,10 @@ const AccountsScreen = ({ navigation }) => {
 
     const { token } = useContext(AuthContext);
 
+    // if (loading && data == []) {
+    //   return <LoadingOverlay />;
+    // }
+
     const fetchData = async () => {
       try {
         setLoading(true);
@@ -55,6 +59,7 @@ const AccountsScreen = ({ navigation }) => {
     if (loading) {
       return <LoadingOverlay />;
     }
+
 
     if (error) {
       navigation.goBack();
@@ -127,6 +132,10 @@ const AccountsScreen = ({ navigation }) => {
     const [data, setData] = useState([]);
 
     const { token } = useContext(AuthContext);
+
+    // if (loading && data == []) {
+    //   return <LoadingOverlay />;
+    // }
 
     const fetchData = async () => {
       try {
@@ -221,16 +230,18 @@ const AccountsScreen = ({ navigation }) => {
 
     const { token } = useContext(AuthContext);
 
+    // if (loading && data == []) {
+    //   return <LoadingOverlay />;
+    // }
+
     const fetchData = async () => {
       try {
         setLoading(true);
         setError(null);
-
         const result = await findAllDeposit(token);
-
         setLoading(false);
         setData(result.data.data);
-      } catch (error) {
+      } catch (error) {   
         setLoading(false);
         setError(error);
       }
@@ -239,10 +250,10 @@ const AccountsScreen = ({ navigation }) => {
     useEffect(() => {
       fetchData();
     }, []);
-
     if (loading) {
       return <LoadingOverlay />;
     }
+
 
     if (error) {
       navigation.goBack();
@@ -250,6 +261,16 @@ const AccountsScreen = ({ navigation }) => {
         message: "Terjadi error saat memuat data tabungan: " + error.message,
       });
     }
+
+    // if (data.length === 0) {
+    //   // Tampilkan pesan jika tidak ada data.
+    //   return (
+    //     <View style={styles.noDataContainer}>
+    //       <Text style={styles.noDataText}>Tidak ada data tabungan yang tersedia.</Text>
+    //     </View>
+    //   );
+    // }
+
 
     const renderDepositItem = (data) => {
       return (

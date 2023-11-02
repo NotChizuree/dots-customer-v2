@@ -31,8 +31,8 @@ const RootNavigation = () => {
 
   const isLoggedIn = !!user;
   if (loadingUser) {
-    <AppNavigation />
-    // return <SplashScreenComponent />;
+    <AppNavigation />;
+    return <SplashScreenComponent />;
   }
   return isLoggedIn ? <AppNavigation /> : <AuthenticationNavigation />;
 };

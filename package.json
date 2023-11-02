@@ -9,6 +9,7 @@
     "web": "expo start --web"
   },
   "dependencies": {
+    "@react-native-async-storage/async-storage": "^1.19.3",
     "@react-native-community/datetimepicker": "7.2.0",
     "@react-navigation/bottom-tabs": "^6.5.9",
     "@react-navigation/native": "^6.1.8",
@@ -16,6 +17,7 @@
     "axios": "^1.5.1",
     "base-64": "^1.0.0",
     "expo": "~49.0.12",
+    "expo-font": "~11.4.0",
     "expo-linear-gradient": "~12.3.0",
     "expo-secure-store": "~12.3.1",
     "expo-status-bar": "~1.6.0",
@@ -41,8 +43,7 @@
     "react-native-tab-view": "^3.5.2",
     "react-native-table-component": "^1.2.2",
     "react-test-renderer": "^17.0.2",
-    "terbilang-js": "^1.0.1",
-    "expo-font": "~11.4.0"
+    "terbilang-js": "^1.0.1"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"

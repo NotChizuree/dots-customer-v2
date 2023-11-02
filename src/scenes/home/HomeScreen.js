@@ -18,9 +18,26 @@ import Carousel, { Pagination } from "react-native-snap-carousel";
 import Color from "../../common/Color";
 import SplashScreen from "../../components/common/SplashScreen";
 import { findAllImage } from "../../api/carosel";
+import AsyncStorage from '@react-native-async-storage/async-storage'; // Impor AsyncStorage
 
 const HomeScreen = ({ navigation }) => {
   const { user, exp } = useContext(AuthContext);
+  const [tenantName, setTenantName] = useState(""); // State untuk nama tenant
+
+  useEffect(() => {
+    const getTenantFromStorage = async () => {
+      try {
+        const storedTenantName = await AsyncStorage.getItem('tenantName');
+        if (storedTenantName) {
+          setTenantName(storedTenantName);
+        }
+      } catch (error) {
+        console.error("Error getting tenant name from AsyncStorage:", error);
+      }
+    }
+
+    getTenantFromStorage();
+  }, []);
 
   // TODO: get menus from reducer
   const menus = [
@@ -149,12 +166,12 @@ const HomeScreen = ({ navigation }) => {
         <Appbar.Content
           style={styles.appbarContent}
           // title={user.firstName}
-          title="BPR SUKMA JAYA"
+          title={tenantName}
           titleStyle={{ color: "#EAEBF8" }}
         />
       </Appbar.Header>
       {isLoading ? (
-        <SplashScreen /> // Tampilkan SplashScreen saat isLoading adalah true
+        <SplashScreen /> 
       ) : (
         <>
           <View style={Color.primaryBackgroundColor}>

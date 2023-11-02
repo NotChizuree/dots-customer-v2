@@ -1,4 +1,4 @@
-import React, { useState, useContext } from "react";
+import React, { useState, useContext, useEffect } from "react";
 import { StyleSheet, View, Image } from "react-native";
 import {
   Button,
@@ -13,20 +13,35 @@ import RNSInfo from "react-native-sensitive-info";
 import { AuthContext } from "../../providers/AuthenticationProvider";
 import { StackActions } from "@react-navigation/native";
 import Color from "../../common/Color";
+import AsyncStorage from '@react-native-async-storage/async-storage'; 
 
 const LoginScreen = ({ navigation }) => {
-  const { login, currentTenant } = useContext(AuthContext);
+  const { login } = useContext(AuthContext);
   const toaster = useToast();
   const [showPassword, setShowPassword] = useState(false);
 
-  // TODO: Use Formik for form state management
   const [username, setUsername] = useState(null);
   const [password, setPassword] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [tenantName, setTenantName] = useState(""); 
+
+  useEffect(() => {
+    const getTenantFromStorage = async () => {
+      try {
+        const storedTenantName = await AsyncStorage.getItem('tenantName');
+        if (storedTenantName) {
+          setTenantName(storedTenantName);
+        }
+      } catch (error) {
+        console.error("Error getting tenant name from AsyncStorage:", error);
+      }
+    }
+
+    getTenantFromStorage();
+  }, []);
 
   const handleLogin = () => {
     if (!username || !password) {
-      // Jika username atau password kosong, tampilkan pemberitahuan
       toaster.show({
         message: "Harap isi username dan password terlebih dahulu",
       });
@@ -34,9 +49,9 @@ const LoginScreen = ({ navigation }) => {
     }
 
     setLoading(true);
-    login(username, password)
+    login(username, password)       
       .then((result) => {
-        console.log('asdwasdwdadkhaidw muahhaha',result.data)
+        console.log("asdwasdwdadkhaidw muahhaha", result.data);
         const msg = result.data.message;
         if (msg === "Unauthorized") {
           toaster.show({
@@ -58,20 +73,12 @@ const LoginScreen = ({ navigation }) => {
         <Headline style={styles.heading}>Halo.</Headline>
         <Headline style={styles.heading}>Selamat Datang</Headline>
         <View style={{ flexDirection: "row" }}>
-          <Subheading style={styles.subheading}>BPR Sukma Jaya</Subheading>
-          {/* <Button
-            mode='outlined'
-            onPress={() => changeTenant()}
-            style={{ marginLeft: 'auto', marginRight: '3%'}} labelStyle={{
-              color: Color.primaryTextColor.color,
-            }}>
-            Ubah
-          </Button> */}
+          <Subheading style={styles.subheading}>{tenantName}</Subheading>
         </View>
       </View>
       <Caption>Username</Caption>
       <TextInput
-        style={[styles.textinput, { backgroundColor: "white" }]}
+        style={[styles.textInput, { backgroundColor: "white" }]}
         value={username}
         mode="outlined"
         placeholder="Masukan Username"
@@ -81,7 +88,7 @@ const LoginScreen = ({ navigation }) => {
       />
       <Caption>Password</Caption>
       <TextInput
-        style={[styles.textinput, { backgroundColor: "white" }]}
+        style={[styles.textInput, { backgroundColor: "white" }]}
         secureTextEntry={!showPassword}
         value={password}
         mode="outlined"
@@ -108,7 +115,7 @@ const LoginScreen = ({ navigation }) => {
           fontSize: 13,
         }}
       >
-        Lupa Password?{" "}
+        Lupa Password?
       </Caption>
       <Button
         style={{
@@ -121,8 +128,6 @@ const LoginScreen = ({ navigation }) => {
       >
         Login
       </Button>
-
-      {/* <Caption onPress={() => navigation.navigate('UserRegistration')} style={{ alignSelf: 'center', fontSize: 14 }}>Belum punya akun? Buat sekarang!</Caption> */}
     </View>
   );
 };

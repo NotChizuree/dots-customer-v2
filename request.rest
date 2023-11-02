@@ -10,11 +10,9 @@ Content-Type: application/json
 GET http://192.168.18.100:8000/api/office
 Content-Type: application/json
 Authorization: Bearer 161|v5zXSnM1KMzWkvjRNykg69By0LZ7yH7Ee1nwmeAR5a33708d
-
+    
 
 ###
-
-
 POST http://192.168.18.100:8000/api/create-reservation
 Content-Type: application/json
 Authorization: Bearer 159|KtqzpiXeHpW9XikKxqZEAntPXJ5P7hprwXNxCcQS75a11507
@@ -40,14 +38,14 @@ Authorization: Bearer 203|n2D9uDIS3Z4cPQDRq8w5lxB7jgRPIlBQxVrgxqeC73bc42c4
 ### ===
 GET http://192.168.18.100:8000/api/loan/00104010002479
 Content-Type: application/json
-Authorization: Bearer 203|n2D9uDIS3Z4cPQDRq8w5lxB7jgRPIlBQxVrgxqeC73bc42c4
+Authorization: Bearer 203|n2D9uDIS3Z4cPQDRq8w5lxB7jgRPIlBQxVrgxqeC73bc42c4                                                            
 ### ===
 GET http://192.168.18.100:8000/api/saving/history/00102070000180
 Content-Type: application/json
 Authorization: Bearer 203|n2D9uDIS3Z4cPQDRq8w5lxB7jgRPIlBQxVrgxqeC73bc42c4
 ### ===
 GET http://192.168.18.100:8000/api/notification
-Content-Type: application/json
+Content-Type: application/json  
 Authorization: Bearer 203|n2D9uDIS3Z4cPQDRq8w5lxB7jgRPIlBQxVrgxqeC73bc42c4
 ### ===
 GET http://192.168.18.100:8000/api/loan/bill/00104010000459
@@ -67,4 +65,4 @@ Authorization: Bearer 269|MVqhBU28S3M3Y26UOCU4hRL1CEQnux1Gt65LoDfy84e09d8a
 
 
 ###
-GET http://192.168.18.100:8000/api/hehe
+GET http://192.168.18.100:8000/api/tenant/bpr_kn_dev
