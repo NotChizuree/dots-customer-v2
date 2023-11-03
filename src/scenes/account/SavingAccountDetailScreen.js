@@ -32,7 +32,7 @@ const SavingAccountDetailScreen = ({ navigation, route }) => {
   const menus = [
     {
       id: 1,
-      title: "Setoran Tabungan",
+      title: "Setoran Simpanan",
       icon: "wallet-outline",
       onPress: () =>
         navigation.navigate("PaymentMethodSelection", { parameter }),
@@ -48,7 +48,7 @@ const SavingAccountDetailScreen = ({ navigation, route }) => {
   const [availableBalance, setAvailableBalance] = useState("");
 
   const { token } = useContext(AuthContext);
-  const [amout, setAmout] = useState([]);
+  const [amount, setAmount] = useState([]);
 
   const fetchData = async () => {
     setLoading(true);
@@ -74,7 +74,7 @@ const SavingAccountDetailScreen = ({ navigation, route }) => {
   const fetchDataHistory = async () => {
     try {
       const result = await findSavingHistory(token, id);
-      setAmout(result.data.data);
+      setAmount(result.data.data);
     } catch (error) {
       console.error("Error API:", error);
     }
@@ -91,9 +91,7 @@ const SavingAccountDetailScreen = ({ navigation, route }) => {
         <ShimmerPlaceholder
           style={{
             width: "80%",
-
             height: 25,
-            // marginTop: 10,
             marginBottom: 15,
           }}
           autoRun={true}
@@ -102,7 +100,6 @@ const SavingAccountDetailScreen = ({ navigation, route }) => {
           style={{
             width: "40%",
             height: 20,
-            // marginTop: 16,
             marginBottom: 15,
           }}
           autoRun={true}
@@ -111,7 +108,6 @@ const SavingAccountDetailScreen = ({ navigation, route }) => {
           style={{
             width: "20%",
             height: 15,
-            // marginTop: 10,
             marginBottom: 15,
           }}
           autoRun={true}
@@ -120,7 +116,6 @@ const SavingAccountDetailScreen = ({ navigation, route }) => {
           style={{
             width: "50%",
             height: 17,
-            // marginTop: 10,
             marginBottom: 18,
           }}
           autoRun={true}
@@ -146,7 +141,7 @@ const SavingAccountDetailScreen = ({ navigation, route }) => {
           {accountNumber}
         </Text>
 
-        <Text style={styles.balanceTitle}>Saldo Tabungan</Text>
+        <Text style={styles.balanceTitle}>Saldo Simpanan</Text>
         <View style={{ flexDirection: "row" }}>
           <Headline adjustFontSizeToFit style={styles.balance}>
             Rp{" "}
@@ -159,7 +154,6 @@ const SavingAccountDetailScreen = ({ navigation, route }) => {
             icon={isBalanceShown ? "eye-off" : "eye"}
             size={20}
             color="white"
-            // style={{ bottom: 5 }}
           />
         </View>
       </>
@@ -167,26 +161,26 @@ const SavingAccountDetailScreen = ({ navigation, route }) => {
   };
 
   const renderTransactionHistoryList = (item) => {
-    const readableCreatedAt = new Date(item.createdAt).toString();
+    const timestamp = new Date(item.createdAt).toLocaleString();
     const formatToRupiah = (angka) => {
       return `${angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`;
     };
+    const isDebit = item.transactionType === "C";
+
     return (
       <List.Item
         titleStyle={{ marginBottom: 7 }}
         style={{ backgroundColor: "white" }}
         title={<Text>{item.title}</Text>}
-        description={<Text>{new Date(readableCreatedAt).toDateString()}</Text>}
+        description={<Text>{timestamp}</Text>}
         right={() => (
           <Caption
             style={[
               styles.transactionAmountCaption,
-              item.transactionType === "D"
-                ? styles.debitTrxAmount
-                : styles.creditTrxAmount,
+              isDebit ? styles.creditTrxAmount : styles.creditTrxAmount,
             ]}
           >
-            {item.transactionType === "D" ? "-" : "+"}Rp{" "}
+            {isDebit ? "-" : "+"}Rp{" "}
             {formatToRupiah(item.amount)}
           </Caption>
         )}
@@ -198,7 +192,7 @@ const SavingAccountDetailScreen = ({ navigation, route }) => {
     <ScrollView style={styles.screen}>
       <Appbar.Header style={styles.appbarHeader}>
         <Appbar.BackAction onPress={() => navigation.goBack()} />
-        <Appbar.Content title="Tabungan" />
+        <Appbar.Content title="Simpanan" />
       </Appbar.Header>
       <View style={styles.headingBlock}>
         <LinearGradient
@@ -231,7 +225,7 @@ const SavingAccountDetailScreen = ({ navigation, route }) => {
         ) : (
           <FlatList
             style={styles.transactionList}
-            data={amout}
+            data={amount}
             renderItem={({ item }) => renderTransactionHistoryList(item)}
             ItemSeparatorComponent={() => <Divider />}
           />
@@ -286,9 +280,7 @@ const styles = StyleSheet.create({
     fontSize: 20,
     color: "white",
   },
-  contentBlock: {
-    height: "50%",
-  },
+
   detailHeading: {
     marginTop: 10,
     fontSize: 22,

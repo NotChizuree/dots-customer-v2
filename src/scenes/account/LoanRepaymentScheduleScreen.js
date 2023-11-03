@@ -160,7 +160,7 @@ const styles = StyleSheet.create({
   },
   textHead: {
     margin: 6,
-    fontSize: 15,
+    fontSize: 14,
   },
   textData: {
     margin: 7,

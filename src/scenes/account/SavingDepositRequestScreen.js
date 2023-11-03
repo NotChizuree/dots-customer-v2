@@ -129,7 +129,7 @@ const SavingDepositRequestScreen = ({ navigation }) => {
     <>
       <Appbar.Header style={styles.appbarHeader}>
         <Appbar.BackAction onPress={() => navigation.goBack()} />
-        <Appbar.Content title="Setoran Tabungan" />
+        <Appbar.Content title="Setoran Simpanan" />
       </Appbar.Header>
 
       <ScrollView>

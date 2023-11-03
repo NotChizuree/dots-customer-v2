@@ -1,9 +1,10 @@
-POST http://192.168.18.100:8000/api/login
+POST http://192.168.8.143:8000/api/login
 Content-Type: application/json
 
 {
-  "username": "bpr_kn_dev_0002798",
-  "password": "password123"
+  "username": "ksp_pelita_rancaekek_0000019",
+  "password": "password123",
+  "tenantID": "ksp_pelita_rancaekek"
 }
 
 ###
@@ -65,4 +66,4 @@ Authorization: Bearer 269|MVqhBU28S3M3Y26UOCU4hRL1CEQnux1Gt65LoDfy84e09d8a
 
 
 ###
-GET http://192.168.18.100:8000/api/tenant/bpr_kn_dev
+GET http://192.168.8.143:8000/api/tenant/ksp_pelita_rancaekek

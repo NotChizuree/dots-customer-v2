@@ -12,10 +12,11 @@ const SplashScreenComponent = () => {
 
   const fetchData = async () => {
     try {
-      const id = "bpr_kn_dev"; 
+      const id = "ksp_pelita_rancaekek"; 
       const result = await findTenantByid(id);
       const data = result.data.data;
       setTenantName(data.name);
+      await AsyncStorage.setItem('tenantName', "");  
       await AsyncStorage.setItem('tenantName', data.name);  
       const splashTimeout = setTimeout(() => {
         setShowSplash(false);

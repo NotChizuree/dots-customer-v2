@@ -159,7 +159,7 @@ const DepositAccountDetailScreen = ({ navigation, route }) => {
     <View style={styles.screen}>
       <Appbar.Header style={styles.appbarHeader}>
         <Appbar.BackAction onPress={() => navigation.goBack()} />
-        <Appbar.Content title="Deposito" />
+        <Appbar.Content title="Sim. Berjangka" />
       </Appbar.Header>
       <ScrollView>
         <View style={styles.headingBlock}>

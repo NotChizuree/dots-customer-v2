@@ -54,7 +54,7 @@ const CreateSavingAccount = ({ navigation }) => {
           navigation.goBack();
           Alert.alert(
             "Sukses",
-            "Berhasil Mengajukan Tabungan Baru. Silahkan cek notifikasi secara berkala"
+            "Berhasil Mengajukan Simpanan Baru. Silahkan cek notifikasi secara berkala"
           );
         });
       } catch (error) {
@@ -67,7 +67,7 @@ const CreateSavingAccount = ({ navigation }) => {
     <>
       <Appbar.Header>
         <Appbar.BackAction onPress={() => navigation.goBack()} />
-        <Appbar.Content title="Ajukan Tabungan Baru" />
+        <Appbar.Content title="Ajukan Simpanan Baru" />
       </Appbar.Header>
 
       <View style={styles.container}>

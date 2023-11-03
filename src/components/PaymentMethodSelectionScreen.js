@@ -4,6 +4,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   ActivityIndicator,
+  ScrollView,
 } from "react-native";
 import { Appbar } from "react-native-paper";
 import Color from "../common/Color";
@@ -16,16 +17,15 @@ const PaymentMethodSelectionScreen = ({ navigation, route }) => {
   const [selectedMethodId, setSelectedMethodId] = useState(null);
   const [selectedMethod, setSelectedMethod] = useState(null);
   const [paymentMethods, setPaymentMethods] = useState([]);
-  const [loading, setLoading] = useState(true); 
+  const [loading, setLoading] = useState(true);
 
   const handleMethodSelection = (method) => {
     setSelectedMethodId(method.title);
-    
-    setSelectedMethod(method)
+    setSelectedMethod(method);
   };
 
-  const { parameter } = route.params
-  
+  const { parameter } = route.params;
+
   const handleContinue = () => {
     if (selectedMethod) {
       navigation.navigate(parameter.route, { selectedMethod, parameter });
@@ -40,11 +40,11 @@ const PaymentMethodSelectionScreen = ({ navigation, route }) => {
     FindPaymentMethod(token)
       .then((result) => {
         setPaymentMethods(result.data.data);
-        setLoading(false); 
+        setLoading(false);
       })
       .catch((error) => {
         console.error("Error fetching payment methods:", error);
-        setLoading(false); 
+        setLoading(false);
       });
   }, [token]);
 
@@ -57,7 +57,7 @@ const PaymentMethodSelectionScreen = ({ navigation, route }) => {
           style={styles.appbarTitle}
         />
       </Appbar.Header>
-      {loading ? ( 
+      {loading ? (
         <View style={styles.loadingContainer}>
           <ActivityIndicator
             size="large"
@@ -65,37 +65,39 @@ const PaymentMethodSelectionScreen = ({ navigation, route }) => {
           />
         </View>
       ) : (
-        <View style={styles.box}>
-          {paymentMethods.map((method) => (
-            <TouchableOpacity
-              key={method.id}
-              style={{
-                ...(selectedMethodId === method.title
-                  ? styles.selectedMethod
-                  : styles.method),
-                borderWidth: 1,
-                borderColor: "black",
-              }}
-              onPress={() => handleMethodSelection(method)}
-            >
-              <Text
-                style={
-                  selectedMethodId === method.title
-                    ? styles.selectedText
-                    : styles.text
-                }
+        <ScrollView>
+          <View style={styles.box}>
+            {paymentMethods.map((method) => (
+              <TouchableOpacity
+                key={method.id}
+                style={{
+                  ...(selectedMethodId === method.title
+                    ? styles.selectedMethod
+                    : styles.method),
+                  borderWidth: 1,
+                  borderColor: "black",
+                }}
+                onPress={() => handleMethodSelection(method)}
               >
-                {method.title}
-              </Text>
+                <Text
+                  style={
+                    selectedMethodId === method.title
+                      ? styles.selectedText
+                      : styles.text
+                  }
+                >
+                  {method.title}
+                </Text>
+              </TouchableOpacity>
+            ))}
+            <TouchableOpacity
+              style={styles.continueButton}
+              onPress={handleContinue}
+            >
+              <Text style={styles.buttonText}>LANJUT</Text>
             </TouchableOpacity>
-          ))}
-          <TouchableOpacity
-            style={styles.continueButton}
-            onPress={handleContinue}
-          >
-            <Text style={styles.buttonText}>LANJUT</Text>
-          </TouchableOpacity>
-        </View>
+          </View>
+        </ScrollView>
       )}
     </>
   );

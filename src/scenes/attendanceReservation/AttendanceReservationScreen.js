@@ -26,8 +26,8 @@ const AttendanceReservationScreen = ({ navigation }) => {
   const [destinationService, setDestinationService] = useState(null);
 
   const destinationServices = [
-    { label: "Teller", value: "001" },
-    { label: "Customer Service", value: "002" },
+    { label: "Teller", value: "1" },
+    { label: "Customer Service", value: "2" },
   ];
 
   const [showDropDownService, setshowDropDownService] = useState(false);
@@ -239,7 +239,6 @@ const AttendanceReservationScreen = ({ navigation }) => {
           <Caption>Kantor Tujuan</Caption>
           <DropDown
             style={{ backgroundColor: "white" }}
-            dropDownContainerHeight={50}
             placeholder={!officesData.length ? "Loading..." : null}
             mode={"outlined"}
             value={office}

@@ -57,7 +57,7 @@ const CreateLoanAccount = ({ navigation }) => {
           navigation.goBack();
           Alert.alert(
             "Sukses",
-            "Berhasil Mengajukan Kredit Baru. Silahkan cek notifikasi secara berkala"
+            "Berhasil Mengajukan Pinjaman Baru. Silahkan cek notifikasi secara berkala"
           );
         });
       } catch (error) {
@@ -76,7 +76,7 @@ const CreateLoanAccount = ({ navigation }) => {
     <>
       <Appbar.Header>
         <Appbar.BackAction onPress={() => navigation.goBack()} />
-        <Appbar.Content title="Ajukan kredit Baru" />
+        <Appbar.Content title="Ajukan Pinjaman Baru" />
       </Appbar.Header>
 
       <View style={styles.container}>

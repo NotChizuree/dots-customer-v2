@@ -48,7 +48,7 @@ const AuthProvider = ({ children }) => {
         username: username,
         password: password,
         clientType: "CUSTOMER",
-        tenantID: "bpr_kn_dev",
+        tenantID: "ksp_pelita_rancaekek",
       });
 
       await SecureStore.setItemAsync("authInfo", JSON.stringify(data));

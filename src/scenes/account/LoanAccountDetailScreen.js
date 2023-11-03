@@ -1,12 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import {
-  View,
-  StyleSheet,
-  Text,
-  ScrollView,
-  FlatList,
-  Alert,
-} from "react-native";
+import { View, StyleSheet, Text, ScrollView, FlatList } from "react-native";
 import { Appbar, IconButton } from "react-native-paper";
 import { LinearGradient } from "expo-linear-gradient";
 import ShimmerPlaceholder from "react-native-shimmer-placeholder";
@@ -70,7 +63,7 @@ const LoanAccountDetailScreen = ({ navigation, route }) => {
   const menus = [
     {
       id: 1,
-      title: "Ajukan Top-up Kredit",
+      title: "Top-up Pinjaman",
       icon: "journal-outline",
       onPress: () => navigation.navigate("LoanTopupRequest", { id: data.id }),
     },
@@ -97,7 +90,6 @@ const LoanAccountDetailScreen = ({ navigation, route }) => {
           style={{
             width: "40%",
             height: 25,
-            // marginTop: 10,
             marginBottom: 15,
           }}
           autoRun={true}
@@ -106,7 +98,6 @@ const LoanAccountDetailScreen = ({ navigation, route }) => {
           style={{
             width: "80%",
             height: 20,
-            // marginTop: 16,
             marginBottom: 15,
           }}
           autoRun={true}
@@ -115,7 +106,6 @@ const LoanAccountDetailScreen = ({ navigation, route }) => {
           style={{
             width: "20%",
             height: 15,
-            // marginTop: 10,
             marginBottom: 15,
           }}
           autoRun={true}
@@ -124,7 +114,6 @@ const LoanAccountDetailScreen = ({ navigation, route }) => {
           style={{
             width: "50%",
             height: 17,
-            // marginTop: 10,
             marginBottom: 18,
           }}
           autoRun={true}
@@ -217,7 +206,7 @@ const LoanAccountDetailScreen = ({ navigation, route }) => {
     <View style={styles.screen}>
       <Appbar.Header style={styles.appbarHeader}>
         <Appbar.BackAction onPress={() => navigation.goBack()} />
-        <Appbar.Content title="Kredit" />
+        <Appbar.Content title="Pinjaman" />
       </Appbar.Header>
       <ScrollView>
         <View style={styles.headingBlock}>
@@ -227,17 +216,16 @@ const LoanAccountDetailScreen = ({ navigation, route }) => {
           >
             {skeletonLoading ? renderSkeletonLoader() : renderAccountInfo()}
           </LinearGradient>
-          <FlatGrid
+          <FlatList
+            horizontal={true}
             data={menus}
-            keyExtractor={(item, index) => index.toString()}
-            itemDimension={80}
+            keyExtractor={(item) => item.id.toString()}
             renderItem={({ item }) => (
-              <View style={styles.buttonRow}>
+              <View style={styles.menuButton}>
                 <MenuButton
                   style={styles.menuButton}
                   iconName={item.icon}
                   title={item.title}
-                  numColumns={2}
                   onPress={item.onPress}
                 />
               </View>
@@ -283,59 +271,19 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: "white",
   },
-  accountNumber: {
-    fontSize: 25,
-    color: "white",
-    fontFamily: "Credit-Regular",
-    fontWeight: "bold",
-  },
   bankName: {
     marginBottom: 20,
     fontSize: 20,
     color: "white",
   },
-  contentBlock: {
-    paddingTop: "2%",
-    flex: 1,
-    width: "95%",
-    backgroundColor: "white",
-    marginTop: 20,
-    alignSelf: "center",
-    borderRadius: 17,
-    height: "100%",
-    marginBottom: 20,
-  },
-  detailHeading: {
-    marginTop: 5,
-    fontSize: 22,
-    fontWeight: "bold",
-  },
-  transactionList: {
-    marginTop: "3%",
-  },
-  transactionAmountCaption: {
-    fontSize: 16,
-    top: 10,
-    fontWeight: "bold",
-    marginRight: 10,
-  },
-  debitTrxAmount: {
-    color: "grey",
-  },
-  creditTrxAmount: {
-    color: "#95D362",
-  },
   menuButton: {
-    marginLeft: 12,
-    marginRight: 10,
     marginBottom: 5,
-    backgroundColor: "#EAEBF8",
+    marginRight:10,
+    marginTop: 10,
   },
   buttonRow: {
-    flex: 1,
-    flexDirection: "column",
-    justifyContent: "center", // Memusatkan vertikal
-    alignItems: "center", // Memusatkan horizontal
+    flexDirection: "row",
+    justifyContent: "space-around",
   },
   billItem: {
     borderBottomWidth: 1,
@@ -355,9 +303,18 @@ const styles = StyleSheet.create({
     marginTop: 5,
     fontSize: 17,
   },
+
   card: {
     margin: 20,
     marginBottom: "30%",
+  },
+  menuButtonTextContainer: {
+    alignItems: "center",
+  },
+  menuButtonText: {
+    fontSize: 14,
+    color: "black",
+    textAlign: "center",
   },
 });
 

@@ -118,7 +118,7 @@ const AccountsScreen = ({ navigation }) => {
             }}
           >
             <Text style={{ color: "white", textAlign: "center", fontSize: 18 }}>
-              Ajukan Tabungan Baru
+              Ajukan Simpanan Baru
             </Text>
           </TouchableOpacity>
         </View>
@@ -215,7 +215,7 @@ const AccountsScreen = ({ navigation }) => {
             }}
           >
             <Text style={{ color: "white", textAlign: "center", fontSize: 18 }}>
-              Ajukan Kredit Baru
+              Ajukan Pinjaman Baru
             </Text>
           </TouchableOpacity>
         </View>
@@ -323,7 +323,7 @@ const AccountsScreen = ({ navigation }) => {
             }}
           >
             <Text style={{ color: "white", textAlign: "center", fontSize: 18 }}>
-              Ajukan Deposit Baru
+              Ajukan Simpanan Berjangka Baru
             </Text>
           </TouchableOpacity>
         </View>
@@ -371,9 +371,9 @@ const AccountsScreen = ({ navigation }) => {
 
   const [index, setIndex] = useState(0);
   const [routes] = useState([
-    { key: "savings", title: "Tabungan" },
-    { key: "loan", title: "Kredit" },
-    { key: "deposit", title: "Deposito" },
+    { key: "savings", title: "Simpanan" },
+    { key: "loan", title: "Pinjaman" },
+    { key: "deposit", title: "Sim. Berjangka" },
   ]);
 
   return (

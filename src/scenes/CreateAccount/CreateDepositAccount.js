@@ -55,7 +55,7 @@ const CreateDepositAccount = ({ navigation }) => {
           navigation.goBack();
           Alert.alert(
             "Sukses",
-            "Berhasil Mengajukan Deposit Baru. Silahkan cek notifikasi secara berkala"
+            "Berhasil Mengajukan Sim. Berjangka Baru. Silahkan cek notifikasi secara berkala"
           );
         });
       } catch (error) {
@@ -68,7 +68,7 @@ const CreateDepositAccount = ({ navigation }) => {
     <>
       <Appbar.Header>
         <Appbar.BackAction onPress={() => navigation.goBack()} />
-        <Appbar.Content title="Ajukan deposit Baru" />
+        <Appbar.Content title="Ajukan Sim. Berjangka Baru" />
       </Appbar.Header>
 
       <View style={styles.container}>

@@ -24,6 +24,7 @@ const LoginScreen = ({ navigation }) => {
   const [password, setPassword] = useState(null);
   const [loading, setLoading] = useState(false);
   const [tenantName, setTenantName] = useState(""); 
+  // console.log(AsyncStorage.setItem('tenantName', data.name));
 
   useEffect(() => {
     const getTenantFromStorage = async () => {
