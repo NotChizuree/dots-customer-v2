@@ -31,7 +31,6 @@ const SavingDepositRequestScreen = ({ navigation }) => {
   }
 
   const [amount, setAmount] = useState("Rp. ");
-  const { login } = useContext(AuthContext);
 
   const handleCreateSavingAccount = () => {
     Alert.alert(

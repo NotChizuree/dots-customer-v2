@@ -66,7 +66,7 @@ const NotificationScreen = ({ navigation }) => {
       setIsModalVisible(true);
     } else {
       navigation.navigate("Blog", {
-        item: notification.description,
+        item: notification.description,     
       });
     }
 

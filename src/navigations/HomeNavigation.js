@@ -15,22 +15,6 @@ const HomeNavigation = ({ navigation }) => {
   const { user, exp } = useContext(AuthContext);
   const HomeBottomTab = createBottomTabNavigator();
 
-  // useEffect(() => {
-  //   const handleCheckToken = () => {
-  //     expToken = exp * 1000
-  //     const currentTime = new Date().getTime();
-  //     console.log('currentTime: ', currentTime);
-  //     console.log('exp: ', expToken);
-      
-  //     if (expToken && expToken < currentTime) {
-  //       navigation.navigate("Login")
-  //     }
-  //   };
-  //   const interval = setInterval(handleCheckToken, 5000);
-
-  //   return () => clearInterval(interval);
-  // }, [navigation, expToken]);
-
   return (
     <HomeBottomTab.Navigator
       screenOptions={{

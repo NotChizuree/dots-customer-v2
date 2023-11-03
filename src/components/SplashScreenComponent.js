@@ -15,13 +15,11 @@ const SplashScreenComponent = () => {
       const id = "bpr_kn_dev"; 
       const result = await findTenantByid(id);
       const data = result.data.data;
-      console.log("Tenant Data:", data);
-      console.log("Tenant Name:", data.name);
       setTenantName(data.name);
       await AsyncStorage.setItem('tenantName', data.name);  
       const splashTimeout = setTimeout(() => {
         setShowSplash(false);
-      }, 2000);     
+      }, 200);     
 
       return () => {
         clearTimeout(splashTimeout);
