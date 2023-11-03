@@ -21,7 +21,7 @@ const SplashScreenComponent = () => {
       await AsyncStorage.setItem('tenantName', data.name);  
       const splashTimeout = setTimeout(() => {
         setShowSplash(false);
-      }, 10000);     
+      }, 2000);     
 
       return () => {
         clearTimeout(splashTimeout);

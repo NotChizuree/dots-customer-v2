@@ -26,8 +26,8 @@ const AttendanceReservationScreen = ({ navigation }) => {
   const [destinationService, setDestinationService] = useState(null);
 
   const destinationServices = [
-    { label: "Teller", value: "1" },
-    { label: "Customer Service", value: "2" },
+    { label: "Teller", value: "001" },
+    { label: "Customer Service", value: "002" },
   ];
 
   const [showDropDownService, setshowDropDownService] = useState(false);
@@ -201,7 +201,7 @@ const AttendanceReservationScreen = ({ navigation }) => {
             attendAtEnd: timestamp2,
             time: clock,
           },
-          setMutationLoading,
+          setMutationLoading, 
           setMutationError
         )
           .then((res) => {
@@ -238,7 +238,7 @@ const AttendanceReservationScreen = ({ navigation }) => {
         >
           <Caption>Kantor Tujuan</Caption>
           <DropDown
-            style={{ backgroundColor: 'white' }}
+            style={{ backgroundColor: "white" }}
             dropDownContainerHeight={50}
             placeholder={!officesData.length ? "Loading..." : null}
             mode={"outlined"}
@@ -261,7 +261,7 @@ const AttendanceReservationScreen = ({ navigation }) => {
           />
           <Caption>Layanan Tujuan</Caption>
           <DropDown
-            style={{ backgroundColor: "white", }}
+            style={{ backgroundColor: "white" }}
             mode={"outlined"}
             value={destinationService}
             setValue={setDestinationService}
@@ -275,7 +275,7 @@ const AttendanceReservationScreen = ({ navigation }) => {
           />
           <Caption>Tujuan Kedatangan</Caption>
           <DropDown
-            style={{ backgroundColor: 'white' }}
+            style={{ backgroundColor: "white" }}
             mode={"outlined"}
             visible={showDropDownService}
             showDropDown={() => setshowDropDownService(true)}
@@ -317,7 +317,7 @@ const AttendanceReservationScreen = ({ navigation }) => {
           )}
           <Caption>Waktu Kedatangan</Caption>
           <DropDown
-            style={{ backgroundColor: 'white' }}
+            style={{ backgroundColor: "white" }}
             mode={"outlined"}
             value={attendanceTimeRange}
             setValue={setAttendanceTimeRange}
