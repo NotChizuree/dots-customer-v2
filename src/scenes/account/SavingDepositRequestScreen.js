@@ -6,29 +6,32 @@ import { KeyboardAccessoryView } from "react-native-keyboard-accessory";
 import { AuthContext } from "../../providers/AuthenticationProvider";
 import { ScrollView } from "react-native-gesture-handler";
 import { createSavingDeposit } from "../../api/SavingApi";
+import * as Clipboard from "expo-clipboard";
 
 const SavingDepositRequestScreen = ({ navigation }) => {
   const [isFocused, setIsFocused] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const [rekeningPengirim, setRekeningPengirim] = useState("");
   const [showTabunganContainer, setShowTabunganContainer] = useState(false);
-  const [itemsDropdown, setItemDropdown] = useState(null);
+
+  const copyToClipboard = async (text) => {
+    await Clipboard.setStringAsync(text);
+  };
 
   const route = useRoute();
   const { selectedMethod = "Pilih Metode Pembayaran", parameter } =
     route.params || {};
   const selectedPaymentMethod = selectedMethod || "Pilih Metode Pembayaran";
 
-  // Define 'method' with a try-catch block to handle parsing errors.
-  let method = [];
-
-  if (selectedMethod && selectedMethod.description) {
-    try {
-      method = JSON.parse(selectedMethod.description);
-    } catch (error) {
-      console.error("Error parsing selectedMethod.description:", error);
-    }
-  }
+  console.log("Haloo", selectedMethod);
+  // if (selectedMethod && selectedMethod.description) {
+  //   try {
+  //     const method = JSON.parse(selectedMethod.title);
+  //     setNorek(method)
+  //   } catch (error) {
+  //     console.error("Error parsing selectedMethod.description:", error);
+  //   }
+  // }
 
   const [amount, setAmount] = useState("Rp. ");
 
@@ -58,20 +61,19 @@ const SavingDepositRequestScreen = ({ navigation }) => {
 
   const handleInputChange = (text) => {
     const cleanedText = text.replace(/[^\d]/g, "");
-        if (cleanedText) {
+    if (cleanedText) {
       const numericValue = Number.parseInt(cleanedText, 10);
       if (!isNaN(numericValue)) {
         const formattedValue = "Rp. " + numericValue.toLocaleString();
         setAmount(formattedValue);
         setInputValue(formattedValue);
-        checkTabunganContainerVisibility(rekeningPengirim, numericValue); 
+        checkTabunganContainerVisibility(rekeningPengirim, numericValue);
       } else {
-      
         setShowTabunganContainer(false);
       }
     } else {
       setAmount("Rp. ");
-      setInputValue(""); 
+      setInputValue("");
       setShowTabunganContainer(false);
     }
   };
@@ -84,7 +86,6 @@ const SavingDepositRequestScreen = ({ navigation }) => {
   const [loading, setLoading] = useState(true);
 
   const handleSubmit = async () => {
-
     if (!amount) {
       Alert.alert("Error", "Kolom Jumlah Belum Di isi.");
     } else if (!rekeningPengirim) {
@@ -93,7 +94,7 @@ const SavingDepositRequestScreen = ({ navigation }) => {
       Alert.alert("Konfirmasi", "Pastikan data yang anda masukan sudah benar", [
         {
           text: "Batal",
-          onPress: () => ("Transaksi dibatalkan"),
+          onPress: () => "Transaksi dibatalkan",
           style: "cancel",
         },
         {
@@ -107,8 +108,10 @@ const SavingDepositRequestScreen = ({ navigation }) => {
                 recipient: rekeningPengirim,
               }).then((result) => {
                 navigation.navigate("SavingDetail", { id: parameter.norek });
-                Alert.alert("Sukses", "Berhasil Mengajukan Setoran. Silahkan cek notifikasi secara berkala"
-                )
+                Alert.alert(
+                  "Sukses",
+                  "Berhasil Mengajukan Setoran. Silahkan cek notifikasi secara berkala"
+                );
               });
             } catch (error) {
               console.error("API Error:", error);
@@ -137,11 +140,25 @@ const SavingDepositRequestScreen = ({ navigation }) => {
           <Caption style={styles.text}>Metode Pembayaran</Caption>
           <View style={styles.inputContainer}>
             <TextInput
-              style={styles.input}
+              style={styles.inputDisable}
               placeholder="Pilih Metode Pembayaran"
               editable={false}
               value={selectedMethod.title}
-              disabled
+              readonly
+            />
+          </View>
+          <Caption style={styles.text}>Nomor Rekening</Caption>
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={styles.inputDisable}
+              placeholder="Pilih Metode Pembayaran"
+              editable={false}
+              value={
+                selectedMethod.description
+                  ? selectedMethod.description
+                  : "No. Rekening Tidak Ada"
+              }
+              readonly
             />
           </View>
           <Caption style={styles.text}>Nama Rekening Pengirim</Caption>
@@ -164,23 +181,9 @@ const SavingDepositRequestScreen = ({ navigation }) => {
             keyboardType="numeric"
             onChangeText={handleInputChange}
           />
-
-          {showTabunganContainer && (
-            <View style={styles.tabunganContainer}>
-              <Text style={styles.tabunganText}>Tata Cara Setoran</Text>
-              {method.map((item, index) => (
-                <Text key={index} style={styles.txt}>
-                  {index + 1}. {item}
-                </Text>
-              ))}
-              <TouchableOpacity
-                style={styles.customButton}
-                onPress={handleSubmit}
-              >
-                <Text style={styles.buttonText}>SAYA SUDAH TRANSFER</Text>
-              </TouchableOpacity>
-            </View>
-          )}
+          <TouchableOpacity style={styles.customButton} onPress={handleSubmit}>
+            <Text style={styles.buttonText}>SAYA SUDAH TRANSFER</Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </>
@@ -207,6 +210,14 @@ const styles = StyleSheet.create({
   },
   input: {
     backgroundColor: "#ffffff",
+    borderWidth: 1,
+    borderColor: "#080808",
+    borderRadius: 5,
+    fontSize: 18,
+  },
+  inputDisable: {
+    backgroundColor: "#ffffff",
+    color: "#000000",
     borderWidth: 1,
     borderColor: "#080808",
     borderRadius: 5,
@@ -249,12 +260,20 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "bold",
     marginBottom: 8,
+    textAlign: "center",
+  },
+  norekText: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 8,
+    textAlign: "center",
   },
   txt: {
     marginBottom: 10,
   },
   customButton: {
     backgroundColor: Color.primaryBackgroundColor.backgroundColor,
+    marginTop: 20,
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 8,

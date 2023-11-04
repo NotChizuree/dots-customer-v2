@@ -43,6 +43,19 @@ export const findLoanBillById = async (token,id) => {
     console.log(error);
   }
 };
+export const findLoanNowlById = async (token,id) => {
+  try {
+    const result = ApiManager(`loan/now/${id}`, {
+      method: "GET",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return result;
+  } catch (error) {
+    console.log(error);
+  }
+};
 export const findLoanProdukType= async (token) => {
   try {
     const result = ApiManager(`/loan/product-type`, {

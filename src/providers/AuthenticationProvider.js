@@ -42,17 +42,23 @@ const AuthProvider = ({ children }) => {
     }
   };
 
+  console.log(process.env.PUBLIC_ID);
+  console.log(process.env.API_URL);
+
   const login = async (username, password) => {
     try {
       const data = await ApiManager.post("/login", {
         username: username,
         password: password,
         clientType: "CUSTOMER",
-        tenantID: "ksp_pelita_rancaekek",
+        tenantID: "900001",
       });
+
+      const json = JSON.stringify(data)
 
       await SecureStore.setItemAsync("authInfo", JSON.stringify(data));
       setUser(data.data.user, data.data.accessToken, data.data.exp);
+      
       return data;
     } catch (error) {
       switch (error.response?.status) {

@@ -22,6 +22,7 @@ import LoanRepaymentScheduleScreen from "../scenes/account/LoanRepaymentSchedule
 import LoanTopupRequestScreen from "../scenes/account/LoanTopupRequestScreen";
 import LoanPaymentScreen from "../scenes/account/LoanPaymentScreen";
 import PaymentMethodSelectionScreen from "../components/PaymentMethodSelectionScreen";
+import QRCodeScreen from "../common/QRCodeScreen";
 
 const AppNavigation = () => {
   const AppNavigator = createStackNavigator();
@@ -112,6 +113,11 @@ const AppNavigation = () => {
       <AppNavigator.Screen
         name="PaymentMethodSelection"
         component={PaymentMethodSelectionScreen}
+        options={{ headerShown: false }}
+      />
+      <AppNavigator.Screen
+        name="QRCode"
+        component={QRCodeScreen}
         options={{ headerShown: false }}
       />
     </AppNavigator.Navigator>

@@ -15,8 +15,6 @@ import {
   NotificationStatus,
   findAllNotificationByToken,
 } from "../../api/NotificationApi";
-import LoadingOverlay from "../../components/common/LoadingOverlay";
-import axios from "axios";
 
 const NotificationScreen = ({ navigation }) => {
   const { logout } = useContext(AuthContext);
@@ -34,6 +32,7 @@ const NotificationScreen = ({ navigation }) => {
     try {
       findAllNotificationByToken(token).then((result) => {
         const apiData = JSON.parse(result.data.data);
+        console.log(apiData);
         setData(apiData);
         setRefreshing(false);
       });
@@ -61,12 +60,12 @@ const NotificationScreen = ({ navigation }) => {
 
   const toggleNotificationPress = (notification) => {
     setSelectedNotification(notification);
-    NotificationStatus(token,notification.id)
+    NotificationStatus(token, notification.id);
     if (notification.type !== 9) {
       setIsModalVisible(true);
     } else {
       navigation.navigate("Blog", {
-        item: notification.description,     
+        item: JSON.parse(notification.description),
       });
     }
 
@@ -77,6 +76,7 @@ const NotificationScreen = ({ navigation }) => {
   const parseDescription = (description) => {
     try {
       const parsedData = JSON.parse(description);
+      console.log(parsedData);
       return parsedData;
     } catch (error) {
       console.error("Error parsing description:", error);
@@ -199,13 +199,40 @@ const NotificationScreen = ({ navigation }) => {
               ) : (
                 <Text style={styles.modalText}>No description available</Text>
               )}
-              <Button
-                mode="contained"
-                style={{ marginTop: 20, ...Color.primaryBackgroundColor }}
-                onPress={toggleModal}
-              >
-                Tutup
-              </Button>
+              <View style={styles.buttonContainer}>
+                <Button
+                  mode="contained"
+                  style={{
+                    flex:
+                      selectedNotification && selectedNotification.type === 1
+                        ? 1
+                        : 2,
+                    marginRight:
+                      selectedNotification && selectedNotification.type === 1
+                        ? 5
+                        : 0,
+                    ...Color.primaryBackgroundColor,
+                  }}
+                  onPress={toggleModal}
+                >
+                  Tutup
+                </Button>
+                {selectedNotification && selectedNotification.type === 1 && (
+                  <Button
+                    mode="contained"
+                    style={{
+                      flex: 1,
+                      marginLeft: 5,
+                      ...Color.primaryBackgroundColor,
+                    }}
+                    onPress={() => {
+                      navigation.navigate("QRCode", { selectedNotification });
+                    }}
+                  >
+                    QR Code
+                  </Button>
+                )}
+              </View>
             </View>
           </View>
         </Modal>
@@ -277,7 +304,7 @@ const styles = StyleSheet.create({
     margin: 20,
     width: "80%",
     backgroundColor: "white",
-    padding: 35,
+    padding: 30,
     shadowColor: "#000",
     shadowOffset: {
       width: 0,
@@ -316,6 +343,11 @@ const styles = StyleSheet.create({
   },
   modalHidden: {
     display: "none",
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    marginTop: 20,
   },
 });
 

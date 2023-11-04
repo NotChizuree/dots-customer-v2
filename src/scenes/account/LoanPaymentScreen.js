@@ -5,6 +5,7 @@ import { useRoute } from "@react-navigation/native";
 import { AuthContext } from "../../providers/AuthenticationProvider";
 import { ScrollView } from "react-native-gesture-handler";
 import { createPayment } from "../../api/LoanApi";
+import * as Clipboard from "expo-clipboard";
 
 const LoanPayment = ({ navigation }) => {
   const [isFocused, setIsFocused] = useState(false);
@@ -12,6 +13,10 @@ const LoanPayment = ({ navigation }) => {
   const [rekeningPengirim, setRekeningPengirim] = useState("");
   const [showTabunganContainer, setShowTabunganContainer] = useState(false);
   const [itemsDropdown, setItemDropdown] = useState(null);
+
+  const copyToClipboard = async (text) => {
+    await Clipboard.setStringAsync(text);
+  };
 
   const route = useRoute();
   const { selectedMethod = "Pilih Metode Pembayaran", parameter } =
@@ -57,19 +62,19 @@ const LoanPayment = ({ navigation }) => {
 
   const handleInputChange = (text) => {
     const cleanedText = text.replace(/[^\d]/g, "");
-        if (cleanedText) {
+    if (cleanedText) {
       const numericValue = Number.parseInt(cleanedText, 10);
       if (!isNaN(numericValue)) {
         const formattedValue = "Rp. " + numericValue.toLocaleString();
         setAmount(formattedValue);
         setInputValue(formattedValue);
-        checkTabunganContainerVisibility(rekeningPengirim, numericValue); 
+        checkTabunganContainerVisibility(rekeningPengirim, numericValue);
       } else {
         setShowTabunganContainer(false);
       }
     } else {
       setAmount("Rp. ");
-      setInputValue(""); 
+      setInputValue("");
       setShowTabunganContainer(false);
     }
   };
@@ -90,7 +95,7 @@ const LoanPayment = ({ navigation }) => {
       Alert.alert("Konfirmasi", "Pastikan data yang anda masukan sudah benar", [
         {
           text: "Batal",
-          onPress: () => ("Transaksi dibatalkan"),
+          onPress: () => "Transaksi dibatalkan",
           style: "cancel",
         },
         {
@@ -104,8 +109,10 @@ const LoanPayment = ({ navigation }) => {
                 recipient: rekeningPengirim,
               }).then((result) => {
                 navigation.navigate("LoanDetail", { id: parameter.norek });
-                Alert.alert("Sukses", "Berhasil Mengajukan Setoran. Silahkan cek notifikasi secara berkala"
-                )
+                Alert.alert(
+                  "Sukses",
+                  "Berhasil Mengajukan Setoran. Silahkan cek notifikasi secara berkala"
+                );
               });
             } catch (error) {
               console.error("API Error:", error);
@@ -134,11 +141,25 @@ const LoanPayment = ({ navigation }) => {
           <Caption style={styles.text}>Metode Pembayaran</Caption>
           <View style={styles.inputContainer}>
             <TextInput
-              style={styles.input}
+              style={styles.inputDisable}
               placeholder="Pilih Metode Pembayaran"
               editable={false}
               value={selectedMethod.title}
-              disabled
+              readonly
+            />
+          </View>
+          <Caption style={styles.text}>Nomor Rekening</Caption>
+          <View style={styles.inputContainer}>
+            <TextInput
+              style={styles.inputDisable}
+              placeholder="Pilih Metode Pembayaran"
+              editable={false}
+              value={
+                selectedMethod.description
+                  ? selectedMethod.description
+                  : "No. Rekening Tidak Ada"
+              }
+              readonly
             />
           </View>
           <Caption style={styles.text}>Nama Rekening Pengirim</Caption>
@@ -161,23 +182,9 @@ const LoanPayment = ({ navigation }) => {
             value={amount}
             onChangeText={handleInputChange}
           />
-
-          {showTabunganContainer && (
-            <View style={styles.tabunganContainer}>
-              <Text style={styles.tabunganText}>Tata Cara Setoran</Text>
-              {method.map((item, index) => (
-                <Text key={index} style={styles.txt}>
-                  {index + 1}. {item}
-                </Text>
-              ))}
-              <TouchableOpacity
-                style={styles.customButton}
-                onPress={handleSubmit}
-              >
-                <Text style={styles.buttonText}>SAYA SUDAH TRANSFER</Text>
-              </TouchableOpacity>
-            </View>
-          )}
+          <TouchableOpacity style={styles.customButton} onPress={handleSubmit}>
+            <Text style={styles.buttonText}>SAYA SUDAH TRANSFER</Text>
+          </TouchableOpacity>
         </View>
       </ScrollView>
     </>
@@ -204,6 +211,14 @@ const styles = StyleSheet.create({
   },
   input: {
     backgroundColor: "#ffffff",
+    borderWidth: 1,
+    borderColor: "#080808",
+    borderRadius: 5,
+    fontSize: 18,
+  },
+  inputDisable: {
+    backgroundColor: "#ffffff",
+    color: "#000000",
     borderWidth: 1,
     borderColor: "#080808",
     borderRadius: 5,
@@ -241,6 +256,13 @@ const styles = StyleSheet.create({
     padding: 16,
     marginTop: 30,
     borderRadius: 5,
+    textAlign: "center",
+  },
+  norekText: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginBottom: 8,
+    textAlign: "center",
   },
   tabunganText: {
     fontSize: 18,
@@ -252,6 +274,7 @@ const styles = StyleSheet.create({
   },
   customButton: {
     backgroundColor: Color.primaryBackgroundColor.backgroundColor,
+    marginTop: 20,
     paddingVertical: 10,
     paddingHorizontal: 20,
     borderRadius: 8,

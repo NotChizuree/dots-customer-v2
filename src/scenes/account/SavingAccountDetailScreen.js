@@ -165,7 +165,7 @@ const SavingAccountDetailScreen = ({ navigation, route }) => {
     const formatToRupiah = (angka) => {
       return `${angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")}`;
     };
-    const isDebit = item.transactionType === "C";
+    const isDebit = item.transactionType == "C ";
 
     return (
       <List.Item
@@ -177,10 +177,10 @@ const SavingAccountDetailScreen = ({ navigation, route }) => {
           <Caption
             style={[
               styles.transactionAmountCaption,
-              isDebit ? styles.creditTrxAmount : styles.creditTrxAmount,
+              isDebit ? styles.creditTrxAmount : styles.debitTrxAmount,
             ]}
           >
-            {isDebit ? "-" : "+"}Rp{" "}
+            {isDebit ? "+" : "-"}Rp{" "}
             {formatToRupiah(item.amount)}
           </Caption>
         )}

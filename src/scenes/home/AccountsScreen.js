@@ -56,7 +56,7 @@ const AccountsScreen = ({ navigation }) => {
       fetchData();
     }, []);
 
-    if (loading) {
+    if (loading && !data) {
       return <LoadingOverlay />;
     }
 
@@ -379,7 +379,7 @@ const AccountsScreen = ({ navigation }) => {
   return (
     <View style={styles.screen}>
       <View style={Color.primaryBackgroundColor}>
-        <Headline style={styles.heading}>Akun Saya</Headline>
+        <Headline style={styles.heading}>Rekening Saya</Headline>
       </View>
 
       <TabView

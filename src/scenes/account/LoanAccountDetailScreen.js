@@ -5,7 +5,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import ShimmerPlaceholder from "react-native-shimmer-placeholder";
 import MenuButton from "../../components/common/MenuButton";
 import { AuthContext } from "../../providers/AuthenticationProvider";
-import { findLoanBillById, findLoanById } from "../../api/LoanApi";
+import { findLoanBillById, findLoanById, findLoanNowlById } from "../../api/LoanApi";
 import { FlatGrid } from "react-native-super-grid";
 import { Card, Paragraph, Title } from "react-native-paper";
 import { useFonts } from "expo-font";
@@ -44,7 +44,7 @@ const LoanAccountDetailScreen = ({ navigation, route }) => {
 
   const fetchDataBill = async () => {
     try {
-      const result = await findLoanBillById(token, id);
+      const result = await findLoanNowlById(token, id);
       setBill(result.data.data);
       setSkeletonLoading(false);
       setLoanLoading(false);
