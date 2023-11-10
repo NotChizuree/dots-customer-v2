@@ -10,15 +10,15 @@ import {
   TouchableOpacity,
 } from "react-native";
 import { Headline, Appbar, Subheading } from "react-native-paper";
-import * as SecureStore from "expo-secure-store";
 import MenuButton from "../../components/common/MenuButton";
 import { AuthContext } from "../../providers/AuthenticationProvider";
 import { FlatGrid } from "react-native-super-grid";
 import Carousel, { Pagination } from "react-native-snap-carousel";
 import Color from "../../common/Color";
 import SplashScreen from "../../components/common/SplashScreen";
-import { findAllImage } from "../../api/carosel";
+import { findAllImage } from "../../api/carosel"
 import AsyncStorage from '@react-native-async-storage/async-storage'; // Impor AsyncStorage
+import {API_URL} from '@env'
 
 const HomeScreen = ({ navigation }) => {
   const { user, exp } = useContext(AuthContext);
@@ -124,7 +124,18 @@ const HomeScreen = ({ navigation }) => {
     try {
       findAllImage(token).then((result) => {
 
-        setImage(result.data.data);
+        const data = result.data.data
+
+        const modifiedData = data.map(item => {
+          return {
+            ...item,
+            imageUrl: API_URL + "/" + item.imageUrl,
+          };
+        });
+
+        setImage(modifiedData);
+        console.log(modifiedData);
+
         setIsLoading(false);
       });
     } catch (error) {}
@@ -179,7 +190,7 @@ const HomeScreen = ({ navigation }) => {
               Selamat Datang
             </Headline>
             <Subheading adjustFontSizeToFit style={styles.subheading}>
-              {user.firstName} {user.lastName}
+              {user && user.firstName} {user && user.lastName}
             </Subheading>
           </View>
           <View>

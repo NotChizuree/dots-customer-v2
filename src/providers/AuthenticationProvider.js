@@ -1,8 +1,9 @@
+// AuthProvider.js
 import React, { createContext, useReducer, useEffect } from "react";
 import * as SecureStore from "expo-secure-store";
 import { ApiManager } from "../api/ApiManager";
 import { Alert } from "react-native";
-import {PUBLIC_ID} from '@env'
+import { PUBLIC_ID } from "@env";
 
 const AuthReducer = (state, action) => {
   switch (action.type) {
@@ -17,7 +18,7 @@ const AuthReducer = (state, action) => {
       return state;
   }
 };
-  
+
 export const AuthContext = createContext();
 
 const AuthProvider = ({ children }) => {
@@ -52,11 +53,9 @@ const AuthProvider = ({ children }) => {
         tenantID: PUBLIC_ID,
       });
 
-      const json = JSON.stringify(data)
-
-      await SecureStore.setItemAsync("authInfo", JSON.stringify(data));
+      await SecureStore.setItemAsync("authInfo", JSON.stringify(data.data));
       setUser(data.data.user, data.data.accessToken, data.data.exp);
-      
+
       return data;
     } catch (error) {
       switch (error.response?.status) {
@@ -72,8 +71,6 @@ const AuthProvider = ({ children }) => {
     const handleCheckToken = () => {
       const expToken = state.exp * 1000;
       const currentTime = new Date().getTime();
-      console.log("currentTime: ", currentTime);
-      console.log("exp: ", expToken);
 
       if (expToken && expToken < currentTime) {
         Alert.alert(

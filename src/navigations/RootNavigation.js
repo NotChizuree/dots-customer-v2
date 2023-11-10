@@ -1,48 +1,46 @@
+// RootNavigation.js
 import React, { useState, useEffect, useContext } from "react";
+import { useNavigation } from "@react-navigation/native";
 import AppNavigation from "./AppNavigation";
 import AuthenticationNavigation from "./AuthenticationNavigation";
-// import LoadingOverlay from "../components/common/LoadingOverlay";
 import { AuthContext } from "../providers/AuthenticationProvider";
-// import { useToast } from "react-native-paper-toast";
 import * as SecureStore from "expo-secure-store";
 import SplashScreenComponent from "../components/SplashScreenComponent";
 
 const RootNavigation = () => {
   const [loadingUser, setLoadingUser] = useState(true);
-  const { user, setUser, setTenant } = useContext(AuthContext);
-  const [token, setToken] = useState(null);
+  const { setUser, setTenant, token } = useContext(AuthContext);
+  const navigation = useNavigation();
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        let data = await SecureStore.getItemAsync("authInfo");
-        if (data !== null) {
-          const u = JSON.parse(data);
-          setUser(u.data.user, u.data.accessToken);
-          console.log(u);
-          setToken(u.data.accessToken);
+        let authData = await SecureStore.getItemAsync("authInfo");
+        if (authData !== null) {
+          const { user, accessToken } = JSON.parse(authData);
+          setUser(user, accessToken);
         }
 
         let tenantData = await SecureStore.getItemAsync("currentTenant");
         if (tenantData !== null) {
-          const t = JSON.parse(tenantData);
-          setTenant(t);
+          const tenant = JSON.parse(tenantData);
+          setTenant(tenant);
         }
       } catch (error) {
-        console.error("Error fetching data:", error);
+        console.error("Error fetching data:", error.message);
       } finally {
         setLoadingUser(false);
       }
     };
 
     fetchData();
-  }, []);
+  }, [setUser, setTenant]);
 
-  const isLoggedIn = token;
   if (loadingUser) {
     return <SplashScreenComponent />;
   }
-  return isLoggedIn !== null ? <AppNavigation /> : <AuthenticationNavigation />;
+
+  return token ? <AppNavigation /> : <AuthenticationNavigation />;
 };
 
 export default RootNavigation;

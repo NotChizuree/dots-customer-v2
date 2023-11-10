@@ -226,6 +226,7 @@ const NotificationScreen = ({ navigation }) => {
                       ...Color.primaryBackgroundColor,
                     }}
                     onPress={() => {
+                      setIsModalVisible(false)
                       navigation.navigate("QRCode", { selectedNotification });
                     }}
                   >

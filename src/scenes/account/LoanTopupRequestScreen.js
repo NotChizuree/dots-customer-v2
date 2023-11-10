@@ -25,7 +25,7 @@ const LoanTopupRequest = ({ navigation }) => {
   const showConfirmModal = () => {
     setConfirmModalVisible(true);
   };
-                    
+
   const hideConfirmModal = () => {
     setConfirmModalVisible(false);
   };
@@ -82,7 +82,7 @@ const LoanTopupRequest = ({ navigation }) => {
         [
           {
             text: "Batal",
-            onPress: () => ("Transaksi dibatalkan"),
+            onPress: () => "Transaksi dibatalkan",
             style: "cancel",
           },
           {
@@ -91,7 +91,7 @@ const LoanTopupRequest = ({ navigation }) => {
               try {
                 createLoanTopup(token, {
                   loanId: id,
-                  amount: amount,
+                  amount: parseInt(amount.replace(/[^0-9]/g, "")),
                   reason: reason,
                 }).then((result) => {
                   navigation.goBack();
@@ -158,7 +158,7 @@ const LoanTopupRequest = ({ navigation }) => {
               [
                 {
                   text: "Batal",
-                  onPress: () => ("Transaksi dibatalkan"),
+                  onPress: () => "Transaksi dibatalkan",
                   style: "cancel",
                 },
                 {
