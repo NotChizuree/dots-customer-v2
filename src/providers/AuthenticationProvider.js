@@ -2,6 +2,7 @@ import React, { createContext, useReducer, useEffect } from "react";
 import * as SecureStore from "expo-secure-store";
 import { ApiManager } from "../api/ApiManager";
 import { Alert } from "react-native";
+import {PUBLIC_ID} from '@env'
 
 const AuthReducer = (state, action) => {
   switch (action.type) {
@@ -42,16 +43,13 @@ const AuthProvider = ({ children }) => {
     }
   };
 
-  console.log(process.env.PUBLIC_ID);
-  console.log(process.env.API_URL);
-
   const login = async (username, password) => {
     try {
       const data = await ApiManager.post("/login", {
         username: username,
         password: password,
         clientType: "CUSTOMER",
-        tenantID: "900001",
+        tenantID: PUBLIC_ID,
       });
 
       const json = JSON.stringify(data)

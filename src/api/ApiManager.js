@@ -1,7 +1,8 @@
 import axios from "axios";
+import {API_URL} from '@env'
 
 export const ApiManager = axios.create({
-  baseURL: 'http://192.168.18.100:8000/api',
+  baseURL: API_URL,
   responseType: 'json',
   withCredentials: true
 })

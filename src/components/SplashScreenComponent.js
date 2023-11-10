@@ -4,6 +4,7 @@ import splashImage from "../../assets/img/logo.png";
 import { findTenantByid } from "../api/tenant";
 import { useNavigation } from "@react-navigation/native";
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {PUBLIC_ID} from '@env';
 
 const SplashScreenComponent = () => {
   const navigation = useNavigation(); 
@@ -13,10 +14,9 @@ const SplashScreenComponent = () => {
   const fetchData = async () => {
     try {
       const id = "900001"; 
-      const result = await findTenantByid(id);
+      const result = await findTenantByid(PUBLIC_ID);
       const data = result.data.data;
-      setTenantName(data.name);
-      await AsyncStorage.setItem('tenantName', "");  
+      setTenantName(data.name);  
       await AsyncStorage.setItem('tenantName', data.name);  
       const splashTimeout = setTimeout(() => {
         setShowSplash(false);

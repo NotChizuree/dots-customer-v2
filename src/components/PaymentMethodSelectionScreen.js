@@ -60,7 +60,7 @@ const PaymentMethodSelectionScreen = ({ navigation, route }) => {
       {loading ? (
         <View style={styles.loadingContainer}>
           <ActivityIndicator
-            size="large"
+            size="large" 
             color={Color.primaryBackgroundColor.backgroundColor}
           />
         </View>
